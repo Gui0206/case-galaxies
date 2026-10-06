@@ -11,14 +11,33 @@ Metric = Literal["likes", "views"]
 
 # Only pre-publication content attributes can enter the predictor.
 FEATURES = {
-    "duration_s", "brightness", "saturation", "frame_change", "cuts_per_second",
-    "audio_rms", "silence_ratio", "speech_words_per_second", "ocr_word_count",
-    "hook_clarity", "product_visibility", "demonstration", "onscreen_text_density",
-    "pacing", "speech_energy", "benefit_clarity", "cta",
+    "duration_s",
+    "brightness",
+    "saturation",
+    "frame_change",
+    "cuts_per_second",
+    "audio_rms",
+    "silence_ratio",
+    "speech_words_per_second",
+    "ocr_word_count",
+    "hook_clarity",
+    "product_visibility",
+    "demonstration",
+    "onscreen_text_density",
+    "pacing",
+    "speech_energy",
+    "benefit_clarity",
+    "cta",
 }
 RUBRIC_FEATURES = {
-    "hook_clarity", "product_visibility", "demonstration", "onscreen_text_density",
-    "pacing", "speech_energy", "benefit_clarity", "cta",
+    "hook_clarity",
+    "product_visibility",
+    "demonstration",
+    "onscreen_text_density",
+    "pacing",
+    "speech_energy",
+    "benefit_clarity",
+    "cta",
 }
 
 
@@ -41,6 +60,7 @@ class Evidence(Contract):
 
 class Creative(Contract):
     creative_id: str = Field(min_length=1, max_length=150)
+    attributes_source: Literal["media_extraction", "human_annotation", "simulation"] = "human_annotation"
     caption: str = Field(default="", max_length=10000)
     transcript: str = Field(default="", max_length=30000)
     features: dict[str, float | None] = Field(default_factory=dict)
@@ -82,6 +102,8 @@ class PostRecord(Creative):
 
     @model_validator(mode="after")
     def information_cutoff(self):
+        if self.attributes_source == "simulation" and not self.synthetic:
+            raise ValueError("Atributos simulados exigem synthetic=true.")
         if self.features_available_at > self.published_at:
             raise ValueError("Conteúdo/contexto não estava disponível antes da publicação.")
         if self.subscribers is not None and self.channel_stats_observed_at is None:

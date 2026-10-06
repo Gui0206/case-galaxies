@@ -1,0 +1,6 @@
+{
+  "iterations": 240,
+  "depth": 5,
+  "coverage": 0.9,
+  "seed": 42
+}

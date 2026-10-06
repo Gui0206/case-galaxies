@@ -1,0 +1,244 @@
+{
+  "$defs": {
+    "Creative": {
+      "additionalProperties": false,
+      "properties": {
+        "creative_id": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Creative Id",
+          "type": "string"
+        },
+        "attributes_source": {
+          "default": "human_annotation",
+          "enum": [
+            "media_extraction",
+            "human_annotation",
+            "simulation"
+          ],
+          "title": "Attributes Source",
+          "type": "string"
+        },
+        "caption": {
+          "default": "",
+          "maxLength": 10000,
+          "title": "Caption",
+          "type": "string"
+        },
+        "transcript": {
+          "default": "",
+          "maxLength": 30000,
+          "title": "Transcript",
+          "type": "string"
+        },
+        "features": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Features",
+          "type": "object"
+        },
+        "visual_embedding": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2048,
+          "title": "Visual Embedding",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "maxItems": 100,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "media_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Id"
+        }
+      },
+      "required": [
+        "creative_id"
+      ],
+      "title": "Creative",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "attribute": {
+          "title": "Attribute",
+          "type": "string"
+        },
+        "observation": {
+          "maxLength": 1000,
+          "title": "Observation",
+          "type": "string"
+        },
+        "start_seconds": {
+          "minimum": 0,
+          "title": "Start Seconds",
+          "type": "number"
+        },
+        "end_seconds": {
+          "minimum": 0,
+          "title": "End Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "attribute",
+        "observation",
+        "start_seconds",
+        "end_seconds"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "PredictionContext": {
+      "additionalProperties": false,
+      "properties": {
+        "channel_id": {
+          "maxLength": 150,
+          "minLength": 1,
+          "title": "Channel Id",
+          "type": "string"
+        },
+        "sector": {
+          "enum": [
+            "beleza",
+            "automotivo",
+            "moda"
+          ],
+          "title": "Sector",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "title": "As Of",
+          "type": "string"
+        },
+        "planned_datetime": {
+          "format": "date-time",
+          "title": "Planned Datetime",
+          "type": "string"
+        },
+        "metric": {
+          "default": "likes",
+          "enum": [
+            "likes",
+            "views"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "horizon_days": {
+          "default": 7,
+          "maximum": 90,
+          "minimum": 1,
+          "title": "Horizon Days",
+          "type": "integer"
+        },
+        "subscribers": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subscribers"
+        },
+        "channel_stats_observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Channel Stats Observed At"
+        },
+        "language": {
+          "default": "pt",
+          "title": "Language",
+          "type": "string"
+        },
+        "distribution": {
+          "default": "unknown",
+          "enum": [
+            "organic",
+            "paid",
+            "unknown"
+          ],
+          "title": "Distribution",
+          "type": "string"
+        }
+      },
+      "required": [
+        "channel_id",
+        "sector",
+        "as_of",
+        "planned_datetime"
+      ],
+      "title": "PredictionContext",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "creatives": {
+      "items": {
+        "$ref": "#/$defs/Creative"
+      },
+      "maxItems": 10,
+      "minItems": 2,
+      "title": "Creatives",
+      "type": "array"
+    },
+    "context": {
+      "$ref": "#/$defs/PredictionContext"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Id"
+    }
+  },
+  "required": [
+    "creatives",
+    "context"
+  ],
+  "title": "CompareRequest",
+  "type": "object"
+}

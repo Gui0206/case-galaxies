@@ -13,15 +13,24 @@ from galaxies.schemas import FEATURES, RUBRIC_FEATURES, Creative, PostRecord, Pr
 LABELS = {
     "log_channel_median": "Histórico recente do canal",
     "log_channel_mean": "Média histórica do canal",
-    "log_subscribers": "Porte do canal", "history_count": "Histórico disponível",
-    "duration_s": "Duração", "hook_clarity": "Clareza da abertura",
-    "product_visibility": "Presença do produto", "demonstration": "Demonstração de uso",
-    "benefit_clarity": "Clareza do benefício", "pacing": "Ritmo da edição",
-    "speech_energy": "Energia da narração", "cta": "Chamada para ação",
-    "onscreen_text_density": "Densidade de texto na tela", "brightness": "Luminosidade",
-    "saturation": "Saturação", "frame_change": "Variação entre frames",
-    "cuts_per_second": "Frequência aproximada de cortes", "audio_rms": "Energia do áudio",
-    "silence_ratio": "Proporção de silêncio", "speech_words_per_second": "Densidade de fala",
+    "log_subscribers": "Porte do canal",
+    "history_count": "Histórico disponível",
+    "duration_s": "Duração",
+    "hook_clarity": "Clareza da abertura",
+    "product_visibility": "Presença do produto",
+    "demonstration": "Demonstração de uso",
+    "benefit_clarity": "Clareza do benefício",
+    "pacing": "Ritmo da edição",
+    "speech_energy": "Energia da narração",
+    "cta": "Chamada para ação",
+    "onscreen_text_density": "Densidade de texto na tela",
+    "brightness": "Luminosidade",
+    "saturation": "Saturação",
+    "frame_change": "Variação entre frames",
+    "cuts_per_second": "Frequência aproximada de cortes",
+    "audio_rms": "Energia do áudio",
+    "silence_ratio": "Proporção de silêncio",
+    "speech_words_per_second": "Densidade de fala",
     "ocr_word_count": "Texto identificado nos frames",
 }
 
@@ -35,19 +44,31 @@ def label(name: str) -> str:
 
 
 def record_context(record: PostRecord) -> PredictionContext:
-    return PredictionContext(channel_id=record.channel_id, sector=record.sector,
-        as_of=record.published_at, planned_datetime=record.published_at, metric=record.metric,
-        horizon_days=record.horizon_days, subscribers=record.subscribers,
+    return PredictionContext(
+        channel_id=record.channel_id,
+        sector=record.sector,
+        as_of=record.published_at,
+        planned_datetime=record.published_at,
+        metric=record.metric,
+        horizon_days=record.horizon_days,
+        subscribers=record.subscribers,
         channel_stats_observed_at=record.channel_stats_observed_at,
-        language=record.language, distribution=record.distribution)
+        language=record.language,
+        distribution=record.distribution,
+    )
 
 
 class FeatureEncoder:
     def __init__(self, blocks: list[str], seed: int = 42):
         self.blocks = blocks
         self.seed = seed
-        self.vectorizer = HashingVectorizer(n_features=1024, alternate_sign=False, norm="l2",
-                                          ngram_range=(1, 2), strip_accents="unicode")
+        self.vectorizer = HashingVectorizer(
+            n_features=1024,
+            alternate_sign=False,
+            norm="l2",
+            ngram_range=(1, 2),
+            strip_accents="unicode",
+        )
         self.text_components = np.empty((0, 1024))
         self.visual_components = np.empty((0, 0))
         self.visual_mean = np.empty(0)
@@ -62,18 +83,25 @@ class FeatureEncoder:
         values = {}
         if "context" in self.blocks:
             hist = history.get(context.channel_id, context.sector, context.as_of)
-            values.update({
-                "log_channel_median": np.log1p(hist["pooled_median"]),
-                "log_channel_mean": np.log1p(hist["channel_mean"]),
-                "history_count": float(hist["history_count"]),
-                "history_log_std": hist["history_log_std"],
-                "log_subscribers": np.log1p(context.subscribers) if context.subscribers is not None else np.nan,
-                "hour_sin": np.sin(context.planned_datetime.hour * np.pi / 12),
-                "hour_cos": np.cos(context.planned_datetime.hour * np.pi / 12),
-                "weekday_sin": np.sin(context.planned_datetime.weekday() * 2 * np.pi / 7),
-                "weekday_cos": np.cos(context.planned_datetime.weekday() * 2 * np.pi / 7),
-                **{f"sector_{s}": float(context.sector == s) for s in ("beleza", "automotivo", "moda")},
-            })
+            values.update(
+                {
+                    "log_channel_median": np.log1p(hist["pooled_median"]),
+                    "log_channel_mean": np.log1p(hist["channel_mean"]),
+                    "history_count": float(hist["history_count"]),
+                    "history_log_std": hist["history_log_std"],
+                    "log_subscribers": np.log1p(context.subscribers)
+                    if context.subscribers is not None
+                    else np.nan,
+                    "hour_sin": np.sin(context.planned_datetime.hour * np.pi / 12),
+                    "hour_cos": np.cos(context.planned_datetime.hour * np.pi / 12),
+                    "weekday_sin": np.sin(context.planned_datetime.weekday() * 2 * np.pi / 7),
+                    "weekday_cos": np.cos(context.planned_datetime.weekday() * 2 * np.pi / 7),
+                    **{
+                        f"sector_{s}": float(context.sector == s)
+                        for s in ("beleza", "automotivo", "moda")
+                    },
+                }
+            )
         if "text" in self.blocks:
             values["caption_words"] = len(creative.caption.split())
             values["transcript_words"] = len(creative.transcript.split())
@@ -103,7 +131,9 @@ class FeatureEncoder:
             if len(dimensions) != 1:
                 raise ValueError("Embeddings devem usar o mesmo encoder e dimensão.")
             self.visual_dim = dimensions.pop()
-            pca = PCA(n_components=min(16, len(embeddings), self.visual_dim), random_state=self.seed)
+            pca = PCA(
+                n_components=min(16, len(embeddings), self.visual_dim), random_state=self.seed
+            )
             pca.fit(np.asarray(embeddings))
             self.visual_components, self.visual_mean = pca.components_, pca.mean_
         self.names = list(self._basic(records[0], record_context(records[0]), history))
@@ -119,8 +149,9 @@ class FeatureEncoder:
         self.low, self.high = np.quantile(filled, [0.01, 0.99], axis=0)
         return matrix
 
-    def transform(self, creative: Creative, context: PredictionContext,
-                  history: ChannelHistory) -> np.ndarray:
+    def transform(
+        self, creative: Creative, context: PredictionContext, history: ChannelHistory
+    ) -> np.ndarray:
         values = list(self._basic(creative, context, history).values())
         if len(self.text_components):
             hashed = self.vectorizer.transform([f"{creative.caption} {creative.transcript}"])
@@ -128,7 +159,11 @@ class FeatureEncoder:
         if self.visual_dim:
             if creative.visual_embedding and len(creative.visual_embedding) != self.visual_dim:
                 raise ValueError("Dimensão do embedding incompatível com o modelo.")
-            vector = np.asarray(creative.visual_embedding) if creative.visual_embedding else self.visual_mean
+            vector = (
+                np.asarray(creative.visual_embedding)
+                if creative.visual_embedding
+                else self.visual_mean
+            )
             values.extend((vector - self.visual_mean) @ self.visual_components.T)
             values.append(float(not creative.visual_embedding))
         return np.asarray(values, dtype=float)
@@ -149,11 +184,25 @@ class FeatureEncoder:
         return reasons
 
     def save(self, folder: Path):
-        write_json(folder / "encoder.json", {"blocks": self.blocks, "seed": self.seed,
-                   "names": self.names, "visual_dim": self.visual_dim})
-        np.savez_compressed(folder / "encoder.npz", text=self.text_components,
-                            visual=self.visual_components, visual_mean=self.visual_mean,
-                            medians=self.medians, scales=self.scales, low=self.low, high=self.high)
+        write_json(
+            folder / "encoder.json",
+            {
+                "blocks": self.blocks,
+                "seed": self.seed,
+                "names": self.names,
+                "visual_dim": self.visual_dim,
+            },
+        )
+        np.savez_compressed(
+            folder / "encoder.npz",
+            text=self.text_components,
+            visual=self.visual_components,
+            visual_mean=self.visual_mean,
+            medians=self.medians,
+            scales=self.scales,
+            low=self.low,
+            high=self.high,
+        )
 
     @classmethod
     def load(cls, folder: Path) -> "FeatureEncoder":
@@ -161,8 +210,14 @@ class FeatureEncoder:
         instance = cls(metadata["blocks"], metadata["seed"])
         instance.names, instance.visual_dim = metadata["names"], metadata["visual_dim"]
         with np.load(folder / "encoder.npz", allow_pickle=False) as arrays:
-            for attribute, key in (("text_components", "text"), ("visual_components", "visual"),
-                                   ("visual_mean", "visual_mean"), ("medians", "medians"),
-                                   ("scales", "scales"), ("low", "low"), ("high", "high")):
+            for attribute, key in (
+                ("text_components", "text"),
+                ("visual_components", "visual"),
+                ("visual_mean", "visual_mean"),
+                ("medians", "medians"),
+                ("scales", "scales"),
+                ("low", "low"),
+                ("high", "high"),
+            ):
                 setattr(instance, attribute, arrays[key])
         return instance

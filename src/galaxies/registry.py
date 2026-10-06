@@ -21,8 +21,15 @@ class Registry:
         return path
 
     def list(self) -> list[dict]:
-        return sorted([read_json(path / "report.json") for path in self.root.glob("model-*")
-                       if (path / "manifest.json").is_file()], key=lambda r: r["created_at"], reverse=True)
+        return sorted(
+            [
+                read_json(path / "report.json")
+                for path in self.root.glob("model-*")
+                if (path / "manifest.json").is_file()
+            ],
+            key=lambda r: r["created_at"],
+            reverse=True,
+        )
 
     def active(self) -> str | None:
         path = self.root / "active.json"
@@ -37,8 +44,12 @@ class Registry:
         elif not report["eligible_for_decision"]:
             raise ValueError("Modelo não cumpriu os critérios mínimos; consulte o relatório.")
         previous = self.active()
-        event = {"model_id": model_id, "previous_model_id": previous,
-                 "promoted_at": utcnow().isoformat(), "demo": demo}
+        event = {
+            "model_id": model_id,
+            "previous_model_id": previous,
+            "promoted_at": utcnow().isoformat(),
+            "demo": demo,
+        }
         write_json(self.root / "active.json", event)
         write_json(self.root / f"promotion-{utcnow():%Y%m%d%H%M%S%f}.json", event)
         return event
@@ -46,5 +57,7 @@ class Registry:
     def load(self, model_id: str | None = None) -> ModelBundle:
         selected = model_id or self.active()
         if not selected:
-            raise ValueError("Nenhum modelo ativo. Execute galaxies demo ou treine e promova um modelo.")
+            raise ValueError(
+                "Nenhum modelo ativo. Execute galaxies demo ou treine e promova um modelo."
+            )
         return ModelBundle(self.folder(selected))

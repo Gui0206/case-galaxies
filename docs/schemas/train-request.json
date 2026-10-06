@@ -1,0 +1,85 @@
+{
+  "$defs": {
+    "TrainConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "iterations": {
+          "default": 240,
+          "maximum": 2000,
+          "minimum": 20,
+          "title": "Iterations",
+          "type": "integer"
+        },
+        "depth": {
+          "default": 5,
+          "maximum": 8,
+          "minimum": 2,
+          "title": "Depth",
+          "type": "integer"
+        },
+        "learning_rate": {
+          "default": 0.06,
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "title": "Learning Rate",
+          "type": "number"
+        },
+        "seed": {
+          "default": 42,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "coverage": {
+          "default": 0.9,
+          "maximum": 0.99,
+          "minimum": 0.5,
+          "title": "Coverage",
+          "type": "number"
+        },
+        "feature_blocks": {
+          "items": {
+            "enum": [
+              "context",
+              "text",
+              "visual",
+              "rubric"
+            ],
+            "type": "string"
+          },
+          "title": "Feature Blocks",
+          "type": "array"
+        },
+        "held_out_channels": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Held Out Channels",
+          "type": "array"
+        },
+        "min_train_rows": {
+          "default": 60,
+          "minimum": 20,
+          "title": "Min Train Rows",
+          "type": "integer"
+        }
+      },
+      "title": "TrainConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "dataset": {
+      "title": "Dataset",
+      "type": "string"
+    },
+    "config": {
+      "$ref": "#/$defs/TrainConfig"
+    }
+  },
+  "required": [
+    "dataset"
+  ],
+  "title": "TrainRequest",
+  "type": "object"
+}

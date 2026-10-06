@@ -15,10 +15,13 @@ class YouTubeCollector:
 
     def _get(self, resource: str, params: dict) -> dict:
         for attempt in range(4):
-            response = httpx.get(f"https://www.googleapis.com/youtube/v3/{resource}",
-                                 params={**params, "key": self.api_key}, timeout=30)
+            response = httpx.get(
+                f"https://www.googleapis.com/youtube/v3/{resource}",
+                params={**params, "key": self.api_key},
+                timeout=30,
+            )
             if response.status_code in (429, 500, 502, 503, 504) and attempt < 3:
-                time.sleep(min(2 ** attempt, 8))
+                time.sleep(min(2**attempt, 8))
                 continue
             if response.status_code != 200:
                 # Never echo response/request URLs containing API keys.
@@ -29,21 +32,29 @@ class YouTubeCollector:
     def snapshot(self, video_ids: list[str]) -> list[dict]:
         observations = []
         for offset in range(0, len(video_ids), 50):
-            result = self._get("videos", {"part": "snippet,statistics,contentDetails",
-                                         "id": ",".join(video_ids[offset:offset + 50])})
+            result = self._get(
+                "videos",
+                {
+                    "part": "snippet,statistics,contentDetails",
+                    "id": ",".join(video_ids[offset : offset + 50]),
+                },
+            )
             observed = utcnow().isoformat()
             for video in result.get("items", []):
                 stats = video.get("statistics", {})
-                observations.append({
-                    "creative_id": video["id"], "observed_at": observed,
-                    "likes": int(stats["likeCount"]) if "likeCount" in stats else None,
-                    "views": int(stats["viewCount"]) if "viewCount" in stats else None,
-                    "channel_id": video["snippet"]["channelId"],
-                    "published_at": video["snippet"]["publishedAt"],
-                    "caption_at_collection": video["snippet"]["title"],
-                    "duration": video.get("contentDetails", {}).get("duration"),
-                    "source": "youtube-data-api-v3",
-                })
+                observations.append(
+                    {
+                        "creative_id": video["id"],
+                        "observed_at": observed,
+                        "likes": int(stats["likeCount"]) if "likeCount" in stats else None,
+                        "views": int(stats["viewCount"]) if "viewCount" in stats else None,
+                        "channel_id": video["snippet"]["channelId"],
+                        "published_at": video["snippet"]["publishedAt"],
+                        "caption_at_collection": video["snippet"]["title"],
+                        "duration": video.get("contentDetails", {}).get("duration"),
+                        "source": "youtube-data-api-v3",
+                    }
+                )
         return observations
 
     def channel_video_ids(self, channel_id: str, limit: int = 200) -> list[str]:

@@ -1,8 +1,10 @@
 """Persistent local jobs and immutable prospective predictions, backed by SQLite."""
 
 import json
+import os
 import sqlite3
 import threading
+import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 
@@ -29,6 +31,9 @@ class Store:
                     registered_at TEXT NOT NULL, outcome TEXT
                 );
             """)
+            columns = {row[1] for row in db.execute("PRAGMA table_info(jobs)")}
+            if "owner_pid" not in columns:
+                db.execute("ALTER TABLE jobs ADD COLUMN owner_pid INTEGER")
 
     def connect(self):
         connection = sqlite3.connect(self.path, timeout=30)
@@ -60,45 +65,90 @@ class Jobs:
         self.futures = []
 
     def recover(self):
-        """Called once by the single HTTP/MCP worker at startup; never silently duplicate training."""
+        """Mark jobs abandoned by dead processes; preserve live HTTP/MCP peers."""
         with self.store.connect() as db:
-            db.execute("UPDATE jobs SET status='interrupted', error=?, updated_at=? WHERE status IN ('queued','running')",
-                       ("Processo encerrado. Use retry para reiniciar com o mesmo contrato.", utcnow().isoformat()))
+            rows = db.execute(
+                "SELECT id, owner_pid FROM jobs WHERE status IN ('queued','running')"
+            ).fetchall()
+            for row in rows:
+                try:
+                    if row["owner_pid"]:
+                        os.kill(row["owner_pid"], 0)
+                        continue
+                except ProcessLookupError:
+                    pass
+                except PermissionError:
+                    continue
+                db.execute(
+                    "UPDATE jobs SET status='interrupted', error=?, updated_at=? WHERE id=?",
+                    (
+                        "Processo encerrado. Use retry para reiniciar com o mesmo contrato.",
+                        utcnow().isoformat(),
+                        row["id"],
+                    ),
+                )
 
     def submit(self, dataset: str, config: TrainConfig) -> dict:
         self.settings.contained(dataset)
         payload = {"dataset": dataset, "config": config.model_dump()}
         with self.lock:
             with self.store.connect() as db:
-                busy = db.execute("SELECT COUNT(*) FROM jobs WHERE status IN ('queued','running')").fetchone()[0]
+                db.execute("BEGIN IMMEDIATE")
+                busy = db.execute(
+                    "SELECT COUNT(*) FROM jobs WHERE status IN ('queued','running')"
+                ).fetchone()[0]
                 if busy >= 4:
                     raise ValueError("Fila de treino cheia; aguarde uma execução terminar.")
                 job_id, now = uuid.uuid4().hex, utcnow().isoformat()
-                db.execute("INSERT INTO jobs VALUES (?, 'queued', ?, NULL, NULL, ?, ?)",
-                           (job_id, json.dumps(payload), now, now))
+                db.execute(
+                    "INSERT INTO jobs (id, status, payload, created_at, updated_at, owner_pid) VALUES (?, 'queued', ?, ?, ?, ?)",
+                    (job_id, json.dumps(payload), now, now, os.getpid()),
+                )
             self.futures.append(self.executor.submit(self._run, job_id, payload))
         return self.store.job(job_id)
 
     def _run(self, job_id: str, payload: dict):
-        with self.store.connect() as db:
-            db.execute("UPDATE jobs SET status='running', updated_at=? WHERE id=?", (utcnow().isoformat(), job_id))
+        while True:
+            self.recover()
+            with self.store.connect() as db:
+                db.execute("BEGIN IMMEDIATE")
+                active = db.execute("SELECT COUNT(*) FROM jobs WHERE status='running'").fetchone()[
+                    0
+                ]
+                if not active:
+                    db.execute(
+                        "UPDATE jobs SET status='running', updated_at=? WHERE id=?",
+                        (utcnow().isoformat(), job_id),
+                    )
+                    break
+            time.sleep(0.5)
         try:
             path = self.settings.contained(payload["dataset"])
-            report = train(load_records(path), self.settings.workspace / "models",
-                           TrainConfig.model_validate(payload["config"]), sha256_file(path))
+            report = train(
+                load_records(path),
+                self.settings.workspace / "models",
+                TrainConfig.model_validate(payload["config"]),
+                sha256_file(path),
+            )
             with self.store.connect() as db:
-                db.execute("UPDATE jobs SET status='completed', result=?, updated_at=? WHERE id=?",
-                           (json.dumps(report), utcnow().isoformat(), job_id))
+                db.execute(
+                    "UPDATE jobs SET status='completed', result=?, updated_at=? WHERE id=?",
+                    (json.dumps(report), utcnow().isoformat(), job_id),
+                )
         except Exception as exc:
             with self.store.connect() as db:
-                db.execute("UPDATE jobs SET status='failed', error=?, updated_at=? WHERE id=?",
-                           (f"{type(exc).__name__}: {str(exc)[:1000]}", utcnow().isoformat(), job_id))
+                db.execute(
+                    "UPDATE jobs SET status='failed', error=?, updated_at=? WHERE id=?",
+                    (f"{type(exc).__name__}: {str(exc)[:1000]}", utcnow().isoformat(), job_id),
+                )
 
     def retry(self, job_id: str):
         job = self.store.job(job_id)
         if job["status"] not in ("failed", "interrupted"):
             raise ValueError("Somente execuções falhas ou interrompidas podem ser reiniciadas.")
-        return self.submit(job["payload"]["dataset"], TrainConfig.model_validate(job["payload"]["config"]))
+        return self.submit(
+            job["payload"]["dataset"], TrainConfig.model_validate(job["payload"]["config"])
+        )
 
     def close(self):
         self.executor.shutdown(wait=True)

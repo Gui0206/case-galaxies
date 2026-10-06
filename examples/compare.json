@@ -1,0 +1,101 @@
+{
+  "creatives": [
+    {
+      "creative_id": "criativo-a",
+      "attributes_source": "simulation",
+      "caption": "Veja o resultado: sérum na rotina de pele. Descubra como usar.",
+      "transcript": "Veja o resultado: sérum na rotina de pele. Descubra como usar.",
+      "features": {
+        "duration_s": 28.0,
+        "brightness": 0.6,
+        "saturation": 0.5,
+        "speech_energy": 6.0,
+        "cta": 1.0,
+        "onscreen_text_density": 3.0,
+        "audio_rms": 0.1,
+        "silence_ratio": 0.15,
+        "speech_words_per_second": 2.0,
+        "ocr_word_count": 15.0,
+        "hook_clarity": 8.0,
+        "benefit_clarity": 8.0,
+        "product_visibility": 8.0,
+        "pacing": 7.0,
+        "demonstration": 1.0,
+        "frame_change": 0.35,
+        "cuts_per_second": 0.4666666666666667
+      },
+      "visual_embedding": [],
+      "evidence": [],
+      "media_id": null
+    },
+    {
+      "creative_id": "criativo-b",
+      "attributes_source": "simulation",
+      "caption": "Conheça a novidade: apresentação da marca e textura do sérum.",
+      "transcript": "Conheça a novidade: apresentação da marca e textura do sérum.",
+      "features": {
+        "duration_s": 28.0,
+        "brightness": 0.6,
+        "saturation": 0.5,
+        "speech_energy": 6.0,
+        "cta": 1.0,
+        "onscreen_text_density": 3.0,
+        "audio_rms": 0.1,
+        "silence_ratio": 0.15,
+        "speech_words_per_second": 2.0,
+        "ocr_word_count": 15.0,
+        "hook_clarity": 5.0,
+        "benefit_clarity": 5.0,
+        "product_visibility": 6.0,
+        "pacing": 5.0,
+        "demonstration": 0.0,
+        "frame_change": 0.25,
+        "cuts_per_second": 0.3333333333333333
+      },
+      "visual_embedding": [],
+      "evidence": [],
+      "media_id": null
+    },
+    {
+      "creative_id": "criativo-c",
+      "attributes_source": "simulation",
+      "caption": "Nova coleção disponível. Identidade da marca em destaque.",
+      "transcript": "Nova coleção disponível. Identidade da marca em destaque.",
+      "features": {
+        "duration_s": 28.0,
+        "brightness": 0.6,
+        "saturation": 0.5,
+        "speech_energy": 6.0,
+        "cta": 1.0,
+        "onscreen_text_density": 3.0,
+        "audio_rms": 0.1,
+        "silence_ratio": 0.15,
+        "speech_words_per_second": 2.0,
+        "ocr_word_count": 15.0,
+        "hook_clarity": 2.0,
+        "benefit_clarity": 3.0,
+        "product_visibility": 3.0,
+        "pacing": 3.0,
+        "demonstration": 0.0,
+        "frame_change": 0.15,
+        "cuts_per_second": 0.2
+      },
+      "visual_embedding": [],
+      "evidence": [],
+      "media_id": null
+    }
+  ],
+  "context": {
+    "channel_id": "canal-00",
+    "sector": "beleza",
+    "as_of": "2025-11-01T00:00:00Z",
+    "planned_datetime": "2025-11-02T18:00:00Z",
+    "metric": "likes",
+    "horizon_days": 7,
+    "subscribers": 40000,
+    "channel_stats_observed_at": "2025-11-01T00:00:00Z",
+    "language": "pt",
+    "distribution": "organic"
+  },
+  "model_id": null
+}

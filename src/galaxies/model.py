@@ -16,6 +16,7 @@ from galaxies.io import read_json, sha256_file, utcnow, write_json
 from galaxies.metrics import (
     calibrate_pairs,
     paired_channel_bootstrap,
+    performance_bands,
     probability_metrics,
     regression_metrics,
 )
@@ -38,8 +39,12 @@ def predict_intervals(point, quantiles, matrix, correction: float):
     return center, np.expm1(np.clip(low, 0, 50)), np.expm1(np.clip(high, 0, 50))
 
 
-def train(records: list[PostRecord], model_root: Path, config: TrainConfig | None = None,
-          dataset_hash: str | None = None) -> dict:
+def train(
+    records: list[PostRecord],
+    model_root: Path,
+    config: TrainConfig | None = None,
+    dataset_hash: str | None = None,
+) -> dict:
     config = config or TrainConfig()
     dataset_audit = audit(records)
     split = temporal_split(records, config.held_out_channels)
@@ -55,18 +60,34 @@ def train(records: list[PostRecord], model_root: Path, config: TrainConfig | Non
     for name in ("validation", "calibration", "test"):
         matrices[name] = encoder.transform_records(parts[name], history)
     targets = {name: np.log1p([r.target for r in rows]) for name, rows in parts.items()}
-    kwargs = {"iterations": config.iterations, "depth": config.depth,
-              "learning_rate": config.learning_rate, "random_seed": config.seed,
-              "verbose": False, "allow_writing_files": False, "thread_count": 2}
+    kwargs = {
+        "iterations": config.iterations,
+        "depth": config.depth,
+        "learning_rate": config.learning_rate,
+        "random_seed": config.seed,
+        "verbose": False,
+        "allow_writing_files": False,
+        "thread_count": 2,
+    }
     point = CatBoostRegressor(loss_function="RMSE", **kwargs)
-    point.fit(matrices["train"], targets["train"],
-              eval_set=(matrices["validation"], targets["validation"]),
-              early_stopping_rounds=35, use_best_model=True)
+    point.fit(
+        matrices["train"],
+        targets["train"],
+        eval_set=(matrices["validation"], targets["validation"]),
+        early_stopping_rounds=35,
+        use_best_model=True,
+    )
     alpha = (1 - config.coverage) / 2
-    quantiles = CatBoostRegressor(loss_function=f"MultiQuantile:alpha={alpha},{1 - alpha}", **kwargs)
-    quantiles.fit(matrices["train"], targets["train"],
-                  eval_set=(matrices["validation"], targets["validation"]),
-                  early_stopping_rounds=35, use_best_model=True)
+    quantiles = CatBoostRegressor(
+        loss_function=f"MultiQuantile:alpha={alpha},{1 - alpha}", **kwargs
+    )
+    quantiles.fit(
+        matrices["train"],
+        targets["train"],
+        eval_set=(matrices["validation"], targets["validation"]),
+        early_stopping_rounds=35,
+        use_best_model=True,
+    )
     cal_center = point.predict(matrices["calibration"])
     cal_quantiles = quantiles.predict(matrices["calibration"])
     low_log = np.minimum(np.min(cal_quantiles, axis=1), cal_center)
@@ -75,19 +96,40 @@ def train(records: list[PostRecord], model_root: Path, config: TrainConfig | Non
     correction = conformal_adjustment(scores, config.coverage)
     calibration = calibrate_pairs(parts["validation"], point.predict(matrices["validation"]))
     predicted_log, low, high = predict_intervals(point, quantiles, matrices["test"], correction)
-    baseline = np.log1p([history.get(r.channel_id, r.sector, r.published_at)["channel_median"] for r in parts["test"]])
-    baseline_mean = np.log1p([history.get(r.channel_id, r.sector, r.published_at)["channel_mean"] for r in parts["test"]])
+    baseline = np.log1p(
+        [
+            history.get(r.channel_id, r.sector, r.published_at)["channel_median"]
+            for r in parts["test"]
+        ]
+    )
+    baseline_mean = np.log1p(
+        [history.get(r.channel_id, r.sector, r.published_at)["channel_mean"] for r in parts["test"]]
+    )
     metrics = regression_metrics(parts["test"], predicted_log, low, high)
     baseline_metrics = regression_metrics(parts["test"], baseline)
     uncertainty = paired_channel_bootstrap(parts["test"], predicted_log, baseline, config.seed)
     by_sector = {}
     for sector in sorted({r.sector for r in parts["test"]}):
         ids = [i for i, r in enumerate(parts["test"]) if r.sector == sector]
-        by_sector[sector] = regression_metrics([parts["test"][i] for i in ids], predicted_log[ids], low[ids], high[ids])
+        by_sector[sector] = regression_metrics(
+            [parts["test"][i] for i in ids], predicted_log[ids], low[ids], high[ids]
+        )
+    by_generalization = {}
+    for cohort, unseen in (("seen_channels", False), ("unseen_channels", True)):
+        train_channels = {r.channel_id for r in parts["train"]}
+        ids = [
+            i for i, r in enumerate(parts["test"]) if (r.channel_id not in train_channels) == unseen
+        ]
+        if ids:
+            by_generalization[cohort] = regression_metrics(
+                [parts["test"][i] for i in ids], predicted_log[ids], low[ids], high[ids]
+            )
     # A research eligibility gate; it is not proof of business/causal impact.
     supported = bool(
-        not dataset_audit["synthetic"] and uncertainty["ci95_low"] is not None
-        and uncertainty["ci95_low"] > 0 and metrics["mae_log"] < baseline_metrics["mae_log"]
+        not dataset_audit["synthetic"]
+        and uncertainty["ci95_low"] is not None
+        and uncertainty["ci95_low"] > 0
+        and metrics["mae_log"] < baseline_metrics["mae_log"]
         and metrics["interval_coverage"] >= config.coverage - 0.05
         and len({r.channel_id for r in parts["test"]}) >= 5
     )
@@ -95,29 +137,50 @@ def train(records: list[PostRecord], model_root: Path, config: TrainConfig | Non
     folder = model_root / model_id
     folder.mkdir(parents=True, exist_ok=False)
     report = {
-        "model_id": model_id, "created_at": utcnow().isoformat(),
+        "model_id": model_id,
+        "created_at": utcnow().isoformat(),
         "evidence_level": "synthetic_demo" if dataset_audit["synthetic"] else "retrospective",
-        "eligible_for_decision": supported, "metric": records[0].metric,
-        "horizon_days": records[0].horizon_days, "config": config.model_dump(),
-        "audit": dataset_audit, "dataset_sha256": dataset_hash,
+        "eligible_for_decision": supported,
+        "metric": records[0].metric,
+        "horizon_days": records[0].horizon_days,
+        "config": config.model_dump(),
+        "audit": dataset_audit,
+        "dataset_sha256": dataset_hash,
         "splits": {name: len(rows) for name, rows in parts.items()},
-        "cutoffs": split["cutoffs"], "purged_rows": split["discarded"],
+        "cutoffs": split["cutoffs"],
+        "purged_rows": split["discarded"],
         "duplicates_removed": split["exact_duplicates_removed"],
         "trained_until": max(r.observed_at for r in parts["train"]).isoformat(),
-        "inference_not_before": max(r.observed_at for r in parts["test"]).isoformat(),
-        "metrics": metrics, "baseline": baseline_metrics,
+        "inference_not_before": (
+            max(r.observed_at for r in parts["test"])
+            if dataset_audit["synthetic"]
+            else max(utcnow(), max(r.observed_at for r in parts["test"]))
+        ).isoformat(),
+        "metrics": metrics,
+        "baseline": baseline_metrics,
+        "performance_bands": performance_bands(parts["test"], predicted_log, baseline),
+        "validation_metrics": regression_metrics(
+            parts["validation"], point.predict(matrices["validation"])
+        ),
         "baseline_mean": regression_metrics(parts["test"], baseline_mean),
-        "by_sector": by_sector, "paired_channel_bootstrap": uncertainty,
+        "by_sector": by_sector,
+        "by_generalization": by_generalization,
+        "paired_channel_bootstrap": uncertainty,
         "pair_calibration": calibration,
         "pair_probability_test": probability_metrics(parts["test"], predicted_log, calibration),
         "conformal_adjustment_log": correction,
-        "feature_names": encoder.names, "sectors": sorted({r.sector for r in parts["train"]}),
+        "feature_names": encoder.names,
+        "sectors": sorted({r.sector for r in parts["train"]}),
         "languages": sorted({r.language for r in parts["train"]}),
         "distribution": sorted({r.distribution for r in parts["train"]}),
         "model_family": "CatBoost + MultiQuantile + split conformal",
-        "environment": {"python": platform.python_version(), **{
-            package: importlib.metadata.version(package)
-            for package in ("catboost", "scikit-learn", "numpy", "pydantic")}},
+        "environment": {
+            "python": platform.python_version(),
+            **{
+                package: importlib.metadata.version(package)
+                for package in ("catboost", "scikit-learn", "numpy", "pydantic")
+            },
+        },
         "limitations": [
             "Dados observacionais; explicações não representam efeitos causais.",
             "Cobertura conformal depende da estabilidade da distribuição e é medida empiricamente.",
@@ -131,16 +194,31 @@ def train(records: list[PostRecord], model_root: Path, config: TrainConfig | Non
     encoder.save(folder)
     save_records(folder / "history.jsonl", history_records)
     save_records(folder / "reference.jsonl", parts["train"])
-    write_json(folder / "partitions.json", {name: [r.creative_id for r in rows] for name, rows in parts.items()})
-    write_json(folder / "test_predictions.json", [
-        {"creative_id": r.creative_id, "channel_id": r.channel_id, "sector": r.sector,
-         "published_at": r.published_at.isoformat(), "actual": r.target,
-         "prediction": float(np.expm1(max(0, predicted_log[i]))),
-         "baseline": float(np.expm1(baseline[i])), "low": float(low[i]), "high": float(high[i])}
-        for i, r in enumerate(parts["test"])
-    ])
+    write_json(
+        folder / "partitions.json",
+        {name: [r.creative_id for r in rows] for name, rows in parts.items()},
+    )
+    write_json(
+        folder / "test_predictions.json",
+        [
+            {
+                "creative_id": r.creative_id,
+                "channel_id": r.channel_id,
+                "sector": r.sector,
+                "published_at": r.published_at.isoformat(),
+                "actual": r.target,
+                "prediction": float(np.expm1(max(0, predicted_log[i]))),
+                "baseline": float(np.expm1(baseline[i])),
+                "low": float(low[i]),
+                "high": float(high[i]),
+            }
+            for i, r in enumerate(parts["test"])
+        ],
+    )
     write_json(folder / "report.json", report)
-    write_json(folder / "manifest.json", {p.name: sha256_file(p) for p in folder.iterdir() if p.is_file()})
+    write_json(
+        folder / "manifest.json", {p.name: sha256_file(p) for p in folder.iterdir() if p.is_file()}
+    )
     _track(report)
     return report
 
@@ -154,10 +232,21 @@ def _track(report: dict) -> None:
         raise ValueError("MLFLOW_TRACKING_URI exige o extra tracking.") from exc
     mlflow.set_experiment("galaxies-creative-intelligence")
     with mlflow.start_run(run_name=report["model_id"]):
-        mlflow.log_params({"evidence_level": report["evidence_level"], "metric": report["metric"],
-                           "horizon_days": report["horizon_days"], **{
-                               key: report["config"][key] for key in ("seed", "depth", "iterations")}})
-        mlflow.log_metrics({key: value for key, value in report["metrics"].items() if isinstance(value, (float, int))})
+        mlflow.log_params(
+            {
+                "evidence_level": report["evidence_level"],
+                "metric": report["metric"],
+                "horizon_days": report["horizon_days"],
+                **{key: report["config"][key] for key in ("seed", "depth", "iterations")},
+            }
+        )
+        mlflow.log_metrics(
+            {
+                key: value
+                for key, value in report["metrics"].items()
+                if isinstance(value, (float, int))
+            }
+        )
         mlflow.log_dict(report, "report.json")
 
 
@@ -175,34 +264,56 @@ class ModelBundle:
         self.history = ChannelHistory(load_records(folder / "history.jsonl"))
         self.references = load_records(folder / "reference.jsonl")
         self.reference_matrix = self.encoder.standardized(
-            self.encoder.transform_records(self.references, self.history))
+            self.encoder.transform_records(self.references, self.history)
+        )
 
     def predict(self, matrix: np.ndarray):
-        return predict_intervals(self.point, self.quantiles, matrix,
-                                 self.report["conformal_adjustment_log"])
+        return predict_intervals(
+            self.point, self.quantiles, matrix, self.report["conformal_adjustment_log"]
+        )
 
     def explain(self, vector: np.ndarray) -> list[Driver]:
-        shap = self.point.get_feature_importance(Pool(vector.reshape(1, -1)), type="ShapValues")[0][:-1]
+        shap = self.point.get_feature_importance(Pool(vector.reshape(1, -1)), type="ShapValues")[0][
+            :-1
+        ]
         indices = np.argsort(np.abs(shap))[-5:][::-1]
-        return [Driver(feature=self.encoder.names[i], label=label(self.encoder.names[i]),
-                       contribution_log=float(shap[i]), direction="positive" if shap[i] >= 0 else "negative")
-                for i in indices if abs(shap[i]) > 1e-8]
+        return [
+            Driver(
+                feature=self.encoder.names[i],
+                label=label(self.encoder.names[i]),
+                contribution_log=float(shap[i]),
+                direction="positive" if shap[i] >= 0 else "negative",
+            )
+            for i in indices
+            if abs(shap[i]) > 1e-8
+        ]
 
     def comparables(self, vector, sector, as_of, exclude_id: str) -> list[dict]:
-        candidates = [i for i, r in enumerate(self.references)
-                      if r.sector == sector and r.observed_at < as_of and r.creative_id != exclude_id]
+        candidates = [
+            i
+            for i, r in enumerate(self.references)
+            if r.sector == sector and r.observed_at < as_of and r.creative_id != exclude_id
+        ]
         if not candidates:
             return []
         # Content-only distance avoids presenting "same channel size" as creative similarity.
-        indices = [i for i, name in enumerate(self.encoder.names)
-                   if name in FEATURES or name.startswith(("text_component", "visual_component"))]
+        indices = [
+            i
+            for i, name in enumerate(self.encoder.names)
+            if name in FEATURES or name.startswith(("text_component", "visual_component"))
+        ]
         if not indices:
             return []
         query = self.encoder.standardized(vector)[indices]
         distances = np.mean((self.reference_matrix[candidates][:, indices] - query) ** 2, axis=1)
         nearest = np.argsort(distances)[:3]
-        return [{"creative_id": self.references[candidates[j]].creative_id,
-                 "caption": self.references[candidates[j]].caption,
-                 "observed_metric": self.references[candidates[j]].target,
-                 "observed_at": self.references[candidates[j]].observed_at.isoformat(),
-                 "distance": float(distances[j])} for j in nearest]
+        return [
+            {
+                "creative_id": self.references[candidates[j]].creative_id,
+                "caption": self.references[candidates[j]].caption,
+                "observed_metric": self.references[candidates[j]].target,
+                "observed_at": self.references[candidates[j]].observed_at.isoformat(),
+                "distance": float(distances[j]),
+            }
+            for j in nearest
+        ]

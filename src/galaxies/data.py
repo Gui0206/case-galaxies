@@ -56,20 +56,24 @@ def audit(records: list[PostRecord]) -> dict:
     hashes = Counter(r.content_hash for r in records)
     channels = Counter(r.channel_id for r in records)
     return {
-        "rows": len(records), "channels": len(channels),
+        "rows": len(records),
+        "channels": len(channels),
         "sectors": dict(Counter(r.sector for r in records)),
-        "metric": records[0].metric, "horizon_days": records[0].horizon_days,
+        "metric": records[0].metric,
+        "horizon_days": records[0].horizon_days,
         "synthetic": records[0].synthetic,
         "period_start": min(r.published_at for r in records).isoformat(),
         "period_end": max(r.published_at for r in records).isoformat(),
         "duplicate_content_rows": sum(count - 1 for count in hashes.values()),
-        "unknown_distribution_fraction": sum(r.distribution == "unknown" for r in records) / len(records),
+        "unknown_distribution_fraction": sum(r.distribution == "unknown" for r in records)
+        / len(records),
         "largest_channel_fraction": max(channels.values()) / len(records),
         "missing_subscribers": sum(r.subscribers is None for r in records),
         "sources": sorted({r.source for r in records}),
         "usage_bases": sorted({r.usage_basis for r in records}),
         "warnings": ["Dados sintéticos: resultados não medem desempenho no mundo real."]
-        if records[0].synthetic else [],
+        if records[0].synthetic
+        else [],
     }
 
 
@@ -110,8 +114,10 @@ def temporal_split(records: list[PostRecord], held_out: list[str] | None = None)
         groups[group] = name
         parts[name].append(record)
     return {
-        "parts": parts, "cutoffs": [cut.isoformat() for cut in cuts],
-        "discarded": discarded, "exact_duplicates_removed": len(ordered) - len(unique),
+        "parts": parts,
+        "cutoffs": [cut.isoformat() for cut in cuts],
+        "discarded": discarded,
+        "exact_duplicates_removed": len(ordered) - len(unique),
     }
 
 
@@ -126,7 +132,8 @@ class ChannelHistory:
 
     def get(self, channel_id: str, sector: str, as_of: datetime) -> dict:
         eligible = [
-            r for r in self.by_channel.get(channel_id, [])
+            r
+            for r in self.by_channel.get(channel_id, [])
             if r.observed_at < as_of and r.published_at < as_of
         ]
         eligible.sort(key=lambda r: r.published_at)
@@ -139,15 +146,18 @@ class ChannelHistory:
         weight = len(recent) / (len(recent) + 5)
         pooled = weight * median + (1 - weight) * peer_median
         return {
-            "history_count": len(eligible), "channel_median": median,
+            "history_count": len(eligible),
+            "channel_median": median,
             "channel_mean": float(np.mean(targets)) if targets else peer_median,
-            "pooled_median": pooled, "sector_median": peer_median,
+            "pooled_median": pooled,
+            "sector_median": peer_median,
             "history_log_std": float(np.std(np.log1p(targets))) if targets else 0.0,
         }
 
 
-def assemble_observations(creative_rows: list[dict], observations: list[dict],
-                          metric: str, horizon_days: int) -> tuple[list[PostRecord], list[str]]:
+def assemble_observations(
+    creative_rows: list[dict], observations: list[dict], metric: str, horizon_days: int
+) -> tuple[list[PostRecord], list[str]]:
     """Join a pre-publication manifest to mature snapshots, never fabricate a past label."""
     from datetime import timedelta
 
@@ -158,16 +168,25 @@ def assemble_observations(creative_rows: list[dict], observations: list[dict],
         candidates = []
         for observation in observations:
             when = datetime.fromisoformat(observation["observed_at"].replace("Z", "+00:00"))
-            if observation["creative_id"] == creative["creative_id"] and (
-                maturity <= when <= maturity + timedelta(hours=24)
-            ) and observation.get(metric) is not None:
+            if (
+                observation["creative_id"] == creative["creative_id"]
+                and (maturity <= when <= maturity + timedelta(hours=24))
+                and observation.get(metric) is not None
+            ):
                 candidates.append((when, observation))
         if not candidates:
             pending.append(creative["creative_id"])
             continue
         when, observation = min(candidates, key=lambda pair: pair[0])
-        result.append(PostRecord.model_validate({
-            **creative, "metric": metric, "horizon_days": horizon_days,
-            "observed_at": when, "target": observation[metric],
-        }))
+        result.append(
+            PostRecord.model_validate(
+                {
+                    **creative,
+                    "metric": metric,
+                    "horizon_days": horizon_days,
+                    "observed_at": when,
+                    "target": observation[metric],
+                }
+            )
+        )
     return result, pending

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "galaxies": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/CAMINHO/ABSOLUTO/case-galaxies",
+        "run",
+        "galaxies",
+        "mcp"
+      ]
+    }
+  }
+}

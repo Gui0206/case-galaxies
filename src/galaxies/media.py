@@ -37,7 +37,9 @@ def _run(command: list[str], timeout: int = 45) -> bytes:
     except FileNotFoundError as exc:
         raise ValueError("Instale FFmpeg e ffprobe para processar vídeos.") from exc
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-        raise ValueError("Não foi possível decodificar a mídia dentro dos limites configurados.") from exc
+        raise ValueError(
+            "Não foi possível decodificar a mídia dentro dos limites configurados."
+        ) from exc
 
 
 def capabilities(settings: Settings) -> dict:
@@ -53,36 +55,91 @@ def capabilities(settings: Settings) -> dict:
 
 
 def _frames(path: Path, duration: float) -> tuple[list[Image.Image], list[float]]:
-    times = sorted(set(float(t) for t in [0, min(1, duration / 4), min(2.5, duration / 2),
-                                        *np.linspace(0, max(0, duration - 0.1), 6)]))
+    times = sorted(
+        set(
+            float(t)
+            for t in [
+                0,
+                min(1, duration / 4),
+                min(2.5, duration / 2),
+                *np.linspace(0, max(0, duration - 0.1), 6),
+            ]
+        )
+    )
     frames = []
     for at in times:
-        raw = _run(["ffmpeg", "-v", "error", "-protocol_whitelist", "file,pipe",
-                    "-ss", str(at), "-i", str(path), "-frames:v", "1", "-vf",
-                    "scale=320:320:force_original_aspect_ratio=decrease", "-f", "image2pipe",
-                    "-vcodec", "png", "pipe:1"])
+        raw = _run(
+            [
+                "ffmpeg",
+                "-v",
+                "error",
+                "-protocol_whitelist",
+                "file,pipe",
+                "-ss",
+                str(at),
+                "-i",
+                str(path),
+                "-frames:v",
+                "1",
+                "-vf",
+                "scale=320:320:force_original_aspect_ratio=decrease",
+                "-f",
+                "image2pipe",
+                "-vcodec",
+                "png",
+                "pipe:1",
+            ]
+        )
         if raw:
             frames.append(Image.open(io.BytesIO(raw)).convert("RGB"))
     if not frames:
         raise ValueError("Nenhum frame válido encontrado.")
-    return frames, times[:len(frames)]
+    return frames, times[: len(frames)]
 
 
-def extract_media(path: Path, settings: Settings, *, audio: bool = False,
-                  vision: bool = False, ocr: bool = False, vlm: bool = False) -> dict:
+def extract_media(
+    path: Path,
+    settings: Settings,
+    *,
+    audio: bool = False,
+    vision: bool = False,
+    ocr: bool = False,
+    vlm: bool = False,
+) -> dict:
     if path.stat().st_size > settings.max_upload_mb * 1024 * 1024:
         raise ValueError("Arquivo excede o limite de tamanho.")
-    options = {"audio": audio, "vision": vision, "ocr": ocr, "vlm": vlm,
-               "vlm_model": settings.vlm_model if vlm else None}
+    options = {
+        "audio": audio,
+        "vision": vision,
+        "ocr": ocr,
+        "vlm": vlm,
+        "vlm_model": settings.vlm_model if vlm else None,
+    }
     digest = sha256_file(path)
     import hashlib
 
-    key = hashlib.sha256(f"{digest}:{EXTRACTOR_VERSION}:{json.dumps(options, sort_keys=True)}".encode()).hexdigest()
+    key = hashlib.sha256(
+        f"{digest}:{EXTRACTOR_VERSION}:{json.dumps(options, sort_keys=True)}".encode()
+    ).hexdigest()
     cached = settings.workspace / "features" / f"{key}.json"
     if cached.exists():
         return {**read_json(cached), "cache_hit": True}
-    metadata = json.loads(_run(["ffprobe", "-v", "error", "-protocol_whitelist", "file,pipe",
-                               "-show_format", "-show_streams", "-of", "json", str(path)]))
+    metadata = json.loads(
+        _run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-protocol_whitelist",
+                "file,pipe",
+                "-show_format",
+                "-show_streams",
+                "-of",
+                "json",
+                str(path),
+            ]
+        )
+    )
     duration = float(metadata.get("format", {}).get("duration", 0))
     if not 0 < duration <= settings.max_video_seconds:
         raise ValueError(f"Vídeo deve ter entre 0 e {settings.max_video_seconds} segundos.")
@@ -97,7 +154,9 @@ def extract_media(path: Path, settings: Settings, *, audio: bool = False,
     features = {
         "duration_s": duration,
         "brightness": float(np.mean([frame.mean() for frame in rgb])),
-        "saturation": float(np.mean([np.asarray(f.convert("HSV"))[:, :, 1].mean() / 255 for f in frames])),
+        "saturation": float(
+            np.mean([np.asarray(f.convert("HSV"))[:, :, 1].mean() / 255 for f in frames])
+        ),
         "frame_change": float(np.mean(changes)) if changes else 0.0,
         # Coarse sample-based proxy, not an exact shot boundary counter.
         "cuts_per_second": float(sum(c > 0.18 for c in changes) / duration),
@@ -106,11 +165,28 @@ def extract_media(path: Path, settings: Settings, *, audio: bool = False,
     transcript = ""
     has_audio = any(s.get("codec_type") == "audio" for s in streams)
     if has_audio:
-        pcm = _run(["ffmpeg", "-v", "error", "-protocol_whitelist", "file,pipe", "-i", str(path),
-                    "-vn", "-ac", "1", "-ar", "16000", "-f", "f32le", "pipe:1"])
+        pcm = _run(
+            [
+                "ffmpeg",
+                "-v",
+                "error",
+                "-protocol_whitelist",
+                "file,pipe",
+                "-i",
+                str(path),
+                "-vn",
+                "-ac",
+                "1",
+                "-ar",
+                "16000",
+                "-f",
+                "f32le",
+                "pipe:1",
+            ]
+        )
         samples = np.frombuffer(pcm, dtype="<f4")
         if len(samples):
-            features["audio_rms"] = float(np.sqrt(np.mean(samples ** 2)))
+            features["audio_rms"] = float(np.sqrt(np.mean(samples**2)))
             features["silence_ratio"] = float(np.mean(np.abs(samples) < 0.01))
         if audio:
             try:
@@ -141,7 +217,9 @@ def extract_media(path: Path, settings: Settings, *, audio: bool = False,
             import torch
         except ImportError as exc:
             raise ValueError("Instale o extra vision: uv sync --extra vision.") from exc
-        model, _, preprocess = open_clip.create_model_and_transforms("ViT-B-32", pretrained="laion2b_s34b_b79k")
+        model, _, preprocess = open_clip.create_model_and_transforms(
+            "ViT-B-32", pretrained="laion2b_s34b_b79k"
+        )
         model.eval()
         with torch.no_grad():
             encoded = model.encode_image(torch.stack([preprocess(frame) for frame in frames]))
@@ -166,13 +244,23 @@ def extract_media(path: Path, settings: Settings, *, audio: bool = False,
             "Não há áudio disponível diretamente; só atribua características de fala sustentadas "
             "pela transcrição e registre essa limitação nas evidências."
         )
-        response = httpx.post(settings.vlm_url.rstrip("/") + "/api/generate", json={
-            "model": settings.vlm_model, "prompt": prompt, "images": images,
-            "format": Rubric.model_json_schema(), "stream": False, "options": {"temperature": 0},
-        }, timeout=180)
+        response = httpx.post(
+            settings.vlm_url.rstrip("/") + "/api/generate",
+            json={
+                "model": settings.vlm_model,
+                "prompt": prompt,
+                "images": images,
+                "format": Rubric.model_json_schema(),
+                "stream": False,
+                "options": {"temperature": 0},
+            },
+            timeout=180,
+        )
         response.raise_for_status()
         rubric = Rubric.model_validate_json(response.json()["response"])
-        if any(e.end_seconds > duration or e.attribute not in RUBRIC_FEATURES for e in rubric.evidence):
+        if any(
+            e.end_seconds > duration or e.attribute not in RUBRIC_FEATURES for e in rubric.evidence
+        ):
             raise ValueError("VLM retornou evidência fora do vídeo ou rubrica.")
         features.update(rubric.model_dump(exclude={"evidence"}))
         # No acoustic claim can be supported by still frames/transcript alone.
@@ -182,9 +270,17 @@ def extract_media(path: Path, settings: Settings, *, audio: bool = False,
         warnings.append("Transcrição não executada; habilite o extra audio para Whisper.")
     if not vlm:
         warnings.append("Rubrica semântica ausente; habilite um VLM local para extraí-la.")
-    result = {"content_hash": digest, "extractor_version": EXTRACTOR_VERSION,
-              "options": options, "features": features, "transcript": transcript,
-              "visual_embedding": embedding, "evidence": evidence,
-              "frame_times": times, "warnings": warnings, "cache_hit": False}
+    result = {
+        "content_hash": digest,
+        "extractor_version": EXTRACTOR_VERSION,
+        "options": options,
+        "features": features,
+        "transcript": transcript,
+        "visual_embedding": embedding,
+        "evidence": evidence,
+        "frame_times": times,
+        "warnings": warnings,
+        "cache_hit": False,
+    }
     write_json(cached, result)
     return result
