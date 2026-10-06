@@ -88,8 +88,8 @@
   "context": {
     "channel_id": "canal-00",
     "sector": "beleza",
-    "as_of": "2025-11-01T00:00:00Z",
-    "planned_datetime": "2025-11-02T18:00:00Z",
+    "as_of": "2025-11-02T00:00:00Z",
+    "planned_datetime": "2025-11-03T18:00:00Z",
     "metric": "likes",
     "horizon_days": 7,
     "subscribers": 40000,

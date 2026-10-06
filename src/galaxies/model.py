@@ -10,7 +10,15 @@ from pathlib import Path
 import numpy as np
 from catboost import CatBoostRegressor, Pool
 
-from galaxies.data import ChannelHistory, audit, load_records, save_records, temporal_split
+from galaxies.data import (
+    ChannelHistory,
+    audit,
+    load_records,
+    save_records,
+    temporal_split,
+    validate_split,
+)
+from galaxies.estimators import PointEstimator, sample_weights
 from galaxies.features import FeatureEncoder, label
 from galaxies.io import read_json, sha256_file, utcnow, write_json
 from galaxies.metrics import (
@@ -34,6 +42,8 @@ def conformal_adjustment(scores: np.ndarray, coverage: float) -> float:
 def predict_intervals(point, quantiles, matrix, correction: float):
     center = np.asarray(point.predict(matrix)).ravel()
     quantile = np.asarray(quantiles.predict(matrix))
+    if isinstance(point, PointEstimator):
+        quantile = quantile + point.offset(matrix)[:, None]
     low = np.minimum(np.min(quantile, axis=1), center) - correction
     high = np.maximum(np.max(quantile, axis=1), center) + correction
     return center, np.expm1(np.clip(low, 0, 50)), np.expm1(np.clip(high, 0, 50))
@@ -44,22 +54,31 @@ def train(
     model_root: Path,
     config: TrainConfig | None = None,
     dataset_hash: str | None = None,
+    *,
+    split_override: dict | None = None,
+    evaluation_role: str = "standalone",
 ) -> dict:
     config = config or TrainConfig()
     dataset_audit = audit(records)
-    split = temporal_split(records, config.held_out_channels)
+    split = split_override or temporal_split(records, config.held_out_channels)
+    validate_split(split, records)
     parts = split["parts"]
     if len(parts["train"]) < config.min_train_rows:
         raise ValueError(f"Treino requer {config.min_train_rows} observações após os expurgos.")
     if any(len(parts[name]) < 20 for name in ("validation", "calibration", "test")):
         raise ValueError("Validação, calibração e teste precisam de pelo menos 20 registros cada.")
-    history_records = [r for r in records if r.channel_id not in config.held_out_channels]
+    # Remove duplicate content from the historical reference too, not only from model rows.
+    unique = {}
+    for record in sorted(records, key=lambda r: (r.published_at, r.creative_id)):
+        unique.setdefault(record.content_hash, record)
+    history_records = [r for r in unique.values() if r.channel_id not in config.held_out_channels]
     history = ChannelHistory(history_records)
     encoder = FeatureEncoder(config.feature_blocks, config.seed)
     matrices = {"train": encoder.fit(parts["train"], history)}
     for name in ("validation", "calibration", "test"):
         matrices[name] = encoder.transform_records(parts[name], history)
     targets = {name: np.log1p([r.target for r in rows]) for name, rows in parts.items()}
+    weights = {name: sample_weights(rows, config.channel_weighting) for name, rows in parts.items()}
     kwargs = {
         "iterations": config.iterations,
         "depth": config.depth,
@@ -68,34 +87,60 @@ def train(
         "verbose": False,
         "allow_writing_files": False,
         "thread_count": 2,
+        "l2_leaf_reg": config.l2_regularization,
     }
-    point = CatBoostRegressor(loss_function="RMSE", **kwargs)
-    point.fit(
+    point = PointEstimator(config, encoder).fit(
         matrices["train"],
         targets["train"],
-        eval_set=(matrices["validation"], targets["validation"]),
-        early_stopping_rounds=35,
-        use_best_model=True,
+        matrices["validation"],
+        targets["validation"],
+        weights["train"],
+        weights["validation"],
     )
     alpha = (1 - config.coverage) / 2
     quantiles = CatBoostRegressor(
         loss_function=f"MultiQuantile:alpha={alpha},{1 - alpha}", **kwargs
     )
     quantiles.fit(
-        matrices["train"],
-        targets["train"],
-        eval_set=(matrices["validation"], targets["validation"]),
+        Pool(
+            matrices["train"],
+            targets["train"] - point.offset(matrices["train"]),
+            weight=weights["train"],
+        ),
+        eval_set=Pool(
+            matrices["validation"],
+            targets["validation"] - point.offset(matrices["validation"]),
+            weight=weights["validation"],
+        ),
         early_stopping_rounds=35,
         use_best_model=True,
     )
     cal_center = point.predict(matrices["calibration"])
-    cal_quantiles = quantiles.predict(matrices["calibration"])
+    cal_quantiles = (
+        quantiles.predict(matrices["calibration"]) + point.offset(matrices["calibration"])[:, None]
+    )
     low_log = np.minimum(np.min(cal_quantiles, axis=1), cal_center)
     high_log = np.maximum(np.max(cal_quantiles, axis=1), cal_center)
     scores = np.maximum(low_log - targets["calibration"], targets["calibration"] - high_log)
     correction = conformal_adjustment(scores, config.coverage)
-    calibration = calibrate_pairs(parts["validation"], point.predict(matrices["validation"]))
-    predicted_log, low, high = predict_intervals(point, quantiles, matrices["test"], correction)
+    # Calibration labels never choose trees, hyperparameters or encoder components.
+    calibration = calibrate_pairs(parts["calibration"], cal_center)
+    sector_corrections = {}
+    if config.sector_calibration and "context" in config.feature_blocks:
+        for sector in sorted({r.sector for r in parts["calibration"]}):
+            ids = [i for i, r in enumerate(parts["calibration"]) if r.sector == sector]
+            if len(ids) >= config.min_sector_calibration:
+                sector_corrections[sector] = {
+                    "n": len(ids),
+                    "adjustment_log": conformal_adjustment(scores[ids], config.coverage),
+                }
+    adjustments = np.array(
+        [
+            sector_corrections.get(r.sector, {}).get("adjustment_log", correction)
+            for r in parts["test"]
+        ]
+    )
+    predicted_log, low, high = predict_intervals(point, quantiles, matrices["test"], adjustments)
     baseline = np.log1p(
         [
             history.get(r.channel_id, r.sector, r.published_at)["channel_median"]
@@ -105,14 +150,18 @@ def train(
     baseline_mean = np.log1p(
         [history.get(r.channel_id, r.sector, r.published_at)["channel_mean"] for r in parts["test"]]
     )
-    metrics = regression_metrics(parts["test"], predicted_log, low, high)
+    metrics = regression_metrics(parts["test"], predicted_log, low, high, config.coverage)
     baseline_metrics = regression_metrics(parts["test"], baseline)
     uncertainty = paired_channel_bootstrap(parts["test"], predicted_log, baseline, config.seed)
     by_sector = {}
     for sector in sorted({r.sector for r in parts["test"]}):
         ids = [i for i, r in enumerate(parts["test"]) if r.sector == sector]
         by_sector[sector] = regression_metrics(
-            [parts["test"][i] for i in ids], predicted_log[ids], low[ids], high[ids]
+            [parts["test"][i] for i in ids],
+            predicted_log[ids],
+            low[ids],
+            high[ids],
+            config.coverage,
         )
     by_generalization = {}
     for cohort, unseen in (("seen_channels", False), ("unseen_channels", True)):
@@ -122,11 +171,16 @@ def train(
         ]
         if ids:
             by_generalization[cohort] = regression_metrics(
-                [parts["test"][i] for i in ids], predicted_log[ids], low[ids], high[ids]
+                [parts["test"][i] for i in ids],
+                predicted_log[ids],
+                low[ids],
+                high[ids],
+                config.coverage,
             )
     # A research eligibility gate; it is not proof of business/causal impact.
     supported = bool(
         not dataset_audit["synthetic"]
+        and evaluation_role == "final_holdout"
         and uncertainty["ci95_low"] is not None
         and uncertainty["ci95_low"] > 0
         and metrics["mae_log"] < baseline_metrics["mae_log"]
@@ -140,7 +194,10 @@ def train(
         "model_id": model_id,
         "created_at": utcnow().isoformat(),
         "evidence_level": "synthetic_demo" if dataset_audit["synthetic"] else "retrospective",
-        "eligible_for_decision": supported,
+        "eligible_for_decision": False,
+        "research_gate_passed": supported,
+        "evaluation_role": evaluation_role,
+        "selection_verified": False,
         "metric": records[0].metric,
         "horizon_days": records[0].horizon_days,
         "config": config.model_dump(),
@@ -169,16 +226,17 @@ def train(
         "pair_calibration": calibration,
         "pair_probability_test": probability_metrics(parts["test"], predicted_log, calibration),
         "conformal_adjustment_log": correction,
+        "conformal_by_sector": sector_corrections,
         "feature_names": encoder.names,
         "sectors": sorted({r.sector for r in parts["train"]}),
         "languages": sorted({r.language for r in parts["train"]}),
         "distribution": sorted({r.distribution for r in parts["train"]}),
-        "model_family": "CatBoost + MultiQuantile + split conformal",
+        "model_family": f"{config.family} ({config.target_mode}) + CatBoost quantiles + split conformal",
         "environment": {
             "python": platform.python_version(),
             **{
                 package: importlib.metadata.version(package)
-                for package in ("catboost", "scikit-learn", "numpy", "pydantic")
+                for package in ("catboost", "lightgbm", "scikit-learn", "numpy", "pydantic")
             },
         },
         "limitations": [
@@ -186,10 +244,11 @@ def train(
             "Cobertura conformal depende da estabilidade da distribuição e é medida empiricamente.",
             "Pares históricos do mesmo canal/janela não são um experimento aleatório de campanha.",
             "Impulsionamento desconhecido não é inferido a partir das métricas públicas.",
+            "Modelos isolados e avaliações de desenvolvimento não habilitam promoção real.",
             *dataset_audit["warnings"],
         ],
     }
-    point.save_model(str(folder / "point.cbm"))
+    point.save(folder)
     quantiles.save_model(str(folder / "quantiles.cbm"))
     encoder.save(folder)
     save_records(folder / "history.jsonl", history_records)
@@ -259,7 +318,11 @@ class ModelBundle:
                 raise ValueError("Artefato de modelo inválido ou alterado.")
         self.report = read_json(folder / "report.json")
         self.encoder = FeatureEncoder.load(folder)
-        self.point = CatBoostRegressor().load_model(str(folder / "point.cbm"))
+        self.point = (
+            PointEstimator.load(folder, self.encoder)
+            if (folder / "point.json").exists()
+            else CatBoostRegressor().load_model(str(folder / "point.cbm"))
+        )
         self.quantiles = CatBoostRegressor().load_model(str(folder / "quantiles.cbm"))
         self.history = ChannelHistory(load_records(folder / "history.jsonl"))
         self.references = load_records(folder / "reference.jsonl")
@@ -268,9 +331,12 @@ class ModelBundle:
         )
 
     def predict(self, matrix: np.ndarray):
-        return predict_intervals(
-            self.point, self.quantiles, matrix, self.report["conformal_adjustment_log"]
-        )
+        correction = np.full(len(matrix), self.report["conformal_adjustment_log"])
+        for sector, group in self.report.get("conformal_by_sector", {}).items():
+            name = f"sector_{sector}"
+            if name in self.encoder.names:
+                correction[matrix[:, self.encoder.names.index(name)] == 1] = group["adjustment_log"]
+        return predict_intervals(self.point, self.quantiles, matrix, correction)
 
     def explain(self, vector: np.ndarray) -> list[Driver]:
         shap = self.point.get_feature_importance(Pool(vector.reshape(1, -1)), type="ShapValues")[0][

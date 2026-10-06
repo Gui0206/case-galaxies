@@ -137,8 +137,8 @@ def demo_comparison() -> CompareRequest:
         context=PredictionContext(
             channel_id="canal-00",
             sector="beleza",
-            as_of=datetime(2025, 11, 1, tzinfo=UTC),
-            planned_datetime=datetime(2025, 11, 2, 18, tzinfo=UTC),
+            as_of=datetime(2025, 11, 2, tzinfo=UTC),
+            planned_datetime=datetime(2025, 11, 3, 18, tzinfo=UTC),
             subscribers=40000,
             channel_stats_observed_at=datetime(2025, 11, 1, tzinfo=UTC),
             distribution="organic",

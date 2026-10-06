@@ -173,6 +173,14 @@ class CompareRequest(Contract):
 
 
 class TrainConfig(Contract):
+    family: Literal["catboost", "ridge", "lightgbm", "blend"] = "catboost"
+    target_mode: Literal["absolute", "channel_residual"] = "absolute"
+    channel_weighting: Literal["uniform", "balanced"] = "uniform"
+    l2_regularization: float = Field(default=3, ge=0)
+    ridge_alpha: float = Field(default=10, gt=0)
+    blend_weight: float = Field(default=0.5, ge=0, le=1)
+    sector_calibration: bool = True
+    min_sector_calibration: int = Field(default=40, ge=20)
     iterations: int = Field(default=240, ge=20, le=2000)
     depth: int = Field(default=5, ge=2, le=8)
     learning_rate: float = Field(default=0.06, gt=0, le=1)
@@ -183,6 +191,14 @@ class TrainConfig(Contract):
     )
     held_out_channels: list[str] = Field(default_factory=list)
     min_train_rows: int = Field(default=60, ge=20)
+
+    @model_validator(mode="after")
+    def residual_needs_context(self):
+        if self.target_mode == "channel_residual" and "context" not in self.feature_blocks:
+            raise ValueError("Alvo residual exige o bloco de contexto do canal.")
+        if not self.feature_blocks or len(set(self.feature_blocks)) != len(self.feature_blocks):
+            raise ValueError("Selecione blocos de atributos únicos e não vazios.")
+        return self
 
 
 class TrainRequest(Contract):

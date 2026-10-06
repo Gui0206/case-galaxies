@@ -3,6 +3,65 @@
     "TrainConfig": {
       "additionalProperties": false,
       "properties": {
+        "family": {
+          "default": "catboost",
+          "enum": [
+            "catboost",
+            "ridge",
+            "lightgbm",
+            "blend"
+          ],
+          "title": "Family",
+          "type": "string"
+        },
+        "target_mode": {
+          "default": "absolute",
+          "enum": [
+            "absolute",
+            "channel_residual"
+          ],
+          "title": "Target Mode",
+          "type": "string"
+        },
+        "channel_weighting": {
+          "default": "uniform",
+          "enum": [
+            "uniform",
+            "balanced"
+          ],
+          "title": "Channel Weighting",
+          "type": "string"
+        },
+        "l2_regularization": {
+          "default": 3,
+          "minimum": 0,
+          "title": "L2 Regularization",
+          "type": "number"
+        },
+        "ridge_alpha": {
+          "default": 10,
+          "exclusiveMinimum": 0,
+          "title": "Ridge Alpha",
+          "type": "number"
+        },
+        "blend_weight": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Blend Weight",
+          "type": "number"
+        },
+        "sector_calibration": {
+          "default": true,
+          "title": "Sector Calibration",
+          "type": "boolean"
+        },
+        "min_sector_calibration": {
+          "default": 40,
+          "minimum": 20,
+          "title": "Min Sector Calibration",
+          "type": "integer"
+        },
         "iterations": {
           "default": 240,
           "maximum": 2000,

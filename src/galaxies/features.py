@@ -15,6 +15,9 @@ LABELS = {
     "log_channel_mean": "Média histórica do canal",
     "log_subscribers": "Porte do canal",
     "history_count": "Histórico disponível",
+    "history_log_ewma": "Trajetória recente do canal",
+    "history_log_trend_per_day": "Tendência histórica do canal",
+    "history_age_days": "Idade da última observação",
     "duration_s": "Duração",
     "hook_clarity": "Clareza da abertura",
     "product_visibility": "Presença do produto",
@@ -89,6 +92,9 @@ class FeatureEncoder:
                     "log_channel_mean": np.log1p(hist["channel_mean"]),
                     "history_count": float(hist["history_count"]),
                     "history_log_std": hist["history_log_std"],
+                    "history_log_ewma": hist["history_log_ewma"],
+                    "history_log_trend_per_day": hist["history_log_trend_per_day"],
+                    "history_age_days": hist["history_age_days"],
                     "log_subscribers": np.log1p(context.subscribers)
                     if context.subscribers is not None
                     else np.nan,
@@ -99,6 +105,10 @@ class FeatureEncoder:
                     **{
                         f"sector_{s}": float(context.sector == s)
                         for s in ("beleza", "automotivo", "moda")
+                    },
+                    **{
+                        f"distribution_{d}": float(context.distribution == d)
+                        for d in ("organic", "paid", "unknown")
                     },
                 }
             )
@@ -152,7 +162,9 @@ class FeatureEncoder:
     def transform(
         self, creative: Creative, context: PredictionContext, history: ChannelHistory
     ) -> np.ndarray:
-        values = list(self._basic(creative, context, history).values())
+        basic = self._basic(creative, context, history)
+        # Respect saved feature order so existing model bundles remain valid as features evolve.
+        values = [basic[name] for name in self.names if name in basic]
         if len(self.text_components):
             hashed = self.vectorizer.transform([f"{creative.caption} {creative.transcript}"])
             values.extend(np.asarray(hashed @ self.text_components.T).ravel())

@@ -50,6 +50,26 @@ def demo(seed: int = 42, iterations: int = 180):
     console.print("Abra a interface com: [bold]uv run galaxies serve[/bold]")
 
 
+@app.command("demo-data")
+def demo_data(destination: Path, seed: int = 42, channels: int = 24, posts: int = 90):
+    """Write an explicitly synthetic fixture without training or activating any model."""
+    if destination.exists():
+        raise typer.BadParameter("Destino já existe; preserve a versão anterior.")
+    if channels < 1 or posts < 1 or destination.suffix not in (".json", ".jsonl", ".parquet"):
+        raise typer.BadParameter("Informe canais/posts positivos e destino JSON, JSONL ou Parquet.")
+    rows = make_demo(seed=seed, channels=channels, posts=posts)
+    save_records(destination, rows)
+    output(
+        {
+            "dataset": str(destination),
+            "seed": seed,
+            "synthetic": True,
+            "rows": len(rows),
+            "sha256": sha256_file(destination),
+        }
+    )
+
+
 @app.command()
 def validate(dataset: Path):
     """Validate the dataset contract and print a data audit."""
@@ -106,6 +126,50 @@ def experiments(dataset: Path, iterations: int = 120):
             settings.workspace / "models",
             settings.workspace / "reports",
             iterations,
+        )
+    )
+
+
+@app.command()
+def research(dataset: Path, iterations: int = 180, folds: int = 3, seed: int = 42):
+    """Select models in rolling temporal folds; reserve the final evaluation window."""
+    from galaxies.research import benchmark
+
+    settings = Settings().prepare()
+    progress = Console(stderr=True)
+    report = benchmark(
+        load_records(dataset),
+        settings.workspace / "models",
+        settings.workspace / "reports",
+        iterations,
+        folds,
+        seed,
+        progress=lambda message: progress.print(message),
+    )
+    output(
+        {
+            "run_id": report["run_id"],
+            "evidence_level": report["evidence_level"],
+            "selection": report["selection"],
+            "final_test_used": report["final_test_used"],
+            "report_folder": str(settings.workspace / "reports" / report["run_id"]),
+        }
+    )
+
+
+@app.command("final-evaluation")
+def final_evaluation_command(dataset: Path, research_folder: Path):
+    """Evaluate the frozen choice once; never tune using the final test."""
+    from galaxies.research import final_evaluation
+
+    settings = Settings().prepare()
+    progress = Console(stderr=True)
+    output(
+        final_evaluation(
+            load_records(dataset),
+            research_folder,
+            settings.workspace / "models",
+            progress=lambda message: progress.print(message),
         )
     )
 

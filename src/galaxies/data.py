@@ -95,6 +95,24 @@ def temporal_split(records: list[PostRecord], held_out: list[str] | None = None)
     if len(dates) < 20:
         raise ValueError("São necessárias pelo menos 20 datas distintas de publicação.")
     cuts = [dates[int(len(dates) * fraction)] for fraction in (0.55, 0.70, 0.85)]
+    return split_at(records, cuts, held_out)
+
+
+def split_at(
+    records: list[PostRecord],
+    cuts: list[datetime],
+    held_out: list[str] | None = None,
+    test_end: datetime | None = None,
+) -> dict:
+    """Shared, explicit calendar boundaries for fair model and sector comparisons."""
+    if len(cuts) != 3 or cuts != sorted(set(cuts)):
+        raise ValueError("Informe três cortes temporais estritamente crescentes.")
+    audit(records)
+    unique, hashes = [], set()
+    for row in sorted(records, key=lambda r: (r.published_at, r.creative_id)):
+        if row.content_hash not in hashes and (test_end is None or row.published_at < test_end):
+            unique.append(row)
+        hashes.add(row.content_hash)
     parts = {name: [] for name in ("train", "validation", "calibration", "test")}
     excluded = set(held_out or [])
     discarded = 0
@@ -117,8 +135,33 @@ def temporal_split(records: list[PostRecord], held_out: list[str] | None = None)
         "parts": parts,
         "cutoffs": [cut.isoformat() for cut in cuts],
         "discarded": discarded,
-        "exact_duplicates_removed": len(ordered) - len(unique),
+        "exact_duplicates_removed": len(records) - len(hashes),
     }
+
+
+def validate_split(split: dict, records: list[PostRecord]) -> None:
+    cuts = [datetime.fromisoformat(c) for c in split["cutoffs"]]
+    if len(cuts) != 3 or cuts != sorted(set(cuts)):
+        raise ValueError("Cortes de partição inválidos.")
+    known = {r.creative_id for r in records}
+    seen_ids, seen_hashes, seen_groups = set(), set(), set()
+    for index, name in enumerate(("train", "validation", "calibration", "test")):
+        rows = split["parts"][name]
+        ids = {r.creative_id for r in rows}
+        hashes = {r.content_hash for r in rows}
+        groups = {r.content_group for r in rows if r.content_group}
+        if not ids <= known or ids & seen_ids or hashes & seen_hashes or groups & seen_groups:
+            raise ValueError("Partições com sobreposição ou IDs desconhecidos.")
+        if len(ids) != len(rows):
+            raise ValueError("IDs repetidos na partição.")
+        for r in rows:
+            if (index and r.published_at < cuts[index - 1]) or (
+                index < 3 and (r.published_at >= cuts[index] or r.observed_at >= cuts[index])
+            ):
+                raise ValueError("Partição viola disponibilidade temporal.")
+        seen_ids |= ids
+        seen_hashes |= hashes
+        seen_groups |= groups
 
 
 class ChannelHistory:
@@ -145,6 +188,17 @@ class ChannelHistory:
         # Partial pooling, explicit and reproducible, regularizes small channels.
         weight = len(recent) / (len(recent) + 5)
         pooled = weight * median + (1 - weight) * peer_median
+        logs = np.log1p(targets)
+        decay = np.exp(-np.arange(len(targets) - 1, -1, -1) / 5)
+        ewma = float(np.average(logs, weights=decay)) if targets else float(np.log1p(peer_median))
+        if len(recent) >= 3:
+            days = np.array(
+                [(r.published_at - recent[0].published_at).total_seconds() / 86400 for r in recent]
+            )
+            centered = days - days.mean()
+            trend = float(centered @ (logs - logs.mean()) / max(centered @ centered, 1))
+        else:
+            trend = 0.0
         return {
             "history_count": len(eligible),
             "channel_median": median,
@@ -152,6 +206,11 @@ class ChannelHistory:
             "pooled_median": pooled,
             "sector_median": peer_median,
             "history_log_std": float(np.std(np.log1p(targets))) if targets else 0.0,
+            "history_log_ewma": ewma,
+            "history_log_trend_per_day": trend,
+            "history_age_days": (as_of - recent[-1].observed_at).total_seconds() / 86400
+            if recent
+            else np.nan,
         }
 
 

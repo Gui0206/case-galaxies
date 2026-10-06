@@ -41,7 +41,7 @@ class Registry:
         if report["evidence_level"] == "synthetic_demo":
             if not demo:
                 raise ValueError("Modelo sintético só pode ser ativado com --demo explícito.")
-        elif not report["eligible_for_decision"]:
+        elif not report["eligible_for_decision"] or not report.get("selection_verified"):
             raise ValueError("Modelo não cumpriu os critérios mínimos; consulte o relatório.")
         previous = self.active()
         event = {
