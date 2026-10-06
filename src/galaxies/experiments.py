@@ -81,6 +81,7 @@ def run_suite(
                 "model_id": result["model_id"],
                 "development_evaluation": result["metrics"],
                 "config": result["config"],
+                "by_sector": result["by_sector"],
             }
         )
     for sector in sorted({r.sector for r in development}):
@@ -107,6 +108,8 @@ def run_suite(
             "experiment": "cold_start",
             "model_id": cold["model_id"],
             "development_evaluation": cold["metrics"],
+            "by_generalization": cold["by_generalization"],
+            "config": cold["config"],
             "held_out_channels": held_out,
         }
     )
@@ -117,6 +120,8 @@ def run_suite(
         "protocol": "Final 15% time window excluded from all suite experiments; no automatic promotion.",
         "protected_final_ids": protected,
         "development_rows": len(development),
+        "environment": cold["environment"],
+        "iterations": iterations,
         "experiments": rows,
         "challengers": challengers(development, iterations),
     }

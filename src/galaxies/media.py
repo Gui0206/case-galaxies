@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 from pathlib import Path
+from typing import Literal
 
 import httpx
 import numpy as np
@@ -16,18 +17,18 @@ from galaxies.config import Settings
 from galaxies.io import read_json, sha256_file, write_json
 from galaxies.schemas import RUBRIC_FEATURES, Contract, Evidence
 
-EXTRACTOR_VERSION = "2"
+EXTRACTOR_VERSION = "3"
 
 
 class Rubric(Contract):
     hook_clarity: float = Field(ge=0, le=10)
     product_visibility: float = Field(ge=0, le=10)
-    demonstration: float = Field(ge=0, le=1)
+    demonstration: Literal[0, 1]
     onscreen_text_density: float = Field(ge=0, le=10)
     pacing: float = Field(ge=0, le=10)
     speech_energy: float = Field(ge=0, le=10)
     benefit_clarity: float = Field(ge=0, le=10)
-    cta: float = Field(ge=0, le=1)
+    cta: Literal[0, 1]
     evidence: list[Evidence] = Field(min_length=1, max_length=20)
 
 

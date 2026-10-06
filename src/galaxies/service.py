@@ -1,7 +1,8 @@
 """Single inference implementation for Python, API and MCP, orchestrated with LangGraph."""
 
-import uuid
 import threading
+import time
+import uuid
 from datetime import datetime
 from typing import TypedDict
 
@@ -97,7 +98,14 @@ def _predict(state: State) -> dict:
     flags = state["flags"]
     severe = any(
         f in flags
-        for f in ("synthetic", "simulated_input", "unapproved", "out_of_domain", "missing_features", "sparse_history")
+        for f in (
+            "synthetic",
+            "simulated_input",
+            "unapproved",
+            "out_of_domain",
+            "missing_features",
+            "sparse_history",
+        )
     )
     confidence = "insufficient" if severe else "limited" if flags else "supported"
     eligible = bool(bundle.report["eligible_for_decision"] and not severe)
@@ -170,6 +178,7 @@ class PredictionService:
             return self._bundle
 
     def predict(self, request: PredictRequest) -> Prediction:
+        started = time.perf_counter()
         trace_id = uuid.uuid4().hex
         bundle = self.bundle(request.model_id)
         result = self.graph.invoke({"request": request, "bundle": bundle, "trace_id": trace_id})
@@ -184,6 +193,7 @@ class PredictionService:
                     for name, value in zip(bundle.encoder.names, result["vector"], strict=True)
                 },
                 "stages": ["validate", "features", "predict_and_explain"],
+                "duration_ms": (time.perf_counter() - started) * 1000,
             },
         )
         return prediction
@@ -220,7 +230,9 @@ class PredictionService:
                     }
                 )
         best_probability = pairs[0]["probability_a_better"] if pairs else None
-        if bundle.report["evidence_level"] == "synthetic_demo" or any(c.attributes_source == "simulation" for c in request.creatives):
+        if bundle.report["evidence_level"] == "synthetic_demo" or any(
+            c.attributes_source == "simulation" for c in request.creatives
+        ):
             decision, recommended = "demonstration_only", None
             reason = "Ranking ilustrativo: modelo ou atributos de entrada sintéticos. Não use para decidir uma campanha real."
         elif not all(p.eligible_for_decision for p in predictions):

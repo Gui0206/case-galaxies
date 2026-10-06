@@ -89,3 +89,19 @@ def test_empty_content_is_flagged(trained):
         p for p in result["ranking"] if p["creative_id"] == request.creatives[0].creative_id
     )
     assert any("ausente" in reason for reason in prediction["confidence_reasons"])
+
+
+def test_simulated_input_blocks_decision_even_if_model_is_eligible(trained):
+    settings, _ = trained
+    service = PredictionService(settings)
+    # Exercise the decision boundary without pretending synthetic weights are real evidence.
+    bundle = service.bundle(None)
+    bundle.report = {
+        **bundle.report,
+        "evidence_level": "retrospective",
+        "eligible_for_decision": True,
+    }
+    result = service.compare(demo_comparison())
+    assert result["decision"] == "demonstration_only"
+    assert result["recommended_id"] is None
+    assert all(not p["eligible_for_decision"] for p in result["ranking"])

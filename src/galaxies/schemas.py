@@ -60,7 +60,9 @@ class Evidence(Contract):
 
 class Creative(Contract):
     creative_id: str = Field(min_length=1, max_length=150)
-    attributes_source: Literal["media_extraction", "human_annotation", "simulation"] = "human_annotation"
+    attributes_source: Literal["media_extraction", "human_annotation", "simulation"] = (
+        "human_annotation"
+    )
     caption: str = Field(default="", max_length=10000)
     transcript: str = Field(default="", max_length=30000)
     features: dict[str, float | None] = Field(default_factory=dict)
@@ -76,6 +78,18 @@ class Creative(Contract):
         for name, value in self.features.items():
             if value is not None and not math.isfinite(value):
                 raise ValueError(f"Atributo não finito: {name}")
+            if value is not None and value < 0:
+                raise ValueError(f"Atributo negativo: {name}")
+            if name in {"cta", "demonstration"} and value is not None and value not in (0, 1):
+                raise ValueError(f"Atributo binário precisa ser 0 ou 1: {name}")
+            if (
+                name in {"brightness", "saturation", "frame_change", "silence_ratio"}
+                and value is not None
+                and value > 1
+            ):
+                raise ValueError(f"Atributo normalizado fora de 0–1: {name}")
+            if name == "duration_s" and value == 0:
+                raise ValueError("Duração precisa ser positiva.")
             if name in RUBRIC_FEATURES and value is not None and not 0 <= value <= 10:
                 raise ValueError(f"Rubrica fora de 0–10: {name}")
         return self

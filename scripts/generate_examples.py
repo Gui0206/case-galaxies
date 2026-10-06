@@ -18,10 +18,34 @@ def save(path, value):
 
 compare = demo_comparison()
 save(examples / "compare.json", compare.model_dump(mode="json"))
-save(examples / "predict.json", PredictRequest(creative=compare.creatives[0], context=compare.context).model_dump(mode="json"))
+save(
+    examples / "predict.json",
+    PredictRequest(creative=compare.creatives[0], context=compare.context).model_dump(mode="json"),
+)
 save(examples / "post-record.json", make_demo(channels=1, posts=1)[0].model_dump(mode="json"))
-save(examples / "train-config.json", {"iterations":240,"depth":5,"coverage":.9,"seed":42})
-save(examples / "mcp.json", {"mcpServers":{"galaxies":{"command":"uv","args":["--directory","/CAMINHO/ABSOLUTO/case-galaxies","run","galaxies","mcp"]}}})
-for name, contract in (("post-record",PostRecord),("predict-request",PredictRequest),("compare-request",CompareRequest),("train-request",TrainRequest)):
+save(examples / "train-config.json", {"iterations": 240, "depth": 5, "coverage": 0.9, "seed": 42})
+save(
+    examples / "mcp.json",
+    {
+        "mcpServers": {
+            "galaxies": {
+                "command": "uv",
+                "args": [
+                    "--directory",
+                    "/CAMINHO/ABSOLUTO/case-galaxies",
+                    "run",
+                    "galaxies",
+                    "mcp",
+                ],
+            }
+        }
+    },
+)
+for name, contract in (
+    ("post-record", PostRecord),
+    ("predict-request", PredictRequest),
+    ("compare-request", CompareRequest),
+    ("train-request", TrainRequest),
+):
     save(schemas / f"{name}.json", contract.model_json_schema())
 print("Examples and schemas regenerated.")

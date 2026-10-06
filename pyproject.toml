@@ -25,7 +25,12 @@ ocr = ["rapidocr-onnxruntime>=1.4,<2"]
 tracking = ["mlflow-skinny>=3,<4"]
 
 [dependency-groups]
-dev = ["pytest>=8.3,<10", "pytest-cov>=6,<8", "ruff>=0.11,<1"]
+dev = [
+    "matplotlib>=3.10,<4",
+    "pytest>=8.3,<10",
+    "pytest-cov>=6,<8",
+    "ruff>=0.11,<1",
+]
 
 [project.scripts]
 galaxies = "galaxies.cli:app"

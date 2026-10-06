@@ -19,7 +19,10 @@ def register(service: PredictionService, request: PredictRequest) -> dict:
     if abs((now - request.context.as_of).total_seconds()) > 300:
         raise ValueError("as_of deve corresponder ao momento atual (tolerância de cinco minutos).")
     prediction = service.predict(request)
-    if prediction.evidence_level == "synthetic_demo" or request.creative.attributes_source == "simulation":
+    if (
+        prediction.evidence_level == "synthetic_demo"
+        or request.creative.attributes_source == "simulation"
+    ):
         raise ValueError("Registro prospectivo real não aceita modelo sintético.")
     record_id = uuid.uuid4().hex
     store = Store(service.settings)

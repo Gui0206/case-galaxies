@@ -268,6 +268,22 @@ def doctor():
 
 
 @app.command()
+def monitor():
+    """Summarize local prediction latency, missing attributes and prospective evidence."""
+    from galaxies.quality import operational_report
+
+    output(operational_report(Settings().prepare()))
+
+
+@app.command("audit-extraction")
+def audit_extraction(reference: Path, extracted: Path):
+    """Compare human annotations with extracted numeric attributes on matched creative IDs."""
+    from galaxies.quality import extraction_agreement
+
+    output(extraction_agreement(read_json(reference), read_json(extracted)))
+
+
+@app.command()
 def serve(host: str | None = None, port: int | None = None):
     """Serve the visual workbench and API. Use a single worker for the local job queue."""
     import uvicorn

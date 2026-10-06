@@ -45,10 +45,24 @@ function pipeline() {
 }
 async function refresh() {
   const [status, models, datasets] = await Promise.all([api('/api/status'),api('/api/models'),api('/api/datasets')]);
+  const changedModel = state.active !== status.active_model_id;
   state.active = status.active_model_id; state.models = models.items; state.datasets = datasets.items;
-  state.report = state.models.find(m => m.model_id === (state.selection || state.active)) || state.models[0] || null;
+  state.report = state.models.find(m => m.model_id === state.active) || null;
   $('#connection-text').textContent = 'Workspace local'; $('#connection-dot').className = 'online';
-  if (!state.scenario) state.scenario = await api('/api/demo/scenario');
+  if (!state.scenario || changedModel) await resetScenario();
+}
+async function resetScenario() {
+  state.scenario = await api('/api/demo/scenario');
+  Object.values(state.uploads).forEach(v=>URL.revokeObjectURL(v.preview));
+  state.uploads={};state.comparison=null;
+  if (!state.report) return;
+  const ctx=state.scenario.context, r=state.report;
+  ctx.metric=r.metric;ctx.horizon_days=r.horizon_days;
+  if (r.evidence_level!=='synthetic_demo') {
+    ctx.as_of=new Date().toISOString();ctx.planned_datetime=new Date(Date.now()+86400000).toISOString();
+    ctx.channel_id='';ctx.subscribers=null;ctx.channel_stats_observed_at=null;
+    ctx.sector=r.sectors[0];ctx.language=r.languages[0];ctx.distribution=r.distribution[0];
+  }
 }
 function overview() {
   const r = state.report, m = r?.metrics;
@@ -96,7 +110,7 @@ function scatter(items) {
   return `<svg class="scatter" viewBox="0 0 390 245" role="img" aria-label="Dispersão das previsões versus resultados observados, em escala log"><line x1="42" y1="208" x2="357" y2="28" stroke="#d6dfcf" stroke-dasharray="5 5"/><line x1="42" y1="208" x2="363" y2="208" stroke="#dce3d6"/><line x1="42" y1="24" x2="42" y2="208" stroke="#dce3d6"/>${items.slice(0,400).map(p=>`<circle cx="${x(p.actual)}" cy="${y(p.prediction)}" r="2.7" fill="#7ca887" opacity=".45"><title>Real: ${num(p.actual)} · previsão: ${num(p.prediction)}</title></circle>`).join('')}<text x="190" y="238" class="svg-label" text-anchor="middle">Resultado observado (log)</text><text x="9" y="16" class="svg-label">Previsão (log)</text><text x="34" y="222" class="svg-label">0</text></svg>`;
 }
 async function modelsView() {
-  const r = state.report;
+  const r = state.models.find(m => m.model_id === state.selection) || state.report || state.models[0];
   if (!r) return pageHead('A evidência por trás da previsão.','Modelos, validação e limitações em um só lugar.') + empty();
   const predictions = await api(`/api/models/${r.model_id}/predictions`);
   return pageHead('A evidência por trás da previsão.','Resultados de teste, referências simples e incerteza.',badge(r)) +
@@ -155,7 +169,7 @@ document.addEventListener('click', async event => {
   const action = button.dataset.action;
   try {
     if (action==='refresh') {await refresh(); await route();}
-    if (action==='reset') {state.scenario = await api('/api/demo/scenario'); Object.values(state.uploads).forEach(v=>URL.revokeObjectURL(v.preview));state.uploads={};state.comparison=null;await route();}
+    if (action==='reset') {await resetScenario();await route();}
     if (action==='upload-video') {uploadIndex = Number(button.dataset.index);$('#video-upload').click();}
     if (action==='upload-dataset') $('#dataset-upload').click();
     if (action==='compare') {
@@ -182,8 +196,8 @@ document.addEventListener('click', async event => {
       await route();pollJob(job.id).catch(e=>toast(e.message,true));
     }
     if (action==='retry') {const job=await api(`/api/jobs/${button.dataset.job}/retry`,{method:'POST'});await route();pollJob(job.id).catch(e=>toast(e.message,true));}
-    if (action==='open-model') {state.selection=button.dataset.model;state.report=state.models.find(m=>m.model_id===state.selection);location.hash='models';}
-    if (action==='promote') {await api(`/api/models/${button.dataset.model}/promote`,{method:'POST',body:{demo:state.report.evidence_level==='synthetic_demo'}});await refresh();await route();toast('Modelo ativado.');}
+    if (action==='open-model') {state.selection=button.dataset.model;location.hash='models';}
+    if (action==='promote') {const selected=state.models.find(m=>m.model_id===button.dataset.model);await api(`/api/models/${selected.model_id}/promote`,{method:'POST',body:{demo:selected.evidence_level==='synthetic_demo'}});await refresh();await route();toast('Modelo ativado.');}
   } catch(error) {toast(error.message,true);if(button.isConnected){button.disabled=false;if(action==='compare')button.textContent='Tentar análise novamente ↗';}}
 });
 document.addEventListener('input', event=>{
@@ -192,7 +206,7 @@ document.addEventListener('input', event=>{
   if(el.dataset.slider){const i=Number(el.dataset.index);state.scenario.creatives[i].features[el.dataset.slider]=Number(el.value);$(`#${el.dataset.slider==='hook_clarity'?'hook':'benefit'}-value-${i}`).textContent=el.value;}
 });
 document.addEventListener('change',async event=>{
-  if(event.target.id==='model-select'){state.selection=event.target.value;state.report=state.models.find(m=>m.model_id===state.selection);await route();}
+  if(event.target.id==='model-select'){state.selection=event.target.value;await route();}
   if(event.target.id==='planned'){
     const value=event.target.value;if(value){state.scenario.context.planned_datetime=new Date(value+'Z').toISOString();state.scenario.context.as_of=new Date().toISOString();}
   }

@@ -73,7 +73,12 @@ def test_duplicates_and_campaigns_do_not_cross_partitions(records):
 
 def test_mixed_synthetic_and_real_rejected(records):
     with pytest.raises(ValueError, match="misturados"):
-        audit([changed(records[0], synthetic=False, attributes_source="human_annotation"), *records[1:]])
+        audit(
+            [
+                changed(records[0], synthetic=False, attributes_source="human_annotation"),
+                *records[1:],
+            ]
+        )
 
 
 @pytest.mark.parametrize("suffix", [".jsonl", ".json", ".parquet"])

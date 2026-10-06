@@ -37,7 +37,7 @@ LABELS = {
 
 def label(name: str) -> str:
     if name.startswith("text_component"):
-        return "Representação semântica do texto"
+        return "Padrões latentes do texto"
     if name.startswith("visual_component"):
         return "Representação visual do criativo"
     return LABELS.get(name, name.replace("_", " "))
