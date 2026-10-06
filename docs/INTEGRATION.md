@@ -56,10 +56,10 @@ O OpenAPI fica em `/openapi.json` e a documentação interativa em `/docs`. O wo
 ### Treinamento assíncrono
 
 ```json
-{"dataset":"cliente-v1.jsonl","config":{"iterations":240,"coverage":0.9,"seed":42}}
+{"dataset":"cliente-v1.jsonl","config":{"family":"catboost","target_mode":"channel_residual","channel_weighting":"balanced","iterations":240,"coverage":0.9,"seed":42}}
 ```
 
-O servidor retorna HTTP 202 com o ID. Estados: `queued → running → completed`, ou `failed`/`interrupted`. O resultado contém o relatório e a versão criada. Treinar não ativa automaticamente a versão.
+O servidor retorna HTTP 202 com o ID. Estados: `queued → running → completed`, ou `failed`/`interrupted`. O resultado contém o relatório e a versão criada. Treinar não ativa automaticamente a versão nem certifica seleção. HTTP/MCP executam um treino exploratório de uma configuração. A competição e a avaliação final protegida são operações administrativas via CLI: `research` e `final-evaluation`. Veja o [case de modelagem](MODEL_CASE.md).
 
 ### Contrato de saída
 
@@ -70,7 +70,7 @@ O servidor retorna HTTP 202 com o ID. Estados: `queued → running → completed
 | `confidence_flag`, `confidence_reasons` | Limitações que precisam acompanhar a resposta |
 | `evidence_level` | Distinguir demonstração sintética de avaliação retrospectiva |
 | `eligible_for_decision` | Impedir recomendações quando falso |
-| `top_drivers` | Contribuições SHAP em log; não interpretar como efeitos causais |
+| `top_drivers` | Contribuições aditivas do score bruto em log; SHAP nativo em árvores e decomposição linear em Ridge, sem interpretação causal |
 | `comparables`, `extraction_evidence` | Referências e trechos verificáveis |
 | `model_id`, `trace_id` | Auditoria e reprodução |
 

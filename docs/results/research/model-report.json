@@ -1,0 +1,449 @@
+{
+  "model_id": "model-20261006132601-0abc8af5",
+  "created_at": "2026-10-06T13:26:01.518407+00:00",
+  "evidence_level": "synthetic_demo",
+  "eligible_for_decision": false,
+  "research_gate_passed": false,
+  "evaluation_role": "final_holdout",
+  "selection_verified": true,
+  "metric": "likes",
+  "horizon_days": 7,
+  "config": {
+    "family": "catboost",
+    "target_mode": "channel_residual",
+    "channel_weighting": "balanced",
+    "l2_regularization": 3.0,
+    "ridge_alpha": 10.0,
+    "blend_weight": 0.5,
+    "sector_calibration": true,
+    "min_sector_calibration": 40,
+    "iterations": 180,
+    "depth": 4,
+    "learning_rate": 0.06,
+    "seed": 42,
+    "coverage": 0.9,
+    "feature_blocks": [
+      "context",
+      "text",
+      "visual",
+      "rubric"
+    ],
+    "held_out_channels": [],
+    "min_train_rows": 60
+  },
+  "audit": {
+    "rows": 2400,
+    "channels": 24,
+    "sectors": {
+      "beleza": 800,
+      "automotivo": 800,
+      "moda": 800
+    },
+    "metric": "likes",
+    "horizon_days": 7,
+    "synthetic": true,
+    "period_start": "2025-01-01T12:00:00+00:00",
+    "period_end": "2025-10-25T23:00:00+00:00",
+    "duplicate_content_rows": 0,
+    "unknown_distribution_fraction": 0.0,
+    "largest_channel_fraction": 0.041666666666666664,
+    "missing_subscribers": 0,
+    "sources": [
+      "synthetic-generator-v1"
+    ],
+    "usage_bases": [
+      "synthetic-original"
+    ],
+    "warnings": [
+      "Dados sintéticos: resultados não medem desempenho no mundo real."
+    ]
+  },
+  "dataset_sha256": "27591696356e1e7c0cf431f4b1b7470f8598476ac286ac770146e5e92d764ea9",
+  "splits": {
+    "train": 1272,
+    "validation": 312,
+    "calibration": 312,
+    "test": 360
+  },
+  "cutoffs": [
+    "2025-06-15T12:00:00+00:00",
+    "2025-07-30T12:00:00+00:00",
+    "2025-09-13T12:00:00+00:00"
+  ],
+  "purged_rows": 144,
+  "duplicates_removed": 0,
+  "trained_until": "2025-06-13T23:00:00+00:00",
+  "inference_not_before": "2025-11-01T23:00:00+00:00",
+  "metrics": {
+    "rows": 360,
+    "mae_log": 0.31588796650485396,
+    "mae": 313.87852168323974,
+    "mape_nonzero": 0.33348957040205507,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.8817617155450033,
+    "spearman_within_channel": 0.7326134332039705,
+    "pair_accuracy": 0.7717041800643086,
+    "pair_count": 622,
+    "mean_selection_regret": 0.10130209363931922,
+    "macro_channel_mae_log": 0.3158879665048539,
+    "macro_channel_pair_accuracy": 0.771602564102564,
+    "interval_coverage": 0.9138888888888889,
+    "mean_interval_width": 1385.2348593952784,
+    "median_interval_width": 1058.6060643640021,
+    "interval_score_log": 1.8425746813923953
+  },
+  "baseline": {
+    "rows": 360,
+    "mae_log": 0.48170394308647,
+    "mae": 447.40555555555557,
+    "mape_nonzero": 0.5516377763147482,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.6883300214862301,
+    "spearman_within_channel": -0.07825721085457898,
+    "pair_accuracy": 0.5056270096463023,
+    "pair_count": 622,
+    "mean_selection_regret": 0.37471010017314144,
+    "macro_channel_mae_log": 0.4817039430864701,
+    "macro_channel_pair_accuracy": 0.5053846153846154
+  },
+  "performance_bands": {
+    "thresholds_relative_to_channel": [
+      0.75,
+      1.25,
+      3
+    ],
+    "labels": [
+      "below",
+      "typical",
+      "above",
+      "exceptional"
+    ],
+    "macro_f1": 0.4623657311157311,
+    "note": "Exceptional is relative performance, not a universal definition of virality."
+  },
+  "validation_metrics": {
+    "rows": 312,
+    "mae_log": 0.31868639212913197,
+    "mae": 315.09487073565276,
+    "mape_nonzero": 0.31999072243121895,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.846773917927722,
+    "spearman_within_channel": 0.738344107493237,
+    "pair_accuracy": 0.7842227378190255,
+    "pair_count": 431,
+    "mean_selection_regret": 0.09009614832322448,
+    "macro_channel_mae_log": 0.318686392129132,
+    "macro_channel_pair_accuracy": 0.7845860566448802
+  },
+  "baseline_mean": {
+    "rows": 360,
+    "mae_log": 0.5083873607680505,
+    "mae": 476.4747222222223,
+    "mape_nonzero": 0.6884093678165157,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.6869377312888999,
+    "spearman_within_channel": -0.09314228905807374,
+    "pair_accuracy": 0.4967845659163987,
+    "pair_count": 622,
+    "mean_selection_regret": 0.38834984737553513,
+    "macro_channel_mae_log": 0.5083873607680505,
+    "macro_channel_pair_accuracy": 0.49660256410256415
+  },
+  "by_sector": {
+    "automotivo": {
+      "rows": 120,
+      "mae_log": 0.317026718338017,
+      "mae": 354.8030948174134,
+      "mape_nonzero": 0.30927232653613823,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8872398460422082,
+      "spearman_within_channel": 0.739517609727653,
+      "pair_accuracy": 0.7815533980582524,
+      "pair_count": 206,
+      "mean_selection_regret": 0.060355365705965065,
+      "macro_channel_mae_log": 0.31702671833801704,
+      "macro_channel_pair_accuracy": 0.7811538461538461,
+      "interval_coverage": 0.9083333333333333,
+      "mean_interval_width": 1477.7522306912588,
+      "median_interval_width": 1024.4602332466798,
+      "interval_score_log": 1.8452104830310556
+    },
+    "beleza": {
+      "rows": 120,
+      "mae_log": 0.3260932650702055,
+      "mae": 344.08968146296985,
+      "mape_nonzero": 0.36131100367667435,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8885454990684065,
+      "spearman_within_channel": 0.7199373164137453,
+      "pair_accuracy": 0.7403846153846154,
+      "pair_count": 208,
+      "mean_selection_regret": 0.14033190113797137,
+      "macro_channel_mae_log": 0.3260932650702055,
+      "macro_channel_pair_accuracy": 0.7403846153846154,
+      "interval_coverage": 0.8916666666666667,
+      "mean_interval_width": 1407.3972419673387,
+      "median_interval_width": 1090.125503173375,
+      "interval_score_log": 1.9240913054893327
+    },
+    "moda": {
+      "rows": 120,
+      "mae_log": 0.30454391610633924,
+      "mae": 242.7427887693361,
+      "mape_nonzero": 0.32988538099335263,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8747985944116939,
+      "spearman_within_channel": 0.7383853734705128,
+      "pair_accuracy": 0.7932692307692307,
+      "pair_count": 208,
+      "mean_selection_regret": 0.10321901407402116,
+      "macro_channel_mae_log": 0.30454391610633924,
+      "macro_channel_pair_accuracy": 0.7932692307692307,
+      "interval_coverage": 0.9416666666666667,
+      "mean_interval_width": 1270.5551055272374,
+      "median_interval_width": 1097.1630038452975,
+      "interval_score_log": 1.7584222556567988
+    }
+  },
+  "by_generalization": {
+    "seen_channels": {
+      "rows": 360,
+      "mae_log": 0.31588796650485396,
+      "mae": 313.87852168323974,
+      "mape_nonzero": 0.33348957040205507,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8817617155450033,
+      "spearman_within_channel": 0.7326134332039705,
+      "pair_accuracy": 0.7717041800643086,
+      "pair_count": 622,
+      "mean_selection_regret": 0.10130209363931922,
+      "macro_channel_mae_log": 0.3158879665048539,
+      "macro_channel_pair_accuracy": 0.771602564102564,
+      "interval_coverage": 0.9138888888888889,
+      "mean_interval_width": 1385.2348593952784,
+      "median_interval_width": 1058.6060643640021,
+      "interval_score_log": 1.8425746813923953
+    }
+  },
+  "paired_channel_bootstrap": {
+    "channels": 24,
+    "mean_delta": 0.26621794871794874,
+    "ci95_low": 0.2093116987179487,
+    "ci95_high": 0.3253205128205128,
+    "method": "paired bootstrap of macro channel pair-accuracy differences; 1000 resamples"
+  },
+  "pair_calibration": {
+    "available": true,
+    "pairs": 456,
+    "slope": 3.3816212429013017,
+    "channels": 24,
+    "channel_weighting": "equal total weight per channel",
+    "method": "symmetric Platt calibration; held-out calibration pairs within channel/14-day window"
+  },
+  "pair_probability_test": {
+    "brier_score": 0.15069070779650007,
+    "pairs": 622,
+    "reliability": [
+      {
+        "count": 80,
+        "probability": 0.0494243600798734,
+        "observed": 0.025
+      },
+      {
+        "count": 85,
+        "probability": 0.14641856790997054,
+        "observed": 0.10588235294117647
+      },
+      {
+        "count": 59,
+        "probability": 0.2540031146053789,
+        "observed": 0.3389830508474576
+      },
+      {
+        "count": 56,
+        "probability": 0.34234692296928,
+        "observed": 0.35714285714285715
+      },
+      {
+        "count": 35,
+        "probability": 0.45242795713880424,
+        "observed": 0.42857142857142855
+      },
+      {
+        "count": 53,
+        "probability": 0.5501974431971163,
+        "observed": 0.5283018867924528
+      },
+      {
+        "count": 55,
+        "probability": 0.653815172220306,
+        "observed": 0.5272727272727272
+      },
+      {
+        "count": 66,
+        "probability": 0.7544615724735606,
+        "observed": 0.7424242424242424
+      },
+      {
+        "count": 63,
+        "probability": 0.8571230440481055,
+        "observed": 0.9047619047619048
+      },
+      {
+        "count": 70,
+        "probability": 0.945067016623036,
+        "observed": 0.9714285714285714
+      }
+    ],
+    "selective_accuracy": [
+      {
+        "threshold": 0.5,
+        "accepted_pairs": 622,
+        "acceptance_rate": 1.0,
+        "accuracy": 0.7717041800643086
+      },
+      {
+        "threshold": 0.6,
+        "accepted_pairs": 534,
+        "acceptance_rate": 0.8585209003215434,
+        "accuracy": 0.8089887640449438
+      },
+      {
+        "threshold": 0.65,
+        "accepted_pairs": 487,
+        "acceptance_rate": 0.7829581993569131,
+        "accuracy": 0.8295687885010267
+      },
+      {
+        "threshold": 0.7,
+        "accepted_pairs": 423,
+        "acceptance_rate": 0.680064308681672,
+        "accuracy": 0.8676122931442081
+      },
+      {
+        "threshold": 0.8,
+        "accepted_pairs": 298,
+        "acceptance_rate": 0.4790996784565916,
+        "accuracy": 0.9362416107382551
+      },
+      {
+        "threshold": 0.9,
+        "accepted_pairs": 150,
+        "acceptance_rate": 0.24115755627009647,
+        "accuracy": 0.9733333333333334
+      }
+    ]
+  },
+  "conformal_adjustment_log": 0.04365198634059908,
+  "conformal_by_sector": {
+    "automotivo": {
+      "n": 104,
+      "adjustment_log": 0.0
+    },
+    "beleza": {
+      "n": 104,
+      "adjustment_log": 0.09913298223046851
+    },
+    "moda": {
+      "n": 104,
+      "adjustment_log": 0.09249926985096835
+    }
+  },
+  "feature_names": [
+    "log_channel_median",
+    "log_channel_mean",
+    "history_count",
+    "history_log_std",
+    "history_log_ewma",
+    "history_log_trend_per_day",
+    "history_age_days",
+    "log_subscribers",
+    "hour_sin",
+    "hour_cos",
+    "weekday_sin",
+    "weekday_cos",
+    "sector_beleza",
+    "sector_automotivo",
+    "sector_moda",
+    "distribution_organic",
+    "distribution_paid",
+    "distribution_unknown",
+    "caption_words",
+    "transcript_words",
+    "audio_rms",
+    "benefit_clarity",
+    "brightness",
+    "cta",
+    "cuts_per_second",
+    "demonstration",
+    "duration_s",
+    "frame_change",
+    "hook_clarity",
+    "ocr_word_count",
+    "onscreen_text_density",
+    "pacing",
+    "product_visibility",
+    "saturation",
+    "silence_ratio",
+    "speech_energy",
+    "speech_words_per_second",
+    "text_component_0",
+    "text_component_1",
+    "text_component_2",
+    "text_component_3",
+    "text_component_4",
+    "text_component_5",
+    "text_component_6",
+    "text_component_7",
+    "text_component_8",
+    "text_component_9",
+    "text_component_10",
+    "text_component_11"
+  ],
+  "sectors": [
+    "automotivo",
+    "beleza",
+    "moda"
+  ],
+  "languages": [
+    "pt"
+  ],
+  "distribution": [
+    "organic"
+  ],
+  "model_family": "catboost (channel_residual) + CatBoost quantiles + split conformal",
+  "environment": {
+    "python": "3.12.13",
+    "catboost": "1.2.10",
+    "lightgbm": "4.7.0",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.3",
+    "pydantic": "2.13.5"
+  },
+  "limitations": [
+    "Dados observacionais; explicações não representam efeitos causais.",
+    "Cobertura conformal depende da estabilidade da distribuição e é medida empiricamente.",
+    "Pares históricos do mesmo canal/janela não são um experimento aleatório de campanha.",
+    "Impulsionamento desconhecido não é inferido a partir das métricas públicas.",
+    "Modelos isolados e avaliações de desenvolvimento não habilitam promoção real.",
+    "Dados sintéticos: resultados não medem desempenho no mundo real."
+  ],
+  "parent_model_id": "model-20261006132600-6e053734",
+  "research_run_id": "research-20261006132411-0e938d5a",
+  "strong_context_model_id": "model-20261006132601-c656e9e4",
+  "incremental_content_gain": {
+    "channels": 24,
+    "mean_delta": 0.308525641025641,
+    "ci95_low": 0.2482355769230769,
+    "ci95_high": 0.3670264423076923,
+    "method": "paired bootstrap of macro channel pair-accuracy differences; 1000 resamples"
+  },
+  "decision_checks": {
+    "real_data": false,
+    "baseline_and_global_coverage": false,
+    "content_in_selected_model": true,
+    "incremental_pair_gain_vs_context": true,
+    "macro_log_mae_vs_context": true,
+    "sector_coverage_and_sample": true
+  }
+}

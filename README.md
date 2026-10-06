@@ -3,15 +3,21 @@
 <h1 align="center">Galaxies · Creative Intelligence</h1>
 <p align="center">Compare criativos antes da publicação.<br>Previsões estatísticas, incerteza explícita e evidências à vista.</p>
 
-<p align="center"><a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/METHODOLOGY.md">Entender a avaliação</a> · <a href="docs/DATA.md">Preparar dados</a> · <a href="docs/INTEGRATION.md">Integrar</a> · <a href="docs/DEMO.md">Apresentar o case</a></p>
+<p align="center"><a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/METHODOLOGY.md">Entender a avaliação</a> · <a href="docs/DATA.md">Preparar dados</a> · <a href="docs/INTEGRATION.md">Integrar</a> · <a href="docs/DEMO.md">Apresentar o case</a></p>
 
 > **Estado da evidência:** o sistema funciona de ponta a ponta com uma base sintética reproduzível. Nenhuma acurácia em campanhas reais é alegada. Uma base real autorizada e a validação prospectiva continuam necessárias para demonstrar utilidade de negócio.
 
-![Visão geral do workspace](docs/assets/workbench.jpg)
+## A qualidade está na avaliação do modelo
+
+O núcleo compara **12 configurações de Ridge, CatBoost, LightGBM e blend em três janelas temporais**, congela a escolha e só então abre uma avaliação final. O conteúdo precisa acrescentar valor sobre uma referência forte que já conhece o canal. Contagens, ranking, incerteza, ablações e canais novos são avaliados separadamente.
+
+Leia primeiro o **[case de modelagem](docs/MODEL_CASE.md)**: arquitetura, regra de seleção, resultados reproduzíveis, falhas encontradas e evidência que falta. No experimento sintético atual, CatBoost residual foi selecionado; isso não determina a melhor família para dados reais.
+
+![Seleção e verificação em dados sintéticos](docs/assets/research.png)
 
 ## Execute em três comandos
 
-Requisitos: [uv](https://docs.astral.sh/uv/getting-started/installation/), Python 3.12 (gerenciado pelo uv) e FFmpeg para vídeos locais.
+Requisitos: [uv](https://docs.astral.sh/uv/getting-started/installation/), Python 3.12 (gerenciado pelo uv) e OpenMP para LightGBM (`brew install libomp` no macOS; `libgomp1` no Ubuntu). FFmpeg é necessário para vídeos locais.
 
 ```bash
 uv sync --frozen --group dev
@@ -27,7 +33,7 @@ Abra **[localhost:8000](http://127.0.0.1:8000)**. A demonstração gera 2.160 po
 flowchart LR
     V["Vídeo autorizado<br>+ contexto"] --> E["Extração<br>multimodal"]
     E --> F["Atributos + histórico<br>disponível na decisão"]
-    F --> M["CatBoost<br>+ quantis calibrados"]
+    F --> M["Modelo selecionado<br>+ quantis calibrados"]
     M --> P["Previsão + intervalo<br>+ ranking"]
     P --> X["SHAP + comparáveis<br>+ limitações"]
     X --> T["Python · HTTP · MCP"]
@@ -42,10 +48,10 @@ flowchart LR
 | Experiência visual | Visão geral, comparação, intervalos, explicações, avaliação, dados, treinamento e guia |
 | Contratos de dados | Pydantic + JSON Schema; JSONL/JSON/Parquet; auditoria de origem, horizonte e disponibilidade temporal |
 | Prevenção de vazamento | Histórico ponto a ponto no tempo; expurgo de rótulos imaturos; deduplicação; separação de campanhas |
-| Modelagem | CatBoost, regressão quantílica e calibração conformal; baselines de média/mediana |
-| Experimentos | Ablações, especialistas por setor, canais não vistos, Ridge e CatBoostRanker; teste final preservado na suíte |
-| Avaliação | MAE, MAE em log, MAPE com zeros explícitos, Spearman, pares, arrependimento de seleção, F1 de faixas e cobertura |
-| Explicação | SHAP nativo, comparáveis históricos, evidências temporais, abstenção e rastros em JSON |
+| Modelagem | Ridge, CatBoost, LightGBM e blend; alvos absolutos/residuais; quantis calibrados por setor |
+| Experimentos | Competição em três janelas, contexto forte, ablações, controles negativos, seeds e canais não vistos; seleção congelada e teste final de uso único |
+| Avaliação | MAE, MAE em log, MAPE com zeros explícitos, Spearman, pares, arrependimento de seleção, F1 de faixas, interval score, cobertura/largura e médias equilibradas por canal |
+| Explicação | SHAP de árvores/decomposição linear, comparáveis históricos, evidências temporais, abstenção e rastros em JSON |
 | Vídeo local | FFmpeg, atributos visuais/acústicos, cache por conteúdo e versão |
 | Extratores opcionais | Whisper, OpenCLIP, OCR e rubrica estruturada via Ollama |
 | Coleta | Snapshots oficiais de metadados do YouTube e montagem de alvos em horizonte fixo |
@@ -58,6 +64,7 @@ flowchart LR
 
 | Quero… | Leia |
 |---|---|
+| Avaliar a qualidade do modelo | [Case de modelagem e evidência](docs/MODEL_CASE.md) |
 | Rodar e explorar | [Guia rápido](docs/QUICKSTART.md) |
 | Entender módulos e fluxos | [Arquitetura](docs/ARCHITECTURE.md) |
 | Importar uma base real sem vazamento | [Dados e coleta](docs/DATA.md) |
@@ -88,8 +95,11 @@ src/galaxies/
   data.py          auditoria, histórico e partições
   features.py      atributos e projeções ajustadas no treino
   media.py         vídeo, áudio, OCR, CLIP e VLM local
+  estimators.py    famílias, alvos residuais e atribuições
   model.py         treino, calibração, avaliação e SHAP
-  experiments.py   ablações e modelos comparativos
+  protocol.py      cortes, candidatos e regra de seleção
+  research.py      competição, diagnósticos e avaliação final
+  experiments.py   suíte exploratória complementar
   service.py       fluxo LangGraph e decisões
   registry.py      versões, integridade e ativação
   jobs.py          fila persistente

@@ -1,5 +1,7 @@
 # Apresente o case pelo que pode ser verificado
 
+> **Prioridade atual: [case de modelagem](MODEL_CASE.md).** Ele documenta a competição em três janelas, seleção congelada, contexto forte, controles negativos e falhas de generalização. As figuras e números abaixo são o registro histórico da demonstração inicial com 2.160 posts; não são a execução do protocolo atual de 2.400 posts.
+
 ## Mensagem central
 
 “Construímos uma ferramenta que recebe criativo e contexto, calcula uma previsão estatística, explicita sua incerteza e entrega evidências para uma decisão pré-publicação. A engenharia está demonstrada; a eficácia comercial depende da validação em dados reais.”

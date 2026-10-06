@@ -14,10 +14,11 @@ flowchart TB
       D --> A[Auditoria e deduplicação]
       A --> T[Partições temporais com expurgo]
       T --> F["Encoder ajustado no treino"]
-      F --> M["Regressão + quantis"]
+      F --> M["Competição temporal<br>Ridge / CatBoost / LightGBM / blend"]
       M --> K["Calibração separada"]
       K --> R["Relatório + artefatos + hashes"]
-      R --> P[Promoção explícita]
+      R --> Z["Seleção congelada + teste final único"]
+      Z --> P[Promoção explícita]
     end
     subgraph Uso
       I["Python / API / MCP"] --> G["LangGraph: validar → atributos → prever/explicar"]
@@ -35,6 +36,8 @@ flowchart TB
 | `data` | Criar partições e consultar histórico conhecido | Reconstruir estatísticas históricas inexistentes |
 | `features` | Hashing de n-grams + SVD; PCA visual; contexto | Ajustar projeções com dados de teste |
 | `media` | Extrair dados de vídeos locais | Baixar vídeos de terceiros ou contornar bloqueios |
+| `estimators` | Estimar alvos absolutos/residuais nas quatro famílias | Escolher família olhando o teste final |
+| `protocol` / `research` | Congelar competição, diagnosticar e avaliar uma única seleção final | Declarar eficácia real com dados artificiais |
 | `model` | Treinar e avaliar números e intervalos | Fazer afirmações causais |
 | `service` | Orquestrar, comparar, explicar e abster-se | Criar personas sintéticas |
 | `registry` | Verificar hashes e ativar versões | Ativar automaticamente o último treino |
@@ -48,7 +51,8 @@ flowchart TB
   media/                   uploads locais com identificadores aleatórios
   features/                extrações cacheadas
   models/model-.../
-    point.cbm               preditor central
+    point.json              configuração/coeficientes do preditor
+    point.cbm / point.lgb.txt componentes nativos quando aplicáveis
     quantiles.cbm           regressor de quantis
     encoder.json + .npz     transformações sem pickle
     history.jsonl           observações para consultas ponto no tempo
@@ -59,7 +63,9 @@ flowchart TB
     manifest.json           hashes de todos os artefatos
   models/active.json        versão selecionada
   runs/                    entradas, features e saídas por análise
-  reports/                 suítes e comparações exportadas
+  reports/research-.../    plano, desenvolvimento, seleção e final
+  reports/final-evaluated-* registro de uso do teste final
+  reports/                 demais suítes e comparações
   state.sqlite3            jobs + registro prospectivo
 ```
 

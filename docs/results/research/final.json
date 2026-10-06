@@ -1,0 +1,61 @@
+{
+  "run_id": "research-20261006132411-0e938d5a",
+  "evidence_level": "synthetic_demo",
+  "selected": "catboost_residual",
+  "model_id": "model-20261006132601-0abc8af5",
+  "context_model_id": "model-20261006132601-c656e9e4",
+  "metrics": {
+    "rows": 360,
+    "mae_log": 0.31588796650485396,
+    "mae": 313.87852168323974,
+    "mape_nonzero": 0.33348957040205507,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.8817617155450033,
+    "spearman_within_channel": 0.7326134332039705,
+    "pair_accuracy": 0.7717041800643086,
+    "pair_count": 622,
+    "mean_selection_regret": 0.10130209363931922,
+    "macro_channel_mae_log": 0.3158879665048539,
+    "macro_channel_pair_accuracy": 0.771602564102564,
+    "interval_coverage": 0.9138888888888889,
+    "mean_interval_width": 1385.2348593952784,
+    "median_interval_width": 1058.6060643640021,
+    "interval_score_log": 1.8425746813923953
+  },
+  "context_metrics": {
+    "rows": 360,
+    "mae_log": 0.49738097690726446,
+    "mae": 454.8085006101275,
+    "mape_nonzero": 0.5746451075767383,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.6532984208920848,
+    "spearman_within_channel": -0.16510154127380408,
+    "pair_accuracy": 0.4630225080385852,
+    "pair_count": 622,
+    "mean_selection_regret": 0.4120212160635495,
+    "macro_channel_mae_log": 0.49738097690726457,
+    "macro_channel_pair_accuracy": 0.4630769230769231,
+    "interval_coverage": 0.9083333333333333,
+    "mean_interval_width": 1867.998500485944,
+    "median_interval_width": 1644.3214214590582,
+    "interval_score_log": 2.503514935252358
+  },
+  "content_gain": {
+    "channels": 24,
+    "mean_delta": 0.308525641025641,
+    "ci95_low": 0.2482355769230769,
+    "ci95_high": 0.3670264423076923,
+    "method": "paired bootstrap of macro channel pair-accuracy differences; 1000 resamples"
+  },
+  "checks": {
+    "real_data": false,
+    "baseline_and_global_coverage": false,
+    "content_in_selected_model": true,
+    "incremental_pair_gain_vs_context": true,
+    "macro_log_mae_vs_context": true,
+    "sector_coverage_and_sample": true
+  },
+  "eligible_for_decision": false,
+  "completed_at": "2026-10-06T13:26:01.522195+00:00",
+  "note": "Synthetic data validates machinery only. On real data, this is a retrospective research gate, not proof of causal campaign uplift."
+}

@@ -15,7 +15,7 @@ uv sync --frozen --group dev
 uv run galaxies doctor
 ```
 
-Para processar vídeo no macOS: `brew install ffmpeg`. Em Ubuntu: `sudo apt-get install ffmpeg`. A comparação de atributos pré-extraídos funciona sem FFmpeg.
+Para o LightGBM e processamento de vídeo no macOS: `brew install libomp ffmpeg`. Em Ubuntu: `sudo apt-get install libgomp1 ffmpeg`. A comparação de atributos pré-extraídos funciona sem FFmpeg.
 
 ## 2. Gerar dados e treinar
 
@@ -54,11 +54,13 @@ Os exemplos são sintéticos. Os comandos usam o modelo ativo; a demonstração 
 ```bash
 uv run galaxies validate minha-base.jsonl
 uv run galaxies import-data minha-base.jsonl
-uv run galaxies train minha-base.jsonl --config examples/train-config.json
+uv run galaxies research minha-base.jsonl --iterations 180 --folds 3
+# Inspecione a seleção congelada antes de consumir a janela final.
+uv run galaxies final-evaluation minha-base.jsonl .runtime/reports/RESEARCH_ID
 uv run galaxies promote MODEL_ID
 ```
 
-`promote` verifica os critérios do relatório. Modelos sintéticos exigem `--demo` e nunca habilitam recomendações reais. Uma base deve conter uma única métrica/horizonte e origens sintéticas ou reais separadas.
+`promote` verifica seleção congelada e critérios do relatório final. `train` continua disponível para exploração, mas não certifica um modelo real. Consulte o [protocolo completo](MODEL_CASE.md). Modelos sintéticos exigem `--demo` e nunca habilitam recomendações reais. Uma base deve conter uma única métrica/horizonte e origens sintéticas ou reais separadas.
 
 Não substitua apenas `synthetic: true` por `false` no exemplo: isso não cria dados reais. Prepare o contrato a partir de observações autorizadas, com os tempos corretos. Veja [Dados](DATA.md).
 

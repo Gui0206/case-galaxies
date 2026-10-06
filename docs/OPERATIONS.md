@@ -34,9 +34,17 @@ Ative versões de forma explícita. Para retornar a uma anterior, execute `galax
 
 ## Integridade
 
-Todos os arquivos do bundle têm hashes SHA-256 verificados no carregamento. Projeções são salvas em JSON/NPZ com `allow_pickle=False`; modelos usam o formato CatBoost. O manifesto não é uma assinatura criptográfica de origem: importe apenas artefatos de origem confiável, já que um terceiro poderia alterar arquivo e manifesto juntos.
+Todos os arquivos do bundle têm hashes SHA-256 verificados no carregamento. Projeções são salvas em JSON/NPZ com `allow_pickle=False`; estimadores usam coeficientes JSON, modelos CatBoost nativos e texto nativo LightGBM. O manifesto não é uma assinatura criptográfica de origem: importe apenas artefatos de origem confiável, já que um terceiro poderia alterar arquivo e manifesto juntos.
 
 Faça backup consistente de `.runtime` e dos arquivos SQLite/WAL, preferencialmente com o serviço parado ou pelo mecanismo de backup do SQLite. A restauração precisa preservar datasets, encoder, modelo, relatório e manifesto correspondentes.
+
+## Pesquisa e teste final
+
+`research` escreve plano, progresso, desenvolvimento e seleção congelada em `.runtime/reports/research-...`. `final-evaluation` exige os mesmos dados, implementação de modelagem e versões das principais bibliotecas. Uma versão certificada recebe outro ID; o bundle original não é alterado. Só a avaliação final pode verificar seleção para promoção real.
+
+O arquivo `final-evaluated-HASH.json` é criado exclusivamente antes de treinar os dois modelos finais. Se ocorrer falha, o estado iniciado permanece: investigue o log e registre o que foi observado. Não há retry automático para esse comando e apagar o registro não torna os dados novamente não vistos. Essa trava é local ao workspace; preserve-a nos backups. Para mudar o protocolo depois de consultar o teste, obtenha outra janela futura independente e declare a mudança.
+
+O LightGBM exige a biblioteca OpenMP: `brew install libomp` no macOS ou `libgomp1` no Ubuntu. O lockfile fixa pacotes Python, não bibliotecas do sistema.
 
 ## Acompanhamento
 

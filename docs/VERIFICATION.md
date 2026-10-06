@@ -2,7 +2,7 @@
 
 Verificação local em 6 de outubro de 2026, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve uma execução; o resultado da CI remota precisa ser consultado separadamente.
 
-**Resultado: 40 testes passaram**, sem skips no ambiente local com FFmpeg disponível. Ruff, formatação, sintaxe JavaScript e build também passaram.
+**Resultado: 55 testes passaram**, sem skips no ambiente local com FFmpeg disponível. Ruff, formatação e build também passaram. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; o reforço atual se concentrou na modelagem.
 
 | Camada | Verificação realizada |
 |---|---|
@@ -10,6 +10,10 @@ Verificação local em 6 de outubro de 2026, Python 3.12.13, macOS. O [lockfile]
 | Contratos e tempo | Rejeição de vazamento, horizonte incorreto, escalas inválidas, mistura sintética/real e timestamps futuros |
 | Dados | JSON/JSONL/Parquet, deduplicação, campanhas, canais excluídos e histórico disponível na decisão |
 | Modelo | Treinamento real em dados sintéticos; persistência; identidade aditiva do SHAP; quantil conformal; detecção de alteração dos artefatos |
+| Competição | Três janelas com avaliações disjuntas; mesmos IDs; isolamento do teste final mesmo ao alterar seus alvos; rejeição de candidatos incompletos |
+| Seleção e confirmação | Regra protege erro de contagens; hashes rejeitam alteração de dados/código; avaliação final de uso único; promoção real exige seleção verificada |
+| Famílias | Ridge, CatBoost, LightGBM e blend em alvos absolutos e residuais; persistência nativa e atribuições aditivas |
+| Diagnósticos | Embaralhamento preserva contexto/alvos; interval score penaliza amplitude e falhas |
 | Decisão | Modelo sintético e entrada simulada bloqueiam recomendação; atributos ausentes são sinalizados |
 | API | Contratos, rastros, autenticação, restrição de origem e importação inválida |
 | Treinamento assíncrono | Job persistido chega a `completed`; processo MCP/API vivo não é interrompido por outra instância |
@@ -31,7 +35,9 @@ node --check src/galaxies/web/app.js
 uv build
 ```
 
-Os testes usam diretórios temporários, dados sintéticos determinísticos e nenhuma credencial externa. O processo MCP é separado; a cobertura padrão do processo pai não atribui suas linhas, embora o teste de protocolo o execute. A suíte de experimentos e os comandos CLI também foram executados manualmente e têm [relatórios salvos](results/experiments.json).
+Os testes usam diretórios temporários, dados sintéticos determinísticos e nenhuma credencial externa. O processo MCP é separado; a cobertura padrão do processo pai não atribui suas linhas, embora o teste de protocolo o execute. A suíte de experimentos e os comandos CLI também foram executados manualmente. A competição completa de 12 configurações, ablações, controles negativos, seeds e canais excluídos tem [resultados salvos](results/research/development.json); a [avaliação final](results/research/final.json) confirma uma seleção previamente congelada em dados sintéticos.
+
+A cobertura instrumentada foi 73% no total, 99% em `estimators`, 97% em `metrics`, 91% em `protocol` e 91% em `research`. CLI, MCP subprocessado e extratores opcionais limitam essa medida; cobertura de linhas não equivale a validade estatística. A comparação HTTP com o modelo residual selecionado também foi confrontada com a saída CLI.
 
 ## Ainda exige ambiente e dados externos
 

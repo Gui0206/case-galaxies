@@ -1,0 +1,49 @@
+{
+  "plan_sha256": "788ff2f216cdc873b6947d7c1d12f10425511451484bec5ea7db44a3777bfbc2",
+  "development_sha256": "8e381a27a8cb02ef5522a241ca2cbdc35314f8c64c72fa30e94f62cf63ceedeb",
+  "selected": "catboost_residual",
+  "strongest_context": "context_lightgbm",
+  "selected_config": {
+    "family": "catboost",
+    "target_mode": "channel_residual",
+    "channel_weighting": "balanced",
+    "l2_regularization": 3,
+    "ridge_alpha": 10,
+    "blend_weight": 0.5,
+    "sector_calibration": true,
+    "min_sector_calibration": 40,
+    "iterations": 180,
+    "depth": 4,
+    "learning_rate": 0.06,
+    "seed": 42,
+    "coverage": 0.9,
+    "feature_blocks": [
+      "context",
+      "text",
+      "visual",
+      "rubric"
+    ],
+    "held_out_channels": [],
+    "min_train_rows": 60
+  },
+  "context_config": {
+    "family": "lightgbm",
+    "target_mode": "absolute",
+    "channel_weighting": "balanced",
+    "l2_regularization": 3,
+    "ridge_alpha": 10,
+    "blend_weight": 0.5,
+    "sector_calibration": true,
+    "min_sector_calibration": 40,
+    "iterations": 180,
+    "depth": 4,
+    "learning_rate": 0.06,
+    "seed": 42,
+    "coverage": 0.9,
+    "feature_blocks": [
+      "context"
+    ],
+    "held_out_channels": [],
+    "min_train_rows": 60
+  }
+}
