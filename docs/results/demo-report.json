@@ -1,0 +1,285 @@
+{
+  "model_id": "model-20261006075245-fb3ce197",
+  "created_at": "2026-10-06T07:52:45.630462+00:00",
+  "evidence_level": "synthetic_demo",
+  "eligible_for_decision": false,
+  "metric": "likes",
+  "horizon_days": 7,
+  "config": {
+    "iterations": 180,
+    "depth": 5,
+    "learning_rate": 0.06,
+    "seed": 42,
+    "coverage": 0.9,
+    "feature_blocks": [
+      "context",
+      "text",
+      "visual",
+      "rubric"
+    ],
+    "held_out_channels": [],
+    "min_train_rows": 60
+  },
+  "audit": {
+    "rows": 2160,
+    "channels": 24,
+    "sectors": {
+      "beleza": 720,
+      "automotivo": 720,
+      "moda": 720
+    },
+    "metric": "likes",
+    "horizon_days": 7,
+    "synthetic": true,
+    "period_start": "2025-01-01T12:00:00+00:00",
+    "period_end": "2025-09-25T23:00:00+00:00",
+    "duplicate_content_rows": 0,
+    "unknown_distribution_fraction": 0.0,
+    "largest_channel_fraction": 0.041666666666666664,
+    "missing_subscribers": 0,
+    "sources": [
+      "synthetic-generator-v1"
+    ],
+    "usage_bases": [
+      "synthetic-original"
+    ],
+    "warnings": [
+      "Dados sintéticos: resultados não medem desempenho no mundo real."
+    ]
+  },
+  "dataset_sha256": "a2d0a2a7cb1665aea71ac5fd2cdf232d081ee94dbea2db07aec9055a85ed566a",
+  "splits": {
+    "train": 1128,
+    "validation": 276,
+    "calibration": 264,
+    "test": 324
+  },
+  "cutoffs": [
+    "2025-05-28T18:00:00+00:00",
+    "2025-07-09T12:00:00+00:00",
+    "2025-08-17T18:00:00+00:00"
+  ],
+  "purged_rows": 168,
+  "duplicates_removed": 0,
+  "trained_until": "2025-05-26T23:00:00+00:00",
+  "inference_not_before": "2025-10-02T23:00:00+00:00",
+  "metrics": {
+    "rows": 324,
+    "mae_log": 0.3266549589214429,
+    "mae": 363.8488391568748,
+    "mape_nonzero": 0.331722776610533,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.8889478683568862,
+    "spearman_within_channel": 0.7006702571045328,
+    "pair_accuracy": 0.8028455284552846,
+    "pair_count": 492,
+    "mean_selection_regret": 0.11266478523240492,
+    "interval_coverage": 0.9074074074074074,
+    "mean_interval_width": 1644.9302887849647,
+    "median_interval_width": 1436.953460626627
+  },
+  "baseline": {
+    "rows": 324,
+    "mae_log": 0.5011561185524236,
+    "mae": 543.7546296296297,
+    "mape_nonzero": 0.5581470869247083,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.7193983717332045,
+    "spearman_within_channel": -0.05051731834773319,
+    "pair_accuracy": 0.5152439024390244,
+    "pair_count": 492,
+    "mean_selection_regret": 0.35534879362248323
+  },
+  "performance_bands": {
+    "thresholds_relative_to_channel": [
+      0.75,
+      1.25,
+      3
+    ],
+    "labels": [
+      "below",
+      "typical",
+      "above",
+      "exceptional"
+    ],
+    "macro_f1": 0.4208275153674547,
+    "note": "Exceptional is relative performance, not a universal definition of virality."
+  },
+  "validation_metrics": {
+    "rows": 276,
+    "mae_log": 0.30128507704466573,
+    "mae": 326.6551289805862,
+    "mape_nonzero": 0.31524976960227047,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.8962599626023926,
+    "spearman_within_channel": 0.7533331406863235,
+    "pair_accuracy": 0.8055555555555556,
+    "pair_count": 432,
+    "mean_selection_regret": 0.07259272895847735
+  },
+  "baseline_mean": {
+    "rows": 324,
+    "mae_log": 0.5107852105758585,
+    "mae": 561.7141975308642,
+    "mape_nonzero": 0.6628995071881449,
+    "mape_excluded_zero_rows": 0,
+    "spearman_global": 0.7340885059171613,
+    "spearman_within_channel": -0.13678896412642658,
+    "pair_accuracy": 0.46747967479674796,
+    "pair_count": 492,
+    "mean_selection_regret": 0.3615558039657748
+  },
+  "by_sector": {
+    "automotivo": {
+      "rows": 108,
+      "mae_log": 0.3247678648173465,
+      "mae": 314.3388108891166,
+      "mape_nonzero": 0.35214304869322743,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8362858626418513,
+      "spearman_within_channel": 0.7288461538461539,
+      "pair_accuracy": 0.8292682926829268,
+      "pair_count": 164,
+      "mean_selection_regret": 0.10557478581599115,
+      "interval_coverage": 0.8888888888888888,
+      "mean_interval_width": 1635.41289047954,
+      "median_interval_width": 1467.221649576959
+    },
+    "beleza": {
+      "rows": 108,
+      "mae_log": 0.32075160447867856,
+      "mae": 250.09695936894437,
+      "mape_nonzero": 0.3427404248399573,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8634046890927624,
+      "spearman_within_channel": 0.6807692307692308,
+      "pair_accuracy": 0.8292682926829268,
+      "pair_count": 164,
+      "mean_selection_regret": 0.07420474329532524,
+      "interval_coverage": 0.8888888888888888,
+      "mean_interval_width": 1238.0927448570674,
+      "median_interval_width": 1147.959279628387
+    },
+    "moda": {
+      "rows": 108,
+      "mae_log": 0.3344454074683037,
+      "mae": 527.1107472125636,
+      "mape_nonzero": 0.3002848562984142,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8915939847576299,
+      "spearman_within_channel": 0.6923953866982138,
+      "pair_accuracy": 0.75,
+      "pair_count": 164,
+      "mean_selection_regret": 0.15821482658589836,
+      "interval_coverage": 0.9444444444444444,
+      "mean_interval_width": 2061.2852310182857,
+      "median_interval_width": 1919.8454928010729
+    }
+  },
+  "by_generalization": {
+    "seen_channels": {
+      "rows": 324,
+      "mae_log": 0.3266549589214429,
+      "mae": 363.8488391568748,
+      "mape_nonzero": 0.331722776610533,
+      "mape_excluded_zero_rows": 0,
+      "spearman_global": 0.8889478683568862,
+      "spearman_within_channel": 0.7006702571045328,
+      "pair_accuracy": 0.8028455284552846,
+      "pair_count": 492,
+      "mean_selection_regret": 0.11266478523240492,
+      "interval_coverage": 0.9074074074074074,
+      "mean_interval_width": 1644.9302887849647,
+      "median_interval_width": 1436.953460626627
+    }
+  },
+  "paired_channel_bootstrap": {
+    "channels": 24,
+    "mean_delta": 0.28982256778309406,
+    "ci95_low": 0.22432341507177037,
+    "ci95_high": 0.35441836124401915,
+    "method": "paired bootstrap of macro channel pair-accuracy differences; 1000 resamples"
+  },
+  "pair_calibration": {
+    "available": true,
+    "pairs": 432,
+    "slope": 4.106397737804076,
+    "method": "symmetric Platt calibration; validation pairs within channel/14-day window"
+  },
+  "pair_probability_test": {
+    "brier_score": 0.13350571487691018,
+    "pairs": 492
+  },
+  "conformal_adjustment_log": 0.20770016486767684,
+  "feature_names": [
+    "log_channel_median",
+    "log_channel_mean",
+    "history_count",
+    "history_log_std",
+    "log_subscribers",
+    "hour_sin",
+    "hour_cos",
+    "weekday_sin",
+    "weekday_cos",
+    "sector_beleza",
+    "sector_automotivo",
+    "sector_moda",
+    "caption_words",
+    "transcript_words",
+    "audio_rms",
+    "benefit_clarity",
+    "brightness",
+    "cta",
+    "cuts_per_second",
+    "demonstration",
+    "duration_s",
+    "frame_change",
+    "hook_clarity",
+    "ocr_word_count",
+    "onscreen_text_density",
+    "pacing",
+    "product_visibility",
+    "saturation",
+    "silence_ratio",
+    "speech_energy",
+    "speech_words_per_second",
+    "text_component_0",
+    "text_component_1",
+    "text_component_2",
+    "text_component_3",
+    "text_component_4",
+    "text_component_5",
+    "text_component_6",
+    "text_component_7",
+    "text_component_8",
+    "text_component_9",
+    "text_component_10",
+    "text_component_11"
+  ],
+  "sectors": [
+    "automotivo",
+    "beleza",
+    "moda"
+  ],
+  "languages": [
+    "pt"
+  ],
+  "distribution": [
+    "organic"
+  ],
+  "model_family": "CatBoost + MultiQuantile + split conformal",
+  "environment": {
+    "python": "3.12.13",
+    "catboost": "1.2.10",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.3",
+    "pydantic": "2.13.5"
+  },
+  "limitations": [
+    "Dados observacionais; explicações não representam efeitos causais.",
+    "Cobertura conformal depende da estabilidade da distribuição e é medida empiricamente.",
+    "Pares históricos do mesmo canal/janela não são um experimento aleatório de campanha.",
+    "Impulsionamento desconhecido não é inferido a partir das métricas públicas.",
+    "Dados sintéticos: resultados não medem desempenho no mundo real."
+  ]
+}
