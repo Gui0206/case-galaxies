@@ -18,6 +18,20 @@ URL = "https://dataverse.harvard.edu/api/access/datafile/3489832"
 def main():
     root = ROOT / "source"
     root.mkdir(parents=True, exist_ok=True)
+    metadata = httpx.get(
+        "https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId=doi:10.7910/DVN/L3UWZT",
+        timeout=45,
+    )
+    metadata.raise_for_status()
+    current = metadata.json()
+    source = next(
+        f["dataFile"]
+        for f in current["data"]["latestVersion"]["files"]
+        if f["dataFile"]["id"] == 3489832
+    )
+    if source["filesize"] != SIZE or source["md5"] != MD5:
+        raise ValueError("Public source version changed; do not silently replace this study's data")
+    (root / "dataverse.json").write_text(json.dumps(current, indent=2) + "\n")
     target = root / "tweeted_videos1.tar.bz2"
     partial = root / "tweeted_videos1.tar.partial"
     # A sequential download prefix from acquisition is also resumable.
@@ -90,6 +104,10 @@ def main():
                 checksum = hashlib.file_digest(source, "sha256").hexdigest()
             records.append({"file": name, "bytes": destination.stat().st_size, "sha256": checksum})
             print("Extracted", name, flush=True)
+            if len(records) == 2:
+                break
+    if {r["file"] for r in records} != {"autos.json", "howto.json"}:
+        raise ValueError("Archive did not contain both declared categories")
     (ROOT / "acquisition.json").write_text(
         json.dumps(
             {

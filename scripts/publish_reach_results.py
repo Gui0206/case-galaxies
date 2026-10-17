@@ -56,6 +56,7 @@ def main():
         shutil.copy2(RUN / filename, DEST / filename)
     for filename in ("audit.json", "acquisition.json", "semantic.json"):
         shutil.copy2(DATA / filename, DEST / filename)
+    shutil.copy2(DATA / "source/dataverse.json", DEST / "source-record.json")
     primary = result["sections"]["primary"]
     metrics = primary["metrics"]
     recommended = selection["recommended_forecaster"]

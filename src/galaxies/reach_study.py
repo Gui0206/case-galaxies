@@ -466,6 +466,22 @@ def fit_candidate(name, matrices, frame, train, predict, folder=None):
     return np.maximum(0, anchor[predict] + model.predict(x[predict]))
 
 
+def predict_saved_candidate(name, matrices, frame, rows, folder):
+    """Execute the saved numerical model without fitting or reading outcome files."""
+    spec = CANDIDATES[name]
+    if spec["bundle"] == "blend":
+        return 0.5 * predict_saved_candidate(
+            "linear_text_100", matrices, frame, rows, folder
+        ) + 0.5 * predict_saved_candidate("retrieval_mae6", matrices, frame, rows, folder)
+    matrix = matrices[spec["bundle"]][rows]
+    if spec["bundle"] == "linear":
+        values = np.load(folder / f"{name}.npz", allow_pickle=False)
+        residual = np.asarray(matrix @ values["coef"]).ravel() + float(values["intercept"])
+    else:
+        residual = CatBoostRegressor().load_model(str(folder / f"{name}.cbm")).predict(matrix)
+    return np.maximum(0, frame.shrunk_2.to_numpy()[rows] + residual)
+
+
 def fingerprint():
     digest = hashlib.sha256(Path(__file__).read_bytes())
     for library in ("numpy", "pandas", "scikit-learn", "catboost", "scipy"):
@@ -896,6 +912,10 @@ def final(root=ROOT, run=RUN):
     for name in sorted(names):
         print("Final fit:", name, flush=True)
         fit_predictions[name] = fit_candidate(name, matrices, frame, train, predict, run / "models")
+        # Verify persistence on calibration inputs; never refit or select using test errors.
+        replay = predict_saved_candidate(name, matrices, frame, cal, run / "models")
+        if not np.allclose(replay, fit_predictions[name][: len(cal)], atol=1e-6, rtol=1e-6):
+            raise ValueError("Saved model does not reproduce its calibration forecasts")
     if needs_blend:
         fit_predictions["blend_text_retrieval"] = (
             0.5 * fit_predictions["linear_text_100"] + 0.5 * fit_predictions["retrieval_mae6"]
