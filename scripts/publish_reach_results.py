@@ -78,15 +78,15 @@ def main():
         "",
         "## A comparação que importa",
         "",
-        "| Previsor | Erro médio em log por canal ↓ | Previsões entre metade e dobro do real ↑ | Acerto ao ordenar vídeos do mesmo canal ↑ |",
-        "|---|---:|---:|---:|",
+        "| Previsor | Erro médio em log por canal ↓ | Erro médio em visualizações ↓ | Entre metade e dobro do real ↑ | Acerto ao ordenar vídeos do mesmo canal ↑ |",
+        "|---|---:|---:|---:|---:|",
     ]
     ranks = primary["ranking"]["macro_accuracy"]
     for name in NAMES:
         m = metrics[name]
         label = NAMES[name] + (" **— escolhido antes do teste**" if name == recommended else "")
         lines.append(
-            f"| {label} | {number(m['macro_mae_log'], 3)} | {number(m['within_factor_two'] * 100)}% | {number(ranks.get(name, 0) * 100)}% |"
+            f"| {label} | {number(m['macro_mae_log'], 3)} | {number(m['mae_views'], 0)} | {number(m['within_factor_two'] * 100)}% | {number(ranks.get(name, 0) * 100)}% |"
         )
     lines += [
         "",
@@ -115,6 +115,10 @@ def main():
         f"**Ganho adicional do conteúdo sobre histórico e contexto:** {'confirmado pelo critério registrado' if result['confirmed_error_gain'] else 'não confirmado pelo critério registrado'}. O critério exige redução de pelo menos 5% e intervalo inteiramente positivo contra as duas referências.",
         "",
         f"**Melhoria da escolha entre criativos:** {'confirmada neste recorte' if result['confirmed_ranking_gain'] else 'não confirmada'}. Foram {number(primary['ranking']['pairs'], 0)} pares, em {number(primary['ranking']['channels'], 0)} canais. Os pares não são independentes. A comparação exige intervalo positivo contra contexto e histórico.",
+        "",
+        f"Ganho de ordenação do conteúdo, em pontos percentuais: sobre histórico, **{number(100 * primary['ranking']['content_vs_history_gain'])}**, IC95% [{number(100 * primary['ranking']['content_vs_history_ci95'][0])}; {number(100 * primary['ranking']['content_vs_history_ci95'][1])}]; sobre contexto, **{number(100 * primary['ranking']['content_vs_context_gain'])}**, IC95% [{number(100 * primary['ranking']['content_vs_context_ci95'][0])}; {number(100 * primary['ranking']['content_vs_context_ci95'][1])}].",
+        "",
+        "Os pares são vídeos publicados pelo mesmo canal na mesma semana de calendário. Podem ter datas e condições de distribuição diferentes; não são alternativas criativas testadas simultaneamente sob o mesmo orçamento.",
         "",
         "## Cinco exemplos, sem escolher os melhores",
         "",
@@ -156,6 +160,11 @@ def main():
             f"| {label} | {number(c['videos'], 0)} | {number(h['macro_mae_log'], 3)} | {number(c['macro_mae_log'], 3)} | {number(section['content_vs_history']['relative_reduction_pct'])}% |"
         )
     chosen = metrics[recommended]
+    primary_rows = predictions[(~predictions.reserved_channel) & (predictions.history_count >= 3)]
+    median_target = float(primary_rows.target.median())
+    absolute_warning = ""
+    if chosen["mae_views"] > metrics["history"]["mae_views"]:
+        absolute_warning = f"**O erro em número de visualizações aumentou {number(100 * (chosen['mae_views'] / metrics['history']['mae_views'] - 1))}% sobre o histórico.** Uma melhora no critério principal em log não implica melhora em todas as escalas."
     control_summary = ""
     if "semantic_control" in metrics:
         control_summary = (
@@ -167,7 +176,9 @@ def main():
         "",
         "Os recortes foram definidos antes do teste. São diagnósticos; não trocamos o resultado principal pelo recorte mais favorável.",
         "",
-        f"Os intervalos nominais de 90% do previsor escolhido cobriram **{number(chosen['coverage90'] * 100)}%** dos resultados do teste principal; a largura mediana foi **{number(chosen['median_interval_width_views'], 0)} visualizações**. Cobertura alta com intervalos largos ainda pode ter pouca utilidade. Coberturas por recorte estão no JSON completo.",
+        absolute_warning,
+        "",
+        f"Os intervalos nominais de 90% do previsor escolhido cobriram **{number(chosen['coverage90'] * 100)}%** dos resultados do teste principal; a largura mediana foi **{number(chosen['median_interval_width_views'], 0)} visualizações**, para uma mediana real de **{number(median_target, 0)} visualizações**. Cobertura alta com intervalos largos ainda pode ter pouca utilidade. Coberturas por recorte estão no JSON completo.",
         "",
         "## O que foi melhorado no modelo",
         "",

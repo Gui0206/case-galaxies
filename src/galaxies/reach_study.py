@@ -654,8 +654,8 @@ def develop(root=ROOT, run=RUN):
         "final_start": FINAL_START,
         "calibration_start": "2016-08-08",
         "calibration_stop": "2016-08-11",
-        "selection": "Minimum macro-channel MAE in log over concatenated disjoint development folds; within 1% prefer lower depth then lexical name. Baseline and context selected independently.",
-        "success": "At least 5% relative macro MAE reduction with positive 95% channel-bootstrap lower gain vs BOTH selected history and context; >=500 videos and >=50 channels. Ranking separately requires positive lower gain vs context, >=200 pairs and >=30 channels.",
+        "selection": "Minimum macro-channel MAE in log over concatenated disjoint development folds; within 1% prefer lower depth, then error, then lexical name. Baseline and context selected independently.",
+        "success": "At least 5% relative macro MAE reduction with positive 95% channel-bootstrap lower gain vs BOTH selected history and context; >=500 videos and >=50 channels. Ranking separately requires positive lower gain vs BOTH context and history, >=200 pairs and >=30 channels.",
         "production_eligible": False,
     }
     write_json(run / "plan.json", plan)
@@ -801,7 +801,13 @@ def ranking(frame, predictions):
                 {"channel_id": channel, **{n: float(np.mean(v)) for n, v in scores.items()}}
             )
     if not channels:
-        return {"pairs": 0, "channels": 0, "macro_accuracy": {}, "content_vs_context_ci95": None}
+        return {
+            "pairs": 0,
+            "channels": 0,
+            "macro_accuracy": {},
+            "content_vs_context_ci95": None,
+            "content_vs_history_ci95": None,
+        }
     groups = pd.DataFrame(channels)
     rng = np.random.default_rng(20261018)
     deltas = {name: (groups.content - groups[name]).to_numpy() for name in ("context", "history")}
