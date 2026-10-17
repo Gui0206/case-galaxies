@@ -64,3 +64,9 @@ A segunda rodada preserva os mesmos dados, datas, canais reservados, métricas e
 São **30 candidatos**, incluindo os 16 originais, e **oito referências históricas**: acrescentamos média em log e mediana dos últimos 50 resultados. Essas duas estatísticas também entram no contexto, para não atribuir ao texto um ganho que venha apenas de consultar mais histórico. Os modelos de árvores e Ridge mantêm os demais hiperparâmetros. A segunda rodada ainda usa somente as duas janelas de desenvolvimento. Nenhum resultado do teste final foi consultado para propor esta revisão.
 
 A primeira rodada foi preservada em [results/reach-development-v1](results/reach-development-v1/), e seu código pode ser recuperado pelo commit `f03257b`. O código da revisão será congelado novamente antes da única avaliação final. Essa revisão é exploração no desenvolvimento; não é uma segunda confirmação independente.
+
+### Regra final de escolha, ainda antes da abertura
+
+A regra inicial de tolerância de 1% favorecia um blend por ele não possuir profundidade declarada e aplicava a tolerância novamente ao escolher entre famílias. Isso podia afastar a escolha do menor erro observado. Após a segunda rodada, retiramos essa tolerância: **o critério final é simplesmente o menor MAE macro em log no desenvolvimento**, com simplicidade somente para empates exatos. Essa alteração usa resultados de desenvolvimento, portanto é uma revisão exploratória declarada, não uma regra fixada antes de qualquer dado.
+
+A rodada com a regra anterior está em [results/reach-development-v2](results/reach-development-v2/). Os 30 candidatos, oito referências, pesos, partições, alvo e limiares de confirmação não mudaram. A execução foi refeita com a seleção corrigida, antes de abrir o teste final, que continua reservado. Não usamos o teste para escolher entre as duas regras.

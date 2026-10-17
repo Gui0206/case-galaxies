@@ -2,7 +2,7 @@
 
 Última verificação local em **17 de outubro de 2026**, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve execuções locais; o resultado da CI remota precisa ser consultado separadamente.
 
-**Resultado atual: 80 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização acrescenta o estudo de alcance à análise de vídeos completos e ao teste temporal de retenção.
+**Resultado atual: 81 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização acrescenta o estudo de alcance à análise de vídeos completos e ao teste temporal de retenção.
 
 A [CI do commit de validação da extração `050d0da`](https://github.com/Gui0206/case-galaxies/actions/runs/39076952015) também terminou com sucesso. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
 

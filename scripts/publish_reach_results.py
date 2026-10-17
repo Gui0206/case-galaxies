@@ -65,13 +65,31 @@ def main():
     primary = result["sections"]["primary"]
     metrics = primary["metrics"]
     recommended = selection["recommended_forecaster"]
+    chosen_name = selection.get(recommended)
+    chosen_spec = plan["candidates"].get(chosen_name, {})
+    chosen_description = "A previsão escolhida é uma correção aprendida sobre o histórico do canal."
+    if chosen_spec.get("bundle", "").endswith("_rule"):
+        similarity = (
+            "similaridade semântica do título, com MiniLM multilíngue congelado"
+            if chosen_spec["bundle"].startswith("semantic")
+            else "semelhança lexical do título, com TF-IDF ajustado só no treino"
+        )
+        share = 100 * chosen_spec["shrink"]
+        chosen_description = (
+            f"**A solução escolhida combina {number(100 - share, 0)}% do histórico habitual com {number(share, 0)}% do resultado de vídeos parecidos.** "
+            f"Ela busca até cinco comparáveis entre as últimas 50 publicações maduras do mesmo canal, por {similarity}. "
+            "A combinação é feita em log e depois convertida em visualizações. A proporção foi escolhida no desenvolvimento; essa regra não ajusta uma nova regressão no treino final."
+        )
+    elif recommended == "history":
+        chosen_description = "A solução escolhida usa somente o histórico; os candidatos de conteúdo não justificaram sua complexidade no desenvolvimento."
     gain = primary["recommended_vs_history"]
     success = result["confirmed_recommended_vs_history"]
-    conclusion = (
-        f"**O preditor escolhido no desenvolvimento reduziu o erro em {number(gain['relative_reduction_pct'])}% sobre o histórico neste teste retrospectivo.**"
-        if success
-        else "**O novo estudo não confirmou o ganho mínimo de 5% sobre o histórico.**"
-    )
+    if success:
+        conclusion = f"**O preditor escolhido no desenvolvimento reduziu o erro em {number(gain['relative_reduction_pct'])}% sobre o histórico neste teste retrospectivo, atendendo ao critério registrado.**"
+    elif gain["ci95"][0] > 0:
+        conclusion = f"**Houve uma redução de {number(gain['relative_reduction_pct'])}% no erro sobre o histórico, com intervalo de 95% positivo, mas abaixo do objetivo registrado de 5%.**"
+    else:
+        conclusion = "**O novo estudo não confirmou superioridade sobre o histórico.**"
     lines = [
         "# O novo modelo supera o histórico?",
         "",
@@ -187,11 +205,13 @@ def main():
         "",
         "## O que foi melhorado no modelo",
         "",
+        chosen_description,
+        "",
         "O modelo aprende correções sobre o padrão recente do canal. Compara duração com a duração habitual, usa o texto do título e recupera até cinco publicações anteriores semelhantes, com resultados já maduros. Foram comparados 30 candidatos na rodada revisada, incluindo versões lexicais, encoder semântico multilíngue congelado, regressão regularizada, CatBoost, uma mistura fixa e regras simples de comparáveis. A primeira rodada de desenvolvimento está preservada no protocolo. Não usamos visualizações iniciais, curtidas ou retenção do próprio vídeo.",
         "",
         control_summary,
         "",
-        f"Treino final: **{number(result['train_videos'], 0)} vídeos**. Calibração separada: **{number(result['calibration_videos'], 0)}**. A avaliação final inclui **{number(result['all_test_videos'], 0)}** vídeos ao somar histórico suficiente, pouco histórico e canais reservados. Todos os alvos do treino/calibração amadurecem antes das respectivas fronteiras. O histórico pode incorporar resultados já maduros durante o teste; os pesos permanecem fixos.",
+        f"Base de ajuste final dos modelos e representações que exigem treino: **{number(result['train_videos'], 0)} vídeos**. Calibração separada: **{number(result['calibration_videos'], 0)}**. A avaliação final inclui **{number(result['all_test_videos'], 0)}** vídeos ao somar histórico suficiente, pouco histórico e canais reservados. Todos os alvos do treino/calibração amadurecem antes das respectivas fronteiras. O histórico pode incorporar resultados já maduros durante o teste; os parâmetros e as regras permanecem fixos.",
         "",
         "## O que este teste ainda não prova",
         "",
@@ -255,7 +275,7 @@ def main():
         f"{number(metrics['content']['videos'], 0)} vídeos reservados · {number(metrics['content']['channels'], 0)} canais · YouTube, agosto de 2016",
         color="#4d596c",
     )
-    footer = f"Escolhido no desenvolvimento: {NAMES[recommended]}. Ganho mínimo de 5% sobre histórico: {'confirmado neste recorte' if success else 'não confirmado'}."
+    footer = f"Escolhido no desenvolvimento: {NAMES[recommended]}. Critério registrado de melhoria: {'atingido neste recorte' if success else 'não atingido'}."
     fig.text(0.06, 0.08, footer, fontsize=10)
     fig.text(
         0.06,

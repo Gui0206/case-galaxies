@@ -696,7 +696,7 @@ def develop(root=ROOT, run=RUN):
             }
         )
     plan = {
-        "protocol": "prepublication-reach-v2",
+        "protocol": "prepublication-reach-v3",
         "created_at": utcnow(),
         "code_sha256": fingerprint(),
         "audit": read_json(root / "audit.json"),
@@ -707,7 +707,7 @@ def develop(root=ROOT, run=RUN):
         "final_start": FINAL_START,
         "calibration_start": "2016-08-08",
         "calibration_stop": "2016-08-11",
-        "selection": "Minimum macro-channel MAE in log over concatenated disjoint development folds; within 1% prefer lower depth, then error, then lexical name. Baseline and context selected independently.",
+        "selection": "Minimum macro-channel MAE in log over concatenated disjoint development folds. Exact ties prefer lower depth then lexical name. Baseline and context selected independently. Recommended family minimizes the same error, with history/context/content order only breaking exact ties.",
         "success": "At least 5% relative macro MAE reduction with positive 95% channel-bootstrap lower gain vs BOTH selected history and context; >=500 videos and >=50 channels. Ranking separately requires positive lower gain vs BOTH context and history, >=200 pairs and >=30 channels.",
         "production_eligible": False,
     }
@@ -747,9 +747,7 @@ def develop(root=ROOT, run=RUN):
     }
 
     def choose(names):
-        best = min(scores[name] for name in names)
-        options = [n for n in names if scores[n] <= best * 1.01]
-        return min(options, key=lambda n: (CANDIDATES.get(n, {}).get("depth", 0), scores[n], n))
+        return min(names, key=lambda n: (scores[n], CANDIDATES.get(n, {}).get("depth", 0), n))
 
     selection = {
         "created_at": utcnow(),
@@ -773,10 +771,7 @@ def develop(root=ROOT, run=RUN):
         "context": selection["context"],
         "content": selection["content"],
     }
-    best_score = min(scores[name] for name in alternatives.values())
-    selection["recommended_forecaster"] = next(
-        label for label, name in alternatives.items() if scores[name] <= best_score * 1.01
-    )
+    selection["recommended_forecaster"] = min(alternatives, key=lambda k: scores[alternatives[k]])
     predictions.to_csv(run / "development_predictions.csv", index=False)
     write_json(run / "development.json", {"folds": outcomes, "scores": scores})
     selection["development_sha256"] = sha256_file(run / "development.json")
