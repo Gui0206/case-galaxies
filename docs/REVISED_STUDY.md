@@ -22,6 +22,7 @@ Este estudo volta ao objetivo do TAPI e do kickoff: estimar visualizações e or
 | [SMP-Video](https://huggingface.co/datasets/smpchallenge/SMP-Video) | Acesso depende de autenticação e aceite do titular; não foi acessada. |
 | [Open Channel Stats](https://openchannelstats.com/channels) | Exportações autorizadas e atuais, mas apenas cinco canais públicos na consulta; população e tamanho não sustentam o teste principal dos setores. |
 | [HIP / ACTIVE](https://github.com/andrei-rizoiu/hip-popularity) | Série diária disponível, mas seleção por atividade e população menos próxima; não escolhida. |
+| [Video Ads, Arantes et al.](https://github.com/marianavsarantes/video-ads-dataset) | 5.052 anúncios com metadados e séries; o arquivo de anúncios não fornece o canal. Sem ligação verificável para reconstruir histórico e sem contexto de investimento, não será o teste principal. |
 | Bases dos estudos anteriores | Testes fechados. Não selecionar um novo vencedor olhando os mesmos resultados. |
 
 ## Reserva de dados, antes de ler os resultados
@@ -42,8 +43,12 @@ Antes do desenvolvimento, também se fixa um diagnóstico de títulos de Howto &
 
 O candidato com conteúdo deve reduzir pelo menos **5% do MAE macro em log** em relação tanto à melhor referência histórica quanto ao modelo escolhido só com contexto; o limite inferior do intervalo pareado de 95%, reamostrado por canal, deve ser positivo para ambas as comparações. São necessários pelo menos 500 vídeos e 50 canais no teste principal.
 
-Para afirmar que ajuda a **escolher criativos**, também deverá haver ganho de ordenação dentro do canal sobre o contexto, com limite inferior positivo e pelo menos 200 pares em 30 canais. Empate de previsão vale meio acerto; empate real não permite ordenar. Pares compartilham vídeos e a incerteza é calculada por canal, não como se fossem independentes.
+Para afirmar que ajuda a **escolher criativos**, também deverá haver ganho de ordenação dentro do canal sobre o contexto **e o histórico**, com limites inferiores positivos e pelo menos 200 pares em 30 canais. Empate de previsão vale meio acerto; empate real não permite ordenar. Pares compartilham vídeos e a incerteza é calculada por canal, não como se fossem independentes.
+
+Há 16 candidatos: modelos residuais CatBoost (MAE/RMSE, profundidades 4/6), regressão Ridge sobre texto, representações lexicais ou MiniLM multilíngue congelado e recuperação de até cinco comparáveis anteriores do canal. PCA, vocabulário e escala são ajustados somente no treino. O encoder pré-treinado é posterior a 2016; seu eventual contato com títulos antigos não pode ser descartado. A família lexical oferece uma comparação sem esse encoder. As seis referências históricas incluem média, mediana, média em log e regularização pelo setor. Além da hipótese de ganho do conteúdo, a previsão recomendada será escolhida no desenvolvimento entre histórico, contexto e conteúdo; dentro de 1% do melhor erro, prefere-se a opção mais simples, nessa ordem. Sua comparação com o histórico será relatada separadamente, sem confundi-la com valor adicional do conteúdo.
 
 Todas as configurações, inclusive as que falharem, serão registradas. Modelos simples podem vencer. Ganho só sobre uma referência fraca não basta. Os intervalos de previsão serão calibrados em dados separados e avaliados por cobertura e largura; não são garantia sob mudança de distribuição.
 
 **Estado ao registrar este plano:** aquisição em andamento; nenhum modelo treinado ou resultado de teste consultado nesta nova base. A camada de vídeo completo existente permanece executável, mas seu ganho sobre visualizações ainda não foi demonstrado.
+
+O usuário confirmou que a base de setores mencionada no TAPI não existe. Este estudo não depende dela nem presume acesso a clientes da Galaxies.

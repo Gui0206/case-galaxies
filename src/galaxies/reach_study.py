@@ -669,6 +669,15 @@ def develop(root=ROOT, run=RUN):
         "scores": scores,
         "plan_sha256": sha256_file(run / "plan.json"),
     }
+    alternatives = {
+        "history": selection["baseline"],
+        "context": selection["context"],
+        "content": selection["content"],
+    }
+    best_score = min(scores[name] for name in alternatives.values())
+    selection["recommended_forecaster"] = next(
+        label for label, name in alternatives.items() if scores[name] <= best_score * 1.01
+    )
     predictions.to_csv(run / "development_predictions.csv", index=False)
     write_json(run / "development.json", {"folds": outcomes, "scores": scores})
     selection["development_sha256"] = sha256_file(run / "development.json")
@@ -748,17 +757,21 @@ def ranking(frame, predictions):
     if not channels:
         return {"pairs": 0, "channels": 0, "macro_accuracy": {}, "content_vs_context_ci95": None}
     groups = pd.DataFrame(channels)
-    delta = (groups.content - groups.context).to_numpy()
     rng = np.random.default_rng(20261018)
-    sampled = np.concatenate(
-        [rng.choice(delta, (100, len(delta)), replace=True).mean(axis=1) for _ in range(50)]
-    )
+    deltas = {name: (groups.content - groups[name]).to_numpy() for name in ("context", "history")}
+    sampled = {name: [] for name in deltas}
+    for _ in range(50):
+        selected = rng.integers(0, len(groups), (100, len(groups)))
+        for name, delta in deltas.items():
+            sampled[name].extend(delta[selected].mean(axis=1))
     return {
         **dict(totals),
         "channels": len(groups),
         "macro_accuracy": {name: float(groups[name].mean()) for name in predictions},
-        "content_vs_context_gain": float(delta.mean()),
-        "content_vs_context_ci95": np.quantile(sampled, [0.025, 0.975]).tolist(),
+        "content_vs_context_gain": float(deltas["context"].mean()),
+        "content_vs_context_ci95": np.quantile(sampled["context"], [0.025, 0.975]).tolist(),
+        "content_vs_history_gain": float(deltas["history"].mean()),
+        "content_vs_history_ci95": np.quantile(sampled["history"], [0.025, 0.975]).tolist(),
     }
 
 
@@ -916,6 +929,10 @@ def final(root=ROOT, run=RUN):
             },
             "content_vs_history": paired_gain(part, forecasts["content"], forecasts["history"]),
             "content_vs_context": paired_gain(part, forecasts["content"], forecasts["context"]),
+            "context_vs_history": paired_gain(part, forecasts["context"], forecasts["history"]),
+            "recommended_vs_history": paired_gain(
+                part, forecasts[selection["recommended_forecaster"]], forecasts["history"]
+            ),
             "ranking": ranking(part, forecasts),
         }
     primary = sections["primary"]
@@ -931,6 +948,7 @@ def final(root=ROOT, run=RUN):
         ranks["pairs"] >= 200
         and ranks["channels"] >= 30
         and ranks["content_vs_context_ci95"][0] > 0
+        and ranks["content_vs_history_ci95"][0] > 0
     )
     report = {
         "completed_at": utcnow(),
@@ -942,6 +960,12 @@ def final(root=ROOT, run=RUN):
         "sections": sections,
         "confirmed_error_gain": bool(gain),
         "confirmed_ranking_gain": bool(ranking_gain),
+        "confirmed_recommended_vs_history": bool(
+            size["videos"] >= 500
+            and size["channels"] >= 50
+            and primary["recommended_vs_history"]["relative_reduction_pct"] >= 5
+            and primary["recommended_vs_history"]["ci95"][0] > 0
+        ),
         "case_solved": False,
         "production_eligible": False,
         "limits": [
