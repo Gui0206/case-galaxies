@@ -1,0 +1,70 @@
+{
+  "registered_at": "2026-10-17T21:37:14.560489+00:00",
+  "source": "https://github.com/tsinghua-fib-lab/ShortVideo_dataset",
+  "target": "mean capped watch fraction in the first 24 hours after first panel exposure; not publication",
+  "cohort": "all 954 eligible videos, 10-120 seconds, >=10 exposures in target window and >=10 completed earlier creator events",
+  "primary_metric": "mean absolute error in retention percentage points, equal weight per video",
+  "folds_local_Asia_Shanghai": [
+    [
+      "2022-09-18 00:00",
+      "2022-09-18 12:00"
+    ],
+    [
+      "2022-09-18 12:00",
+      "2022-09-19 12:00"
+    ]
+  ],
+  "final_start_local_Asia_Shanghai": "2022-09-20 12:00",
+  "training_rule": "all outcomes available strictly before the evaluation-window start",
+  "feature_bundles": {
+    "context": [],
+    "caption": [
+      "caption"
+    ],
+    "image": [
+      "image"
+    ],
+    "speech": [
+      "speech"
+    ],
+    "editing": [
+      "editing"
+    ],
+    "full": [
+      "caption",
+      "image",
+      "speech",
+      "editing"
+    ]
+  },
+  "candidates": {
+    "ridge_10": {
+      "family": "ridge",
+      "alpha": 10
+    },
+    "ridge_100": {
+      "family": "ridge",
+      "alpha": 100
+    },
+    "ridge_1000": {
+      "family": "ridge",
+      "alpha": 1000
+    },
+    "catboost_3": {
+      "family": "catboost",
+      "depth": 3,
+      "iterations": 300
+    },
+    "catboost_5": {
+      "family": "catboost",
+      "depth": 5,
+      "iterations": 300
+    }
+  },
+  "selection": "minimum video-weighted development MAE; within 1% prefer simpler Ridge/stronger regularization/shallow trees",
+  "success": ">=5% MAE reduction and positive lower 95% creator-cluster bootstrap gain versus BOTH shrunk channel history and chosen context model; >=100 test videos and >=50 creators",
+  "failure_policy": "exclude unreadable/unavailable files or >5%/1s duration mismatch before model fitting; report all exclusions and evaluate all models on identical surviving IDs",
+  "deduplication": "remove later exact media SHA256 duplicates; cannot guarantee against edited reposts",
+  "prohibited": "do not select representations or candidates using final-test results; do not claim view/like or publication prediction from retention results",
+  "production_eligible": false
+}
