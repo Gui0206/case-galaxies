@@ -28,7 +28,16 @@ ROOT = Path(".runtime/public/beyond-views")
 RUN = Path(".runtime/reports/reach")
 DAY = 86400
 FINAL_START = "2016-08-20"
-BASELINES = ["median_5", "median_20", "mean_20", "logmean_20", "shrunk_2", "shrunk_5"]
+BASELINES = [
+    "median_5",
+    "median_20",
+    "mean_20",
+    "logmean_20",
+    "shrunk_2",
+    "shrunk_5",
+    "median_50",
+    "logmean_50",
+]
 CONTEXT = [
     "log_history_count",
     "history_age_days",
@@ -39,6 +48,8 @@ CONTEXT = [
     "median_20",
     "mean_20",
     "logmean_20",
+    "median_50",
+    "logmean_50",
     "shrunk_2",
     "shrunk_5",
     "history_std",
@@ -78,6 +89,29 @@ CANDIDATES = {
     "semantic_retrieval_mae6": {"bundle": "semantic_retrieval", "depth": 6, "loss": "MAE"},
     "blend_text_retrieval": {"bundle": "blend", "weight": 0.5},
 }
+# Second development round: retained original candidates, improved anchoring and simple
+# content-based historical estimators. The untouched final window is unchanged.
+for _bundle in ("context", "retrieval", "semantic_retrieval"):
+    for _depth in (4, 6):
+        CANDIDATES[f"channel_{_bundle}_mae{_depth}"] = {
+            "bundle": _bundle,
+            "depth": _depth,
+            "loss": "MAE",
+            "anchor": "logmean_20",
+        }
+for _alpha in (100, 1000):
+    CANDIDATES[f"channel_linear_{_alpha}"] = {
+        "bundle": "linear",
+        "alpha": _alpha,
+        "anchor": "logmean_20",
+    }
+for _bundle in ("lexical_rule", "semantic_rule"):
+    for _shrink in (0.25, 0.5, 0.75):
+        CANDIDATES[f"{_bundle}_{int(_shrink * 100)}"] = {
+            "bundle": _bundle,
+            "shrink": _shrink,
+            "anchor": "logmean_20",
+        }
 
 
 def epoch(value):
@@ -233,6 +267,8 @@ def history_features(frame):
             "median_5": float(np.median(values[-5:])) if n else cat_prior,
             "median_20": med,
             "logmean_20": logmean,
+            "median_50": float(np.median(values)) if n else cat_prior,
+            "logmean_50": float(np.mean(values)) if n else cat_prior,
             "mean_20": rawmean,
             "shrunk_2": (n * med + 2 * cat_prior) / (n + 2),
             "shrunk_5": (n * med + 5 * cat_prior) / (n + 5),
@@ -316,6 +352,8 @@ class ReachEncoder:
         # Similarity is based on a train-only vocabulary; neighbor outcomes obey event time.
         anchor = frame.shrunk_2.to_numpy()
         retrieval = np.zeros((len(frame), 4))
+        lexical_rule = np.zeros((len(frame), 1))
+        rule_anchor = frame.logmean_20.to_numpy()
         y = frame.target_log.to_numpy()
         for i, prior in enumerate(neighbors):
             if not prior:
@@ -324,6 +362,8 @@ class ReachEncoder:
             order = np.argsort(-similarity, kind="stable")[:5]
             ids, sim = np.asarray(prior)[order], similarity[order]
             strength = sim**2
+            if strength.sum() > 0:
+                lexical_rule[i, 0] = np.dot(strength, y[ids] - rule_anchor[i]) / strength.sum()
             retrieval[i] = [
                 np.dot(strength, y[ids] - anchor[i]) / (1 + strength.sum()),
                 float(sim.max()),
@@ -335,6 +375,7 @@ class ReachEncoder:
             "context": context,
             "text": text_dense,
             "retrieval": np.column_stack([text_dense, retrieval]),
+            "lexical_rule": lexical_rule,
             "linear": sparse.hstack(
                 [
                     sparse.csr_matrix(self.scaler.transform(context)),
@@ -349,6 +390,7 @@ class ReachEncoder:
                 raise ValueError("Saved encoder requires the same frozen semantic representations")
             semantic_dense = self.semantic_pca.transform(semantic)
             semantic_neighbors = np.zeros((len(frame), 3))
+            semantic_rule = np.zeros((len(frame), 1))
             for i, prior in enumerate(neighbors):
                 if not prior:
                     continue
@@ -356,6 +398,8 @@ class ReachEncoder:
                 order = np.argsort(-similarity, kind="stable")[:5]
                 ids, sim = np.asarray(prior)[order], similarity[order]
                 strength = sim**4
+                if strength.sum() > 0:
+                    semantic_rule[i, 0] = np.dot(strength, y[ids] - rule_anchor[i]) / strength.sum()
                 semantic_neighbors[i] = [
                     np.dot(strength, y[ids] - anchor[i]) / (1 + strength.sum()),
                     float(sim.max()),
@@ -365,6 +409,7 @@ class ReachEncoder:
             matrices["semantic_retrieval"] = np.column_stack(
                 [matrices["semantic"], semantic_neighbors]
             )
+            matrices["semantic_rule"] = semantic_rule
         return matrices
 
     def save(self, folder):
@@ -438,7 +483,11 @@ def fit_candidate(name, matrices, frame, train, predict, folder=None):
     if spec["bundle"] == "blend":
         raise ValueError("A blend must use its declared component predictions")
     x = matrices[spec["bundle"]]
-    anchor = frame.shrunk_2.to_numpy()
+    anchor = frame[spec.get("anchor", "shrunk_2")].to_numpy()
+    if spec["bundle"].endswith("_rule"):
+        if folder:
+            write_json(folder / f"{name}.json", spec)
+        return np.maximum(0, anchor[predict] + spec["shrink"] * x[predict, 0])
     residual = frame.target_log.to_numpy()[train] - anchor[train]
     w = weights(frame.iloc[train])
     if spec["bundle"] == "linear":
@@ -474,12 +523,16 @@ def predict_saved_candidate(name, matrices, frame, rows, folder):
             "linear_text_100", matrices, frame, rows, folder
         ) + 0.5 * predict_saved_candidate("retrieval_mae6", matrices, frame, rows, folder)
     matrix = matrices[spec["bundle"]][rows]
+    if spec["bundle"].endswith("_rule"):
+        if read_json(folder / f"{name}.json") != spec:
+            raise ValueError("Saved historical-comparable rule changed")
+        return np.maximum(0, frame[spec["anchor"]].to_numpy()[rows] + spec["shrink"] * matrix[:, 0])
     if spec["bundle"] == "linear":
         values = np.load(folder / f"{name}.npz", allow_pickle=False)
         residual = np.asarray(matrix @ values["coef"]).ravel() + float(values["intercept"])
     else:
         residual = CatBoostRegressor().load_model(str(folder / f"{name}.cbm")).predict(matrix)
-    return np.maximum(0, frame.shrunk_2.to_numpy()[rows] + residual)
+    return np.maximum(0, frame[spec.get("anchor", "shrunk_2")].to_numpy()[rows] + residual)
 
 
 def fingerprint():
@@ -643,7 +696,7 @@ def develop(root=ROOT, run=RUN):
             }
         )
     plan = {
-        "protocol": "prepublication-reach-v1",
+        "protocol": "prepublication-reach-v2",
         "created_at": utcnow(),
         "code_sha256": fingerprint(),
         "audit": read_json(root / "audit.json"),

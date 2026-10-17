@@ -54,3 +54,13 @@ Todas as configurações, inclusive as que falharem, serão registradas. Modelos
 **Estado ao registrar este plano:** aquisição em andamento; nenhum modelo treinado ou resultado de teste consultado nesta nova base. A camada de vídeo completo existente permanece executável, mas seu ganho sobre visualizações ainda não foi demonstrado.
 
 O usuário confirmou que a base de setores mencionada no TAPI não existe. Este estudo não depende dela nem presume acesso a clientes da Galaxies.
+
+## Revisão após o desenvolvimento, antes do teste final
+
+Em 17/10/2026, a primeira rodada terminou sem abrir o teste. A melhor referência foi a média dos últimos 20 resultados em log (erro macro **0,534236**); a mistura lexical e de comparáveis ficou em **0,523876**, melhora de **1,94%**, abaixo do objetivo de 5%. Esses resultados são de desenvolvimento e não confirmam eficácia.
+
+A segunda rodada preserva os mesmos dados, datas, canais reservados, métricas e critérios de sucesso. A hipótese revisada é reduzir o viés introduzido pela referência regularizada pelo setor: os novos modelos aprendem correções sobre a média histórica em log que venceu a primeira rodada. Também testamos uma alternativa simples: recuperar cinco títulos anteriores parecidos do canal e combinar sua média ponderada em log com o histórico, em proporções fixadas de 25%, 50% e 75%, com similaridade lexical ou semântica.
+
+São **30 candidatos**, incluindo os 16 originais, e **oito referências históricas**: acrescentamos média em log e mediana dos últimos 50 resultados. Essas duas estatísticas também entram no contexto, para não atribuir ao texto um ganho que venha apenas de consultar mais histórico. Os modelos de árvores e Ridge mantêm os demais hiperparâmetros. A segunda rodada ainda usa somente as duas janelas de desenvolvimento. Nenhum resultado do teste final foi consultado para propor esta revisão.
+
+A primeira rodada foi preservada em [results/reach-development-v1](results/reach-development-v1/), e seu código pode ser recuperado pelo commit `f03257b`. O código da revisão será congelado novamente antes da única avaliação final. Essa revisão é exploração no desenvolvimento; não é uma segunda confirmação independente.

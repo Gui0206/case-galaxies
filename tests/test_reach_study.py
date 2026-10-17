@@ -181,3 +181,28 @@ def test_sparse_linear_forecast_survives_native_persistence(tmp_path):
     before = study.fit_candidate("linear_text_10", matrices, frame, train, predict, tmp_path)
     after = study.predict_saved_candidate("linear_text_10", matrices, frame, predict, tmp_path)
     np.testing.assert_allclose(before, after, rtol=1e-6, atol=1e-6)
+
+
+def test_comparable_rule_uses_only_mature_labels_and_persists(tmp_path):
+    channel = next(f"c{i}" for i in range(100) if not study.reserved_channel(f"c{i}"))
+    rows = [study.parse_record(source_record(i + 1, channel, f"v{i}")) for i in range(24)]
+    for i, row in enumerate(rows):
+        row["title"] = "Car review sedan" if i % 2 else "Car review truck"
+        row["target_log"] = 2 + i % 2
+    frame, neighbors = study.history_features(pd.DataFrame(rows))
+    train, predict = np.arange(12), np.arange(18, 24)
+    encoder = study.ReachEncoder()
+    matrices = encoder.fit_transform(frame, train, neighbors)
+    name = "lexical_rule_50"
+    before = study.fit_candidate(name, matrices, frame, train, predict, tmp_path)
+    after = study.predict_saved_candidate(name, matrices, frame, predict, tmp_path)
+    np.testing.assert_allclose(before, after)
+    # All six query outcomes are immature for every query in this period.
+    changed = frame.copy()
+    changed.loc[predict, "target_log"] = 100
+    perturbed = encoder.transform(changed, neighbors)
+    np.testing.assert_allclose(matrices["lexical_rule"], perturbed["lexical_rule"])
+    declaration = tmp_path / f"{name}.json"
+    declaration.write_text("{}")
+    with pytest.raises(ValueError, match="rule changed"):
+        study.predict_saved_candidate(name, matrices, frame, predict, tmp_path)

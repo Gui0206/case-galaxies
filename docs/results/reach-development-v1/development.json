@@ -1,0 +1,74 @@
+{
+  "folds": [
+    {
+      "start": "2016-07-25",
+      "train": 2627,
+      "validation": 12242,
+      "scores": {
+        "context_mae4": 0.5363344966080845,
+        "context_mae6": 0.5419938698632659,
+        "context_rmse6": 0.5535549383199414,
+        "text_mae4": 0.5380841291265358,
+        "text_mae6": 0.5426123351358328,
+        "text_rmse6": 0.5577573138012875,
+        "retrieval_mae4": 0.5363060086341719,
+        "retrieval_mae6": 0.5365808938420175,
+        "retrieval_rmse6": 0.5515431279591854,
+        "linear_text_10": 0.5355001698242761,
+        "linear_text_100": 0.5311906519596057,
+        "semantic_mae4": 0.5391832021924018,
+        "semantic_mae6": 0.5425462574423912,
+        "semantic_retrieval_mae4": 0.5358163066859264,
+        "semantic_retrieval_mae6": 0.5366851006992053,
+        "blend_text_retrieval": 0.5260309370516507
+      }
+    },
+    {
+      "start": "2016-08-01",
+      "train": 10789,
+      "validation": 14322,
+      "scores": {
+        "context_mae4": 0.5179845243674813,
+        "context_mae6": 0.5207370918247558,
+        "context_rmse6": 0.5302190754646388,
+        "text_mae4": 0.5182649862819181,
+        "text_mae6": 0.5177039557776979,
+        "text_rmse6": 0.5260605396489536,
+        "retrieval_mae4": 0.5138500968480614,
+        "retrieval_mae6": 0.5111124880601831,
+        "retrieval_rmse6": 0.5181366341088288,
+        "linear_text_10": 0.5356582347564015,
+        "linear_text_100": 0.5270104514503474,
+        "semantic_mae4": 0.5193577151900243,
+        "semantic_mae6": 0.5176033065907191,
+        "semantic_retrieval_mae4": 0.5134357108674729,
+        "semantic_retrieval_mae6": 0.5118803857337079,
+        "blend_text_retrieval": 0.5097824299703603
+      }
+    }
+  ],
+  "scores": {
+    "median_5": 0.5465851855043479,
+    "median_20": 0.541346311294146,
+    "mean_20": 0.5731338344096828,
+    "logmean_20": 0.5342357436215937,
+    "shrunk_2": 0.7340038850299249,
+    "shrunk_5": 0.986230124912271,
+    "context_mae4": 0.5322674981200931,
+    "context_mae6": 0.536482868760041,
+    "context_rmse6": 0.5475170185989725,
+    "text_mae4": 0.5328463236875599,
+    "text_mae6": 0.5344985192650713,
+    "text_rmse6": 0.5461500372204309,
+    "retrieval_mae4": 0.5296376768260112,
+    "retrieval_mae6": 0.5285382940093288,
+    "retrieval_rmse6": 0.5386894586440986,
+    "linear_text_10": 0.5442941215151165,
+    "linear_text_100": 0.5363243414404552,
+    "semantic_mae4": 0.5332452559369889,
+    "semantic_mae6": 0.5335480910687422,
+    "semantic_retrieval_mae4": 0.5287549968092622,
+    "semantic_retrieval_mae6": 0.5281054992981778,
+    "blend_text_retrieval": 0.5238762646589646
+  }
+}

@@ -49,6 +49,7 @@ def main():
     for filename in (
         "plan.json",
         "development.json",
+        "development_predictions.csv",
         "selection.json",
         "final.json",
         "test_predictions.csv",
@@ -57,6 +58,10 @@ def main():
     for filename in ("audit.json", "acquisition.json", "semantic.json"):
         shutil.copy2(DATA / filename, DEST / filename)
     shutil.copy2(DATA / "source/dataverse.json", DEST / "source-record.json")
+    shutil.copy2(
+        RUN.parent / f"reach-final-opened-{plan['audit']['cohort_sha256']}.json",
+        DEST / "evaluation-opened.json",
+    )
     primary = result["sections"]["primary"]
     metrics = primary["metrics"]
     recommended = selection["recommended_forecaster"]
@@ -182,7 +187,7 @@ def main():
         "",
         "## O que foi melhorado no modelo",
         "",
-        "O modelo aprende correções sobre o padrão recente do canal. Compara duração com a duração habitual, usa o texto do título e recupera até cinco publicações anteriores semelhantes, com resultados já maduros. Foram comparados 16 candidatos, incluindo versões lexicais, encoder semântico multilíngue congelado, regressão regularizada, CatBoost e uma mistura fixa. Não usamos visualizações iniciais, curtidas ou retenção do próprio vídeo.",
+        "O modelo aprende correções sobre o padrão recente do canal. Compara duração com a duração habitual, usa o texto do título e recupera até cinco publicações anteriores semelhantes, com resultados já maduros. Foram comparados 30 candidatos na rodada revisada, incluindo versões lexicais, encoder semântico multilíngue congelado, regressão regularizada, CatBoost, uma mistura fixa e regras simples de comparáveis. A primeira rodada de desenvolvimento está preservada no protocolo. Não usamos visualizações iniciais, curtidas ou retenção do próprio vídeo.",
         "",
         control_summary,
         "",
@@ -215,7 +220,7 @@ def main():
         "",
         "O teste é de abertura única por fingerprint. Não apague o registro para retreinar e apresentar os mesmos dados como confirmação nova. Os modelos nativos e o encoder ficam em `.runtime/reports/reach/models/`; metadados brutos e pesos não foram publicados no Git.",
         "",
-        "Auditoria: [protocolo e busca de bases](REVISED_STUDY.md), [fonte](results/reach/acquisition.json), [exclusões](results/reach/audit.json), [plano](results/reach/plan.json), [todos os modelos no desenvolvimento](results/reach/development.json), [seleção](results/reach/selection.json), [teste completo](results/reach/final.json), [todas as previsões finais](results/reach/test_predictions.csv).",
+        "Auditoria: [protocolo e busca de bases](REVISED_STUDY.md), [fonte](results/reach/acquisition.json), [exclusões](results/reach/audit.json), [plano](results/reach/plan.json), [todos os modelos no desenvolvimento](results/reach/development.json), [previsões de desenvolvimento](results/reach/development_predictions.csv), [seleção](results/reach/selection.json), [registro da abertura final](results/reach/evaluation-opened.json), [teste completo](results/reach/final.json), [todas as previsões finais](results/reach/test_predictions.csv).",
     ]
     (ROOT / "docs/REACH_RESULTS.md").write_text("\n".join(lines) + "\n")
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 11})
