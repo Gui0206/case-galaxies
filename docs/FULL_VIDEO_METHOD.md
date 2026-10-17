@@ -103,6 +103,8 @@ uv run --no-sync python scripts/run_multimodal.py analyze /caminho/video.mp4 --s
 
 O resultado inclui transcrição com tempos, cortes detectados, atributos de fala/edição e representações visuais/semânticas. A análise aceita vídeo local de até 180 segundos, 150 MB e 4K. Não produz uma previsão de retenção sem o modelo e o contexto do estudo.
 
+O comando `analyze` usa um cache separado (`analysis-cache`). Analisar um vídeo avulso ou escolher outro backend nesse comando não altera os atributos congelados do benchmark.
+
 Os comandos acima reproduzem o extrator usado no estudo, em Apple Silicon. Em outras plataformas, omita `--extra apple` e use `--speech-backend cpu` em `weights`, `extract` e `analyze`. Isso cria um **extrator diferente**, com Whisper Small, e exige outra avaliação; não reproduz os números do estudo MLX. Nenhum backend troca de modelo silenciosamente.
 
 A extração reutiliza os modelos na memória, processa até três vídeos em paralelo e mantém cache por conteúdo, legenda e identidade do extrator. O detector de edição roda em um processo separado para isolar bibliotecas nativas de vídeo. Uma execução pode continuar do cache; ela não inventa atributos para arquivos que falharam.

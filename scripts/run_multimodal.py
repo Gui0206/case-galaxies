@@ -32,9 +32,8 @@ elif args.operation == "download":
     plan = create_acquisition_plan(args.root)
     download_videos(args.root, plan["ids"])
 elif args.operation in ("extract", "analyze"):
-    analyzer = DeepMediaAnalyzer(
-        args.weights, args.root / "features", speech_backend=args.speech_backend
-    )
+    cache = args.root / ("features" if args.operation == "extract" else "analysis-cache")
+    analyzer = DeepMediaAnalyzer(args.weights, cache, speech_backend=args.speech_backend)
     if args.operation == "analyze":
         if args.video is None:
             parser.error("analyze requer o caminho de um vídeo local")
