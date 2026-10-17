@@ -21,6 +21,14 @@ timeline
     Até 24 horas depois : Tolerância de observação do alvo
 ```
 
+## Nova fonte para alcance semanal
+
+O [protocolo revisado](REVISED_STUDY.md) usa Beyond Views / Harvard Dataverse, com séries diárias de vídeos publicados em julho e agosto de 2016. A auditoria de Automotivo e Howto & Style encontrou 277.727 registros e manteve **263.317 vídeos de 68.411 canais**. Foram excluídos 12.954 registros sem todos os sete dias explícitos, 654 com início da série diferente da data de publicação, três com duração inválida e 799 títulos duplicados dentro do mesmo canal.
+
+O alvo soma a data de publicação e as seis datas seguintes. A disponibilidade do resultado é convencionada como publicação + nove datas; não se apresenta esse horário como se fosse um timestamp de coleta observado. `reach_study.py` mantém essa convenção separada do contrato de produção. Títulos e metadados são retrospectivos, a amostra não contém todos os uploads e os vídeos originais não acompanham a base. A licença declarada do registro é CC0 1.0; origem, hash integral e hashes dos dois arquivos extraídos são preservados.
+
+A base da Academy mencionada no TAPI não existe, conforme informado pelo usuário. Nenhuma evidência deste projeto depende de acesso presumido a ela.
+
 ## Contrato de uma linha
 
 Veja [exemplo completo](../examples/post-record.json) e [JSON Schema](schemas/post-record.json).
