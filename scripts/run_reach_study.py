@@ -3,14 +3,18 @@
 import argparse
 import json
 
-from galaxies.reach_study import develop, encode_titles, final, prepare
+from galaxies.reach_study import develop, encode_titles, final, prepare, provision_language
 
 parser = argparse.ArgumentParser()
-parser.add_argument("stage", choices=["prepare", "encode", "develop", "final"])
+parser.add_argument("stage", choices=["weights", "prepare", "encode", "develop", "final"])
 args = parser.parse_args()
-result = {"prepare": prepare, "encode": encode_titles, "develop": develop, "final": final}[
-    args.stage
-]()
+result = {
+    "weights": provision_language,
+    "prepare": prepare,
+    "encode": encode_titles,
+    "develop": develop,
+    "final": final,
+}[args.stage]()
 if args.stage == "final":
     result = {
         k: result[k]

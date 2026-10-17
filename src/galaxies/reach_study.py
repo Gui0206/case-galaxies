@@ -555,6 +555,27 @@ def encode_titles(root=ROOT, weights_path=Path(".runtime/weights/language")):
     return manifest
 
 
+def provision_language(weights_path=Path(".runtime/weights/language")):
+    from huggingface_hub import snapshot_download
+
+    snapshot_download(
+        "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        revision="e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+        allow_patterns=[
+            "*.json",
+            "*.safetensors",
+            "tokenizer*",
+            "sentencepiece*",
+            "*.txt",
+            "README.md",
+        ],
+        ignore_patterns=["onnx/*", "openvino/*"],
+        local_dir=weights_path,
+        max_workers=2,
+    )
+    return {"language_weights": str(weights_path)}
+
+
 def load_semantic(root, frame):
     if not (root / "semantic.json").exists():
         if any(v["bundle"].startswith("semantic") for v in CANDIDATES.values()):
