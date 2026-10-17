@@ -1,0 +1,152 @@
+{
+  "completed_at": "2026-10-17T22:55:18.446000+00:00",
+  "evidence": "real full videos, retrospective first-panel-observation retention; NOT upload-time popularity",
+  "train_videos": 623,
+  "test_videos": 177,
+  "test_creators": 164,
+  "test_first_seen_period_utc": [
+    "2022-09-20T04:04:49+00:00",
+    "2022-09-21T15:51:34+00:00"
+  ],
+  "selection": {
+    "context": "catboost_3",
+    "caption": "catboost_3",
+    "image": "catboost_3",
+    "speech": "catboost_3",
+    "editing": "catboost_3",
+    "full": "catboost_5"
+  },
+  "metrics": {
+    "history_raw": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 25.167912483626235,
+      "macro_creator_mae_pp": 25.333642516874505,
+      "rmse_pp": 32.92634621763966,
+      "within_10pp": 0.2937853107344633,
+      "pair_count": 12,
+      "pair_accuracy": 0.3333333333333333
+    },
+    "history_shrunk": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 24.097329342479014,
+      "macro_creator_mae_pp": 24.20981946325124,
+      "rmse_pp": 30.517823335790204,
+      "within_10pp": 0.2824858757062147,
+      "pair_count": 12,
+      "pair_accuracy": 0.25
+    },
+    "context": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 23.28706988059044,
+      "macro_creator_mae_pp": 23.156219230167537,
+      "rmse_pp": 28.706854675442745,
+      "within_10pp": 0.2655367231638418,
+      "pair_count": 12,
+      "pair_accuracy": 0.4166666666666667
+    },
+    "caption": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 23.370800937341954,
+      "macro_creator_mae_pp": 23.152493856029828,
+      "rmse_pp": 28.784269772307887,
+      "within_10pp": 0.2711864406779661,
+      "pair_count": 12,
+      "pair_accuracy": 0.25
+    },
+    "image": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 23.782771873375395,
+      "macro_creator_mae_pp": 23.62801334787889,
+      "rmse_pp": 29.131749232666714,
+      "within_10pp": 0.2542372881355932,
+      "pair_count": 12,
+      "pair_accuracy": 0.4166666666666667
+    },
+    "speech": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 23.412324348450966,
+      "macro_creator_mae_pp": 23.17349065859098,
+      "rmse_pp": 28.629323597169204,
+      "within_10pp": 0.2655367231638418,
+      "pair_count": 12,
+      "pair_accuracy": 0.6666666666666666
+    },
+    "editing": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 23.227449948226074,
+      "macro_creator_mae_pp": 23.103069097126493,
+      "rmse_pp": 28.74917267663099,
+      "within_10pp": 0.2824858757062147,
+      "pair_count": 12,
+      "pair_accuracy": 0.3333333333333333
+    },
+    "full": {
+      "videos": 177,
+      "creators": 164,
+      "mae_pp": 23.700058581315613,
+      "macro_creator_mae_pp": 23.503105494542456,
+      "rmse_pp": 28.894854061763343,
+      "within_10pp": 0.2768361581920904,
+      "pair_count": 12,
+      "pair_accuracy": 0.5833333333333334
+    }
+  },
+  "full_model_comparisons": {
+    "history_raw": {
+      "mean_error_reduction_pp": 1.4678539023106245,
+      "ci95_low": -1.1047089032668866,
+      "ci95_high": 4.00862522674872,
+      "creators": 164,
+      "resamples": 5000,
+      "method": "paired creator-cluster bootstrap, video-weighted MAE; observational panel, shared-viewer dependence not resolved"
+    },
+    "history_shrunk": {
+      "mean_error_reduction_pp": 0.397270761163404,
+      "ci95_low": -1.4054190055307292,
+      "ci95_high": 2.1064406150469415,
+      "creators": 164,
+      "resamples": 5000,
+      "method": "paired creator-cluster bootstrap, video-weighted MAE; observational panel, shared-viewer dependence not resolved"
+    },
+    "context": {
+      "mean_error_reduction_pp": -0.41298870072516847,
+      "ci95_low": -1.2113851329397398,
+      "ci95_high": 0.3354804066425113,
+      "creators": 164,
+      "resamples": 5000,
+      "method": "paired creator-cluster bootstrap, video-weighted MAE; observational panel, shared-viewer dependence not resolved"
+    },
+    "caption": {
+      "mean_error_reduction_pp": -0.3292576439736591,
+      "ci95_low": -1.06635661906699,
+      "ci95_high": 0.39228540984517074,
+      "creators": 164,
+      "resamples": 5000,
+      "method": "paired creator-cluster bootstrap, video-weighted MAE; observational panel, shared-viewer dependence not resolved"
+    }
+  },
+  "relative_mae_reduction": {
+    "history_raw": 0.05832243350598032,
+    "history_shrunk": 0.016486090865807657,
+    "context": -0.017734678636808443,
+    "caption": -0.014088419342426883
+  },
+  "success_rule_met": false,
+  "eligible_for_production": false,
+  "limitations": [
+    "First panel exposure is not publication; no fixed-horizon view/like prediction validated.",
+    "Observed recommendations to a volunteer panel; exposure and audience selection remain confounded.",
+    "Requires at least 10 prior creator events and 10 outcome exposures; no cold-start claim.",
+    "One short collection window in September 2022; not Brazilian advertising or prospective validation.",
+    "Original upload-version integrity and modified reposts cannot be fully verified.",
+    "Whisper transcription and scene detection are automatic; human-label extraction accuracy was not established.",
+    "Pretrained encoder overlap with source videos is unknown; no popularity labels were supplied to the encoders."
+  ]
+}

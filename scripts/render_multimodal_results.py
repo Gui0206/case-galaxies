@@ -17,7 +17,7 @@ names = ["history_shrunk", "context", "full"]
 labels = [
     "Histórico do criador\n(ajustado pela categoria)",
     "Histórico + categoria\n+ duração",
-    "Análise completa\nimagem + fala + edição + título",
+    "Análise completa\nimagem + fala + edição\n+ título",
 ]
 values = [report["metrics"][name]["mae_pp"] for name in names]
 bars = left.barh(
@@ -56,11 +56,10 @@ for i, result in enumerate(comparisons):
     )
 right.set_yticks([0, 1], ["Sobre o histórico", "Sobre contexto + duração"])
 right.set_ylim(-0.6, 1.7)
+right.invert_yaxis()
 right.axvline(0, color="#70756e", linestyle="--", linewidth=1)
-right.set_title(
-    "Quanto a análise completa reduziu o erro\nPOSITIVO É MELHOR", loc="left", weight="bold", pad=15
-)
-right.set_xlabel("Redução em pontos percentuais; intervalo por criador")
+right.set_title("Quanto mudou o erro\nPOSITIVO É MELHOR", loc="left", weight="bold", pad=15)
+right.set_xlabel("Redução do erro (pp)\nIntervalo de 95% por criador")
 for axis in (left, right):
     axis.set_facecolor("#f6f7f4")
     axis.spines[["top", "right", "left"]].set_visible(False)
@@ -69,7 +68,7 @@ for axis in (left, right):
 headline = (
     "A análise completa superou as duas referências neste teste"
     if passed
-    else "A análise completa não demonstrou o ganho exigido neste teste"
+    else "A análise completa não confirmou vantagem neste teste"
 )
 fig.suptitle(
     f"{headline}\n{report['test_videos']} vídeos reservados · {report['test_creators']} criadores",

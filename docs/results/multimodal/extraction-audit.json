@@ -1,0 +1,110 @@
+{
+  "downloaded_videos": 954,
+  "downloaded_bytes": 12590726584,
+  "download_failures": [],
+  "extracted_videos": 945,
+  "extraction_failures": {
+    "84846": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "119968": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "124840": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "134094": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "137482": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "132368": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "151986": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "152374": "ValueError: Duração do arquivo diverge da duração nos logs.",
+    "32598": "ValueError: A decodificação não cobre a duração do vídeo completo."
+  },
+  "exclusion_details": [
+    {
+      "creative_id": "84846",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 14.85,
+      "file_duration_s": 13.766667,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "119968",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 16.666,
+      "file_duration_s": 15.633333,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "124840",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 15.134,
+      "file_duration_s": 14.066667,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "134094",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 10.366,
+      "file_duration_s": 9.3,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "137482",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 16.55,
+      "file_duration_s": 15.533991,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "132368",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 14.433,
+      "file_duration_s": 13.4,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "151986",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 13.033,
+      "file_duration_s": 12.0,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "152374",
+      "reason": "ValueError: Duração do arquivo diverge da duração nos logs.",
+      "log_duration_s": 14.4,
+      "file_duration_s": 13.333333,
+      "decoded_duration_s": null
+    },
+    {
+      "creative_id": "32598",
+      "reason": "ValueError: A decodificação não cobre a duração do vídeo completo.",
+      "log_duration_s": 88.96600000000001,
+      "file_duration_s": 88.966667,
+      "decoded_duration_s": 69.6
+    }
+  ],
+  "download_retry_audit": {
+    "video": "32598",
+    "original_bytes": 12881920,
+    "original_sha256": "5831045d44cadc82336923396fb51a14b54fee4b34c186532103a44cf350edf7",
+    "retry_bytes": 12881920,
+    "retry_sha256": "5831045d44cadc82336923396fb51a14b54fee4b34c186532103a44cf350edf7",
+    "reason": "Partial file reported by FFmpeg; declared 88.97s but only about 69.6s decoded."
+  },
+  "video_hours": 13.808915505555555,
+  "decoded_frames": 1984272,
+  "semantic_image_samples": 14173,
+  "estimated_cuts": 18860,
+  "transcript_segments": 19761,
+  "videos_with_transcript": 869,
+  "automatically_detected_languages": {
+    "zh": 816,
+    "no_speech_detected": 76,
+    "en": 41,
+    "es": 3,
+    "tr": 1,
+    "vi": 2,
+    "kk": 1,
+    "ko": 2,
+    "ja": 2,
+    "ru": 1
+  },
+  "extractor_fingerprint": "1c1cd0a0de1c53a76d762775eec94eb43e957448a15569b0cc5f2014a232f5cf",
+  "extraction_accuracy_against_human_labels": "not measured"
+}

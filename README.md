@@ -1,25 +1,35 @@
 <p align="center"><img src="src/galaxies/web/mark.svg" width="64" alt="Galaxies Creative Intelligence"></p>
 
 <h1 align="center">Galaxies · Creative Intelligence</h1>
-<p align="center">Compare criativos antes da publicação.<br>Previsões estatísticas, incerteza explícita e evidências à vista.</p>
+<p align="center">Imagem, fala e edição acrescentam valor ao histórico do canal?<br>Análise de vídeos e avaliação temporal com dados reais.</p>
 
-<p align="center"><a href="docs/REAL_DATA_RESULTS.md">Resultado em dados reais</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/METHODOLOGY.md">Entender a avaliação</a> · <a href="docs/DATA.md">Preparar dados</a> · <a href="docs/INTEGRATION.md">Integrar</a></p>
+<p align="center"><a href="docs/FULL_VIDEO_RESULTS.md">Resultado com vídeos completos</a> · <a href="docs/FULL_VIDEO_METHOD.md">Como a análise funciona</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
 
-> **Estado da evidência — 17/10/2026:** os preditores foram treinados e testados em duas bases públicas reais. **Ainda não demonstraram vantagem consistente sobre um histórico bem calculado.** O teste usa título, duração quando disponível e contexto; não valida vídeo/áudio completos nem campanhas da Galaxies. Nenhum modelo desse estudo foi promovido para produção.
+> **Resultado real — 17/10/2026:** a análise de imagem, fala e edição foi implementada e testada em vídeos reservados. **Ainda não demonstrou vantagem confiável sobre o histórico.** O estudo mede retenção no painel de observação; não valida visualizações/curtidas após publicação nem campanhas da Galaxies. Nenhum modelo foi promovido para produção.
 
-## O que aconteceu com dados reais
+## A resposta em números
 
-Usamos 196 vídeos do canal Ken Jee e 2.534 vídeos do YouTube Trending. Os períodos finais, reservados antes da escolha do modelo, contêm **30 e 377 vídeos**. O CatBoost residual anterior ficou próximo do histórico ajustado no erro médio; a seleção automática entre famílias também não produziu ganho consistente.
+Baixamos 954 arquivos do Tsinghua ShortVideo e aceitamos **945 vídeos íntegros**, após nove exclusões documentadas. Executamos análise de imagem, transcrição e edição em 13,8 horas de vídeo. A escolha dos modelos usou períodos anteriores; o teste final reservou **177 vídeos de 164 criadores**.
 
-![Resultado dos testes públicos reais](docs/assets/real-data-results.png)
+| Como prever a retenção | Erro médio no teste ↓ |
+|---|---:|
+| Histórico do criador ajustado pela categoria | 24,1 pontos percentuais |
+| Histórico, categoria e duração | 23,3 pontos percentuais |
+| Contexto, título, imagem, fala/som e edição | 23,7 pontos percentuais |
 
-O gráfico aceita uma faixa ampla: para um resultado real de 1.000 visualizações, aproximadamente 500–2.000. Não representa acerto exato da contagem. **Leia primeiro o [resultado em dados reais](docs/REAL_DATA_RESULTS.md)**: explicação simples, exemplos de previsões, comparação completa, fontes, limitações e comandos para reproduzir.
+Retenção é quanto do vídeo as pessoas assistem. Prever 60% quando o observado é 50% representa erro de dez pontos percentuais. A pequena melhora de **1,6% no erro** sobre o histórico ajustado é incerta; a análise completa não superou a referência de contexto no erro observado. Apenas 27,7% das previsões completas ficaram a até dez pontos do valor real.
+
+![Resultado com vídeos completos](docs/assets/full-video-results.png)
+
+**Leia primeiro o [resultado explicado](docs/FULL_VIDEO_RESULTS.md)**: comparações, incerteza, exemplos que incluem erros e arquivos auditáveis. O [método](docs/FULL_VIDEO_METHOD.md) mostra os atributos extraídos e os comandos para analisar um vídeo seu. Não se atribui uma “nota de viralidade” sem validação.
+
+Os [estudos anteriores de metadados](docs/REAL_DATA_RESULTS.md), com Ken Jee e YouTube Trending, também não demonstraram ganho consistente. Seus testes com 30 e 377 vídeos permanecem preservados; não foram reutilizados para ajustar este estudo.
 
 ## A qualidade está na avaliação do modelo
 
 O núcleo compara **12 configurações de Ridge, CatBoost, LightGBM e blend em três janelas temporais**, congela a escolha e só então abre uma avaliação final. O conteúdo precisa acrescentar valor sobre uma referência forte que já conhece o canal. Contagens, ranking, incerteza, ablações e canais novos são avaliados separadamente.
 
-O **[case de modelagem](docs/MODEL_CASE.md)** descreve a arquitetura e o estudo sintético anterior. O estudo público usa duas janelas de desenvolvimento devido ao tamanho das amostras após expurgo temporal; preserva a escolha congelada e registra as falhas. A evidência sintética verifica a implementação, mas não substitui o resultado real acima.
+O **[case de modelagem](docs/MODEL_CASE.md)** descreve a arquitetura e o estudo sintético anterior. Os estudos públicos usam duas janelas de desenvolvimento devido ao tamanho das amostras após expurgo temporal. O estudo de retenção compara cinco configurações em seis grupos de atributos, preserva a escolha congelada e registra as exclusões. A evidência sintética verifica a implementação, mas não substitui o resultado real acima.
 
 ## Execute em três comandos
 
@@ -47,6 +57,8 @@ flowchart LR
 
 **O modelo calcula os números.** LangGraph organiza validação, atributos e explicação; a saída é estruturada e inspecionável. O texto explicativo padrão é determinístico e usa as contribuições reais do modelo. O VLM opcional observa o vídeo; não inventa métricas futuras.
 
+Esse é o fluxo da aplicação de demonstração, que continua usando dados sintéticos. O estudo real de retenção é executado pelos scripts e relatórios próprios; não calibra intervalos individuais nem ativa o preditor de contagens da interface.
+
 ## O que está implementado
 
 | Área | Entrega |
@@ -57,7 +69,7 @@ flowchart LR
 | Modelagem | Ridge, CatBoost, LightGBM e blend; alvos absolutos/residuais; quantis calibrados por setor |
 | Experimentos | Competição em três janelas, contexto forte, ablações, controles negativos, seeds e canais não vistos; seleção congelada e teste final de uso único |
 | Testes públicos reais | Dois estudos de metadados, duas janelas de desenvolvimento, versões/hashes das fontes, referências simples e resultados negativos preservados |
-| Vídeos completos | [Pipeline de imagem, fala e edição](docs/FULL_VIDEO_METHOD.md), pesos fixados, decodificação completa para cortes e protocolo temporal de retenção |
+| Vídeos completos | [Imagem, fala e edição](docs/FULL_VIDEO_METHOD.md) em 945 vídeos íntegros; teste reservado com 177 vídeos; vantagem não confirmada |
 | Avaliação | MAE, MAE em log, MAPE com zeros explícitos, Spearman, pares, arrependimento de seleção, F1 de faixas, interval score, cobertura/largura e médias equilibradas por canal |
 | Explicação | SHAP de árvores/decomposição linear, comparáveis históricos, evidências temporais, abstenção e rastros em JSON |
 | Vídeo local | FFmpeg, atributos visuais/acústicos, cache por conteúdo e versão |
@@ -72,7 +84,8 @@ flowchart LR
 
 | Quero… | Leia |
 |---|---|
-| Saber se ajudou em dados reais | [Resultados reais, em linguagem simples](docs/REAL_DATA_RESULTS.md) |
+| Saber se imagem, fala e edição ajudaram | [Resultado com vídeos completos](docs/FULL_VIDEO_RESULTS.md) |
+| Conferir os testes anteriores de metadados | [Ken Jee e YouTube Trending](docs/REAL_DATA_RESULTS.md) |
 | Avaliar a qualidade do modelo | [Case de modelagem e evidência](docs/MODEL_CASE.md) |
 | Rodar e explorar | [Guia rápido](docs/QUICKSTART.md) |
 | Entender módulos e fluxos | [Arquitetura](docs/ARCHITECTURE.md) |

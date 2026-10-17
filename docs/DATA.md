@@ -10,6 +10,8 @@ Essas bases não comprovam versões originais anteriores à publicação nem obs
 
 O [estudo de vídeos completos](FULL_VIDEO_METHOD.md) usa uma terceira fonte, Tsinghua ShortVideo: arquivos de vídeo e logs com criador, duração e tempo assistido. O alvo é retenção no primeiro dia observado pelo painel, porque não há data de publicação verificável. `shortvideo.py` e `retention_benchmark.py` mantêm esse alvo separado do contrato de contagens; não preenchem a data de publicação com uma suposição. Vídeos completos, transcrições e logs permanecem fora do Git.
 
+Foram aceitos 945 dos 954 arquivos solicitados: oito tinham duração incompatível e um estava incompleto na fonte. O [resultado reservado com 177 vídeos](FULL_VIDEO_RESULTS.md) não confirmou vantagem da análise completa sobre o histórico.
+
 ```mermaid
 timeline
     title Disponibilidade da informação

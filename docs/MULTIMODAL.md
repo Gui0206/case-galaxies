@@ -4,6 +4,8 @@
 
 O [estudo de vídeo completo](FULL_VIDEO_METHOD.md) tem um pipeline próprio: OpenCLIP para imagem, Whisper Large v3 Turbo para fala, encoder semântico multilíngue e detecção de cortes sobre todos os frames. Esse pipeline usa pesos fixados, cache por conteúdo e verificações de integridade antes de treinar.
 
+O [resultado real](FULL_VIDEO_RESULTS.md) já está disponível: 945 vídeos íntegros processados, 177 no teste final e nenhum ganho confiável confirmado sobre o histórico.
+
 ```bash
 uv sync --frozen --group dev --extra audio --extra vision --extra semantic --extra apple
 uv run --no-sync python scripts/run_multimodal.py weights --speech-backend mlx

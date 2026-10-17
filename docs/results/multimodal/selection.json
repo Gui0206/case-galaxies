@@ -1,0 +1,12 @@
+{
+  "selection": {
+    "context": "catboost_3",
+    "caption": "catboost_3",
+    "image": "catboost_3",
+    "speech": "catboost_3",
+    "editing": "catboost_3",
+    "full": "catboost_5"
+  },
+  "plan_sha256": "723277e1595e5d4659ba055b60d24103f06399ec6c976dfe555b476a30f1a449",
+  "development_sha256": "7a3c34fc2a96dbf06712513d09c08b39931998c579e34fc8c92d5fcd23d4e047"
+}

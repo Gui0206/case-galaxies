@@ -2,6 +2,8 @@
 
 Este estudo pergunta: **imagem, fala e edição ajudam a prever quanto do vídeo as pessoas assistem, além do que já sabemos pelo histórico do criador?** A comparação usa uma base independente dos testes anteriores de metadados.
 
+**Execução concluída:** 945 vídeos íntegros, 623 no treino final e 177 no teste reservado. A análise completa não confirmou vantagem sobre o histórico. Veja o [resultado explicado, com gráficos e exemplos](FULL_VIDEO_RESULTS.md).
+
 O estudo tem um alvo específico. Se uma pessoa assiste 30 segundos de um vídeo de 60 segundos, sua retenção é 50%. Calculamos a média dessa proporção nas observações do primeiro dia em que o vídeo aparece no painel. Repetições são limitadas a 100%. Isso **não é previsão de visualizações ou curtidas após a publicação**, nem demonstra que uma mudança na edição causaria melhor resultado.
 
 ## O que é analisado
@@ -112,3 +114,5 @@ A extração reutiliza os modelos na memória, processa até três vídeos em pa
 `develop` exige pasta nova e extração encerrada. `final` verifica dados, atributos, versões e escolha congelada e registra a abertura do teste. Não apague esse registro para experimentar outra configuração nos mesmos vídeos. Reproduzir os mesmos dados não cria uma confirmação independente.
 
 Antes de treinar, a leitura também confere se a duração efetivamente decodificada acompanha a duração do arquivo (tolerância máxima de 0,5 segundo ou 1%), se cortes e transcrições cabem no vídeo, se os vetores têm dimensões consistentes e se todos os atributos são finitos. Uma falha interrompe o estudo para investigação; não vira um vetor de zeros nem uma observação silenciosamente aproveitada.
+
+A extração também aplica essa validação a resultados novos e ao retomar o cache, registrando exclusões por arquivo. Na auditoria desta execução, um arquivo incompleto voltou idêntico após novo download; foi excluído antes do treino. O estudo mantém hashes e a evidência dessa tentativa no relatório de extração.

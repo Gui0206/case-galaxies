@@ -49,12 +49,19 @@ for video, reason in index["failures"].items():
         )
         if probe.returncode == 0:
             actual_duration = float(json.loads(probe.stdout)["format"]["duration"])
+    record_path = args.root / "features" / f"video-{video}.json"
+    decoded_duration = (
+        json.loads(record_path.read_text())["editing"]["decoded_duration_s"]
+        if record_path.exists()
+        else None
+    )
     exclusions.append(
         {
             "creative_id": video,
             "reason": reason,
             "log_duration_s": float(cohort.loc[video, "duration"]),
             "file_duration_s": actual_duration,
+            "decoded_duration_s": decoded_duration,
         }
     )
 for video, entry in index["rows"].items():
@@ -85,6 +92,9 @@ audit = {
     "extracted_videos": len(records),
     "extraction_failures": index["failures"],
     "exclusion_details": exclusions,
+    "download_retry_audit": json.loads((args.root / "repair/retry-audit.json").read_text())
+    if (args.root / "repair/retry-audit.json").exists()
+    else None,
     "video_hours": sum(r["duration_s"] for r in records) / 3600,
     "decoded_frames": sum(r["editing"]["decoded_frames"] for r in records),
     "semantic_image_samples": sum(len(r["frame_times"]) for r in records),
@@ -150,7 +160,7 @@ context = report["metrics"]["context"]
 if report["success_rule_met"]:
     conclusion = "**Sim, a análise completa superou o histórico e a referência de contexto neste teste de retenção**, cumprindo o critério registrado antes de abrir o teste. Isso é evidência favorável neste painel, ainda sem demonstrar previsão de visualizações/curtidas ou eficácia em campanhas da Galaxies."
 else:
-    conclusion = "**Não demonstramos o ganho exigido da análise completa sobre as duas referências neste teste.** O resultado abaixo separa a comparação com o histórico simples da comparação mais difícil, que também conhece categoria e duração. A implementação funciona; sua utilidade preditiva precisa ser julgada por estes números."
+    conclusion = "**Não demonstramos uma vantagem confiável desta análise de imagem, fala e edição sobre o histórico.** O resultado abaixo separa a comparação com o histórico da comparação mais difícil, que também conhece categoria e duração. O critério de sucesso definido antes do teste não foi cumprido."
 training_gap = plan["provenance"]["used"] - report["train_videos"] - report["test_videos"]
 pair_count = full["pair_count"]
 pair_result = (
@@ -163,6 +173,8 @@ body = f"""# Imagem, fala e edição ajudam a superar o histórico?
 {conclusion}
 
 Em **{report["test_videos"]} vídeos reservados, de {report["test_creators"]} criadores**, o erro médio foi **{number(history["mae_pp"])} pontos percentuais** usando o histórico ajustado, **{number(context["mae_pp"])}** usando também categoria/duração e **{number(full["mae_pp"])}** com a análise completa.
+
+Somente **{number(full["within_10pp"] * 100)}%** das previsões completas ficaram a até dez pontos percentuais do valor observado. Esse percentual mede uma tolerância explícita, não “acurácia geral” nem acerto exato.
 
 ![Comparação no teste reservado](assets/full-video-results.png)
 
@@ -179,8 +191,8 @@ A base pública oferece os arquivos completos, criadores e tempos de visualizaç
 | Evidência | Quantidade |
 |---|---:|
 | Interações auditadas na fonte | 794.053 |
-| Vídeos completos baixados | {audit["downloaded_videos"]} |
-| Vídeos analisados | {audit["extracted_videos"]} |
+| Arquivos de vídeo baixados | {audit["downloaded_videos"]} |
+| Vídeos íntegros aceitos | {audit["extracted_videos"]} |
 | Horas de vídeo | {number(audit["video_hours"], 2)} |
 | Frames decodificados pelo detector de edição | {number(audit["decoded_frames"], 0)} |
 | Imagens usadas pelo encoder visual | {number(audit["semantic_image_samples"], 0)} |
@@ -191,6 +203,8 @@ A base pública oferece os arquivos completos, criadores e tempos de visualizaç
 | Vídeos no treino final / teste reservado | {report["train_videos"]} / {report["test_videos"]} |
 
 Outros {training_gap} vídeos elegíveis ficaram fora do treino/teste final por atravessar o intervalo de segurança temporal. Seus resultados ainda não estariam completos no momento de treinar o modelo final. As duas janelas anteriores serviram para escolher configurações; não foi feito sorteio aleatório para misturar passado e futuro.
+
+As exclusões estão detalhadas na [auditoria dos arquivos](results/multimodal/extraction-audit.json), com ID, motivo e durações. Na execução registrada, oito arquivos divergiam dos tempos dos logs e um estava fisicamente incompleto. A nova tentativa de baixar esse último trouxe o mesmo conteúdo e o mesmo hash. A investigação e as exclusões aconteceram antes do treinamento; os arquivos originais foram preservados localmente.
 
 Usamos **OpenCLIP** para imagem, **Whisper Large v3 Turbo** para fala, um encoder semântico multilíngue para título/transcrição e **PySceneDetect com fluxo óptico** para cortes e movimento. O detector de edição decodifica todos os frames; a compreensão semântica da imagem usa amostras distribuídas, incluindo a abertura. Os modelos foram executados localmente, com versões e hashes registrados.
 

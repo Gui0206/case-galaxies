@@ -1,6 +1,6 @@
 # O case está no modelo e na evidência
 
-> **Atualização de 17/10/2026:** já há [testes em duas bases públicas reais](REAL_DATA_RESULTS.md), com resultado desfavorável à hipótese de ganho consistente sobre o histórico. Leia esse relatório primeiro. Os números de desempenho apresentados nesta página são do estudo sintético anterior e não medem eficácia real.
+> **Atualização de 17/10/2026:** o [teste com vídeos completos](FULL_VIDEO_RESULTS.md) executou imagem, fala e edição em 945 arquivos íntegros e avaliou 177 vídeos reservados. **Não demonstrou vantagem confiável sobre o histórico.** Os [dois estudos anteriores de metadados](REAL_DATA_RESULTS.md) também mantêm resultados negativos. Os números de desempenho apresentados nesta página são do estudo sintético anterior e não medem eficácia real.
 
 **A entrega é uma infraestrutura de pesquisa executável. Ainda não é um modelo com eficácia comprovada em campanhas reais.** A interface permite inspecioná-la; a qualidade depende dos dados, da representação do vídeo e do teste que tenta refutar o ganho do modelo.
 
@@ -103,7 +103,7 @@ O último resultado é uma limitação importante. O acerto de ranking dessa coo
 |---|---|---|
 | Rótulos corretos e representativos | Métrica no mesmo horizonte, origem e disponibilidade verificáveis, distribuição paga separada | Duas bases públicas auditadas; falta base representativa com versões pré-publicação verificadas |
 | Representação semântica útil | Comparar texto, frames/segmentos, áudio, embeddings e rubrica nos mesmos cortes; medir concordância humana e erros de extração | Adaptadores existentes; eficácia não demonstrada |
-| Valor além do histórico | Superar referências simples e contexto aprendido em erro e ordenação no futuro; reportar setores e canais | Testes públicos de metadados executados; ganho consistente não demonstrado |
+| Valor além do histórico | Superar referências simples e contexto aprendido em erro e ordenação no futuro; reportar setores e canais | Testes públicos de metadados e de retenção com vídeos completos executados; ganho consistente não demonstrado |
 | Generalização para novos clientes | Canais/clientes excluídos e calibração dedicada; manter abstenção enquanto falhar | Diagnóstico implementado e falha registrada |
 | Robustez a mudança temporal | Várias janelas e acompanhamento de cobertura/erro; política de recalibração | Teste público temporal executado; seleção instável e limitações de cobertura registradas |
 | Utilidade antes da publicação | Registrar previsões e versão antes de publicar; avaliar resultados maduros | Registro prospectivo implementado |

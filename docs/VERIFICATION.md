@@ -4,7 +4,7 @@
 
 **Resultado atual: 73 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização se concentra na análise de vídeos completos e no teste temporal de retenção.
 
-A [CI do commit de modelagem e integridade `99fb771`](https://github.com/Gui0206/case-galaxies/actions/runs/39073856356) também terminou com sucesso. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
+A [CI do commit de validação da extração `050d0da`](https://github.com/Gui0206/case-galaxies/actions/runs/39076952015) também terminou com sucesso. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
 
 | Camada | Verificação realizada |
 |---|---|
@@ -52,6 +52,8 @@ O [estudo real](REAL_DATA_RESULTS.md) treinou 12 configurações em duas janelas
 
 ## Ainda exige ambiente e dados externos
 
+O estudo de vídeos completos descrito a seguir acrescenta execução real de Whisper/OpenCLIP e edição, mas não uma medição humana da precisão desses extratores.
+
 - Ganho preditivo consistente em campanhas representativas da Galaxies e validação prospectiva; o teste público de metadados já executado não demonstrou esse ganho.
 - Qualidade de Whisper, OpenCLIP, OCR e VLM, incluindo avaliação cega da rubrica.
 - Coleta autenticada de snapshots do YouTube.
@@ -59,3 +61,13 @@ O [estudo real](REAL_DATA_RESULTS.md) treinou 12 configurações em duas janelas
 - Operação multiusuário, carga e identidade corporativa.
 
 Essas verificações não são substituídas por exemplos artificiais, mocks ou alteração de rótulos.
+
+## Vídeos completos: execução e resultado
+
+O [estudo de retenção](FULL_VIDEO_RESULTS.md) baixou 954 arquivos (12,59 GB) e aceitou 945: oito divergiam da duração dos logs e um estava truncado na própria fonte. A segunda aquisição desse arquivo produziu o mesmo hash. A validação bloqueou o treinamento até a investigação e o registro da exclusão; nenhuma falha foi substituída por atributos inventados.
+
+Foram analisadas 13,81 horas: 1.984.272 frames decodificados, 14.173 imagens enviadas ao encoder visual e 19.761 trechos de fala, em 869 vídeos com transcrição. Os outros 76 não tiveram fala detectada/transcrita; transcrição vazia é diferente de falha de processamento. As verificações de duração, tempos, dimensões e valores finitos passaram nos 945 registros aceitos.
+
+O desenvolvimento executou cinco configurações em seis grupos de atributos e duas janelas temporais. A seleção foi congelada antes do teste final com 177 vídeos de 164 criadores, usando 623 vídeos no treino final. Erro médio: histórico ajustado **24,10 pp**, contexto **23,29 pp**, análise completa **23,70 pp**. O ganho da análise completa sobre o histórico ajustado foi **0,40 pp**, com intervalo de 95% de **−1,41 a 2,11 pp**. O critério de sucesso não foi cumprido e `eligible_for_production` permanece `false`.
+
+As métricas foram recalculadas independentemente a partir das previsões individuais e coincidiram com o relatório. A análise avulsa via CLI foi executada em arquivo real e preservou a identidade do extrator do benchmark, usando cache separado. Os gráficos foram renderizados e inspecionados. Relatórios e previsões estão em [results/multimodal](results/multimodal/); vídeos, transcrições completas e modelos treinados permanecem em `.runtime/`.
