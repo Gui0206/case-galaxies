@@ -32,12 +32,15 @@ elif args.operation == "download":
     plan = create_acquisition_plan(args.root)
     download_videos(args.root, plan["ids"])
 elif args.operation in ("extract", "analyze"):
+    from galaxies.retention_benchmark import validate_media_record
+
     cache = args.root / ("features" if args.operation == "extract" else "analysis-cache")
     analyzer = DeepMediaAnalyzer(args.weights, cache, speech_backend=args.speech_backend)
     if args.operation == "analyze":
         if args.video is None:
             parser.error("analyze requer o caminho de um vídeo local")
         result = analyzer.analyze(args.video)
+        validate_media_record(result)
         if args.output:
             write_json(args.output, result)
             print(args.output)
@@ -52,6 +55,13 @@ elif args.operation in ("extract", "analyze"):
             previous = json.loads(index_path.read_text())
             if previous["extractor_fingerprint"] == analyzer.fingerprint:
                 index = previous
+                for video, entry in list(index["rows"].items()):
+                    record = json.loads((args.root / "features" / entry["file"]).read_text())
+                    try:
+                        validate_media_record(record)
+                    except ValueError as exc:
+                        index["rows"].pop(video)
+                        index["failures"][video] = f"ValueError: {exc}"
                 pending = {k: v for k, v in pending.items() if k not in index["rows"]}
         index["extraction_complete"] = False
         write_json(index_path, index)
@@ -64,6 +74,7 @@ elif args.operation in ("extract", "analyze"):
             )
             if abs(result["duration_s"] - row.duration) > max(1, row.duration * 0.05):
                 raise ValueError("Duração do arquivo diverge da duração nos logs.")
+            validate_media_record(result)
             return result
 
         while pending:
