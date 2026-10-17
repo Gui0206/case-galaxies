@@ -108,3 +108,5 @@ Os comandos acima reproduzem o extrator usado no estudo, em Apple Silicon. Em ou
 A extração reutiliza os modelos na memória, processa até três vídeos em paralelo e mantém cache por conteúdo, legenda e identidade do extrator. O detector de edição roda em um processo separado para isolar bibliotecas nativas de vídeo. Uma execução pode continuar do cache; ela não inventa atributos para arquivos que falharam.
 
 `develop` exige pasta nova e extração encerrada. `final` verifica dados, atributos, versões e escolha congelada e registra a abertura do teste. Não apague esse registro para experimentar outra configuração nos mesmos vídeos. Reproduzir os mesmos dados não cria uma confirmação independente.
+
+Antes de treinar, a leitura também confere se a duração efetivamente decodificada acompanha a duração do arquivo (tolerância máxima de 0,5 segundo ou 1%), se cortes e transcrições cabem no vídeo, se os vetores têm dimensões consistentes e se todos os atributos são finitos. Uma falha interrompe o estudo para investigação; não vira um vetor de zeros nem uma observação silenciosamente aproveitada.

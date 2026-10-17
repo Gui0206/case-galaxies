@@ -58,6 +58,39 @@ def code_hash():
     return digest.hexdigest()
 
 
+def validate_media_record(record):
+    duration = record["duration_s"]
+    decoded = record["editing"]["decoded_duration_s"]
+    if not np.isfinite([duration, decoded]).all() or duration <= 0:
+        raise ValueError("Duração inválida no arquivo de atributos.")
+    if abs(duration - decoded) > max(0.5, duration * 0.01):
+        raise ValueError("A decodificação não cobre a duração do vídeo completo.")
+    if record["editing"]["decoded_frames"] < 1:
+        raise ValueError("Vídeo sem frames decodificados.")
+    if not record["frame_times"] or not all(0 <= t < duration for t in record["frame_times"]):
+        raise ValueError("Amostragem visual fora da duração do vídeo.")
+    if not all(0 < t < duration for t in record["editing"]["cut_times"]):
+        raise ValueError("Corte fora da duração do vídeo.")
+    if not all(0 <= s["start"] < s["end"] <= duration for s in record["transcript_segments"]):
+        raise ValueError("Trecho de fala fora da duração do vídeo.")
+    for values in (record["speech_features"], record["editing"]["features"]):
+        if not np.isfinite(list(values.values())).all():
+            raise ValueError("Atributo numérico inválido.")
+    dimensions = {}
+    for field in (
+        "visual_mean",
+        "visual_opening",
+        "visual_variation",
+        "speech_embedding",
+        "caption_embedding",
+    ):
+        vector = np.asarray(record[field], dtype=float)
+        if vector.ndim != 1 or not len(vector) or not np.isfinite(vector).all():
+            raise ValueError("Representação semântica inválida.")
+        dimensions[field] = len(vector)
+    return dimensions
+
+
 def load_study(root):
     frame = pd.read_parquet(root / "cohort.parquet")
     index = json.loads((root / "features/index.json").read_text())
@@ -66,7 +99,7 @@ def load_study(root):
     extractor = json.loads((root / "features/extractor.json").read_text())
     if index["extractor_fingerprint"] != extractor["fingerprint"]:
         raise ValueError("Extratores diferentes na base.")
-    features, file_hashes = {}, {}
+    features, file_hashes, dimensions = {}, {}, None
     for video, info in index["rows"].items():
         path = root / "features" / info["file"]
         if path.parent.resolve() != (root / "features").resolve():
@@ -76,6 +109,10 @@ def load_study(root):
             raise ValueError("Versão inconsistente de atributos.")
         if record["content_hash"] != info["content_hash"]:
             raise ValueError("Hash de mídia inconsistente.")
+        current_dimensions = validate_media_record(record)
+        if dimensions is not None and current_dimensions != dimensions:
+            raise ValueError("Dimensões semânticas inconsistentes entre vídeos.")
+        dimensions = current_dimensions
         features[video] = record
         file_hashes[video] = sha256_file(path)
     before = len(frame)

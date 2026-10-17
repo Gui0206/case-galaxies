@@ -14,6 +14,7 @@ from galaxies.retention_benchmark import (
     evaluate_final,
     make_plan,
     paired_gain,
+    validate_media_record,
 )
 from galaxies.shortvideo import temporal_context
 
@@ -64,9 +65,13 @@ def fixture(n=420):
     )
     records = {}
     for video in frame.creative_id:
+        duration = float(frame.loc[int(video), "duration"])
         records[video] = {
             "content_hash": video,
             "extractor_fingerprint": "fixture",
+            "duration_s": duration,
+            "frame_times": [0.0, duration - 0.1],
+            "transcript_segments": [],
             **{
                 key: rng.normal(size=6).tolist()
                 for key in (
@@ -78,9 +83,27 @@ def fixture(n=420):
                 )
             },
             "speech_features": {"has_audio": 1, "audio_rms": 0.1},
-            "editing": {"features": {"shot_count": 3, "motion_mean": 0.2}},
+            "editing": {
+                "features": {"shot_count": 3, "motion_mean": 0.2},
+                "decoded_duration_s": duration,
+                "decoded_frames": int(duration * 30),
+                "cut_times": [1.0, 2.0],
+            },
         }
     return frame, records
+
+
+def test_incomplete_decoding_or_non_finite_content_cannot_enter_the_study():
+    _, features = fixture(1)
+    record = features["0"]
+    assert validate_media_record(record)["visual_mean"] == 6
+    record["editing"]["decoded_duration_s"] = 2
+    with pytest.raises(ValueError, match="vídeo completo"):
+        validate_media_record(record)
+    record["editing"]["decoded_duration_s"] = record["duration_s"]
+    record["speech_embedding"][0] = float("nan")
+    with pytest.raises(ValueError, match="semântica"):
+        validate_media_record(record)
 
 
 def test_temporal_plan_purges_immature_labels_and_does_not_use_final_targets():
