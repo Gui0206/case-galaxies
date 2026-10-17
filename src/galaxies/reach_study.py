@@ -690,6 +690,15 @@ def develop(root=ROOT, run=RUN):
         "scores": scores,
         "plan_sha256": sha256_file(run / "plan.json"),
     }
+    selection["lexical_control"] = choose(
+        [
+            n
+            for n, v in CANDIDATES.items()
+            if v["bundle"] != "context" and not v["bundle"].startswith("semantic")
+        ]
+    )
+    semantic_names = [n for n, v in CANDIDATES.items() if v["bundle"].startswith("semantic")]
+    selection["semantic_control"] = choose(semantic_names) if semantic_names else None
     alternatives = {
         "history": selection["baseline"],
         "context": selection["context"],
@@ -876,20 +885,26 @@ def final(root=ROOT, run=RUN):
     matrices = encoder.fit_transform(frame, train, neighbors, semantic)
     encoder.save(run / "models")
     predictions = {"history": frame.iloc[predict][selection["baseline"]].to_numpy()}
-    names = {selection["context"], selection["content"]}
-    if selection["content"] == "blend_text_retrieval":
+    names = {selection["context"], selection["content"], selection["lexical_control"]}
+    if selection["semantic_control"]:
+        names.add(selection["semantic_control"])
+    needs_blend = "blend_text_retrieval" in names
+    if needs_blend:
         names |= {"linear_text_100", "retrieval_mae6"}
         names.remove("blend_text_retrieval")
     fit_predictions = {}
     for name in sorted(names):
         print("Final fit:", name, flush=True)
         fit_predictions[name] = fit_candidate(name, matrices, frame, train, predict, run / "models")
-    if selection["content"] == "blend_text_retrieval":
+    if needs_blend:
         fit_predictions["blend_text_retrieval"] = (
             0.5 * fit_predictions["linear_text_100"] + 0.5 * fit_predictions["retrieval_mae6"]
         )
     for label in ("context", "content"):
         predictions[label] = fit_predictions[selection[label]]
+    predictions["lexical_control"] = fit_predictions[selection["lexical_control"]]
+    if selection["semantic_control"]:
+        predictions["semantic_control"] = fit_predictions[selection["semantic_control"]]
     radii = {}
     for name, values in predictions.items():
         errors = np.abs(frame.iloc[cal].target_log.to_numpy() - values[: len(cal)])

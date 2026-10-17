@@ -47,6 +47,8 @@ Para afirmar que ajuda a **escolher criativos**, também deverá haver ganho de 
 
 Há 16 candidatos: modelos residuais CatBoost (MAE/RMSE, profundidades 4/6), regressão Ridge sobre texto, representações lexicais ou MiniLM multilíngue congelado e recuperação de até cinco comparáveis anteriores do canal. PCA, vocabulário e escala são ajustados somente no treino. O encoder pré-treinado é posterior a 2016; seu eventual contato com títulos antigos não pode ser descartado. A família lexical oferece uma comparação sem esse encoder. As seis referências históricas incluem média, mediana, média em log e regularização pelo setor. Além da hipótese de ganho do conteúdo, a previsão recomendada será escolhida no desenvolvimento entre histórico, contexto e conteúdo; dentro de 1% do melhor erro, prefere-se a opção mais simples, nessa ordem. Sua comparação com o histórico será relatada separadamente, sem confundi-la com valor adicional do conteúdo.
 
+Os vencedores lexical e semântico também serão congelados no desenvolvimento e avaliados como controles no teste. Isso permite inspecionar a contribuição de um encoder externo sem escolher posteriormente a família que teve o resultado mais favorável no teste.
+
 Todas as configurações, inclusive as que falharem, serão registradas. Modelos simples podem vencer. Ganho só sobre uma referência fraca não basta. Os intervalos de previsão serão calibrados em dados separados e avaliados por cobertura e largura; não são garantia sob mudança de distribuição.
 
 **Estado ao registrar este plano:** aquisição em andamento; nenhum modelo treinado ou resultado de teste consultado nesta nova base. A camada de vídeo completo existente permanece executável, mas seu ganho sobre visualizações ainda não foi demonstrado.
