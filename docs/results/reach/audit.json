@@ -1,0 +1,21 @@
+{
+  "created_at": "2026-10-17 23:41:00.809335+00:00",
+  "counts": {
+    "source_rows": 277727,
+    "excluded:missing_week_day": 12954,
+    "excluded:reporting_start_not_publication_date": 654,
+    "excluded:invalid_duration": 3,
+    "duplicate_ids": 0,
+    "duplicate_channel_title": 799
+  },
+  "eligible_rows": 263317,
+  "channels": 68411,
+  "category_counts": {
+    "26": 183048,
+    "2": 80269
+  },
+  "published_min": "2016-07-01 00:00:00+00:00",
+  "published_max": "2016-08-31 22:40:55+00:00",
+  "cohort_sha256": "4133f1821c15396529d115af1feee347cd3e5ab13b5df8e3be9af4c83ffc571d",
+  "acquisition_sha256": "8a985c8624467adc12597247f967272ac9364aa649b5d1844aae7773eb10a4c9"
+}

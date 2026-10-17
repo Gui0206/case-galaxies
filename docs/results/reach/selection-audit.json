@@ -1,0 +1,8 @@
+{
+  "previous_predictions_sha256": "3283ee0125051ab4b2ba94a5bbe57f621bd8711e5a3410f96b30a953563f0f98",
+  "current_predictions_sha256": "3283ee0125051ab4b2ba94a5bbe57f621bd8711e5a3410f96b30a953563f0f98",
+  "predictions_identical": true,
+  "previous_recommendation": "context",
+  "current_recommendation": "content",
+  "purpose": "Selection-rule revision on unchanged development predictions, before any final opening."
+}

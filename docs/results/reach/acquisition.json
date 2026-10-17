@@ -1,0 +1,19 @@
+{
+  "doi": "10.7910/DVN/L3UWZT",
+  "file_id": 3489832,
+  "archive_bytes": 2512142102,
+  "archive_md5": "1f01676fb6abd3ddc47e1289d64a2803",
+  "license_record": "CC0-1.0",
+  "files": [
+    {
+      "file": "autos.json",
+      "bytes": 499019776,
+      "sha256": "19ff6de7b03b8b3e614e1875b2c86dbd46213b0b2e18d8310ad7fb270bdbad06"
+    },
+    {
+      "file": "howto.json",
+      "bytes": 1233664992,
+      "sha256": "1ba479465ad29e5851ab1c3af562be606a5aa9e3a2b72a8c10853168308daecf"
+    }
+  ]
+}
