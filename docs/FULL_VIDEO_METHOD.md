@@ -32,6 +32,10 @@ O encoder de linguagem é [paraphrase-multilingual-MiniLM-L12-v2](https://huggin
 
 O detector de fala remove intervalos sem fala antes da transcrição; os tempos são recolocados na posição original do vídeo. Áudio sem fala detectada produz transcrição vazia, sem texto fabricado para preencher o atributo. O modelo maior foi escolhido por viabilidade técnica no Mac, antes do desenvolvimento supervisionado e da abertura do teste. Não houve seleção de transcritor pelos resultados de retenção. O backend CPU com Whisper Small permanece como alternativa explícita, com outra identidade de extrator; seus atributos não são misturados neste estudo.
 
+![Linha do tempo da análise de um vídeo real do período de treino](assets/video-analysis-example.png)
+
+Cada ponto azul indica uma imagem que alimenta o encoder visual. As linhas vermelhas indicam mudanças de plano detectadas. Os blocos verdes localizam os trechos transcritos. O arquivo de atributos guarda esses tempos e permite conferir a análise no vídeo original. O gráfico ilustra a extração, não uma previsão nem um exemplo escolhido por bom desempenho.
+
 Não há um LLM inventando uma “nota de viralidade”. Os encoders descrevem o conteúdo, e os regressores aprendem a relação com a retenção apenas nos dados de treino. Textos presentes em vídeos são processados como dados, sem executar instruções neles contidas.
 
 ## Por que esta base
