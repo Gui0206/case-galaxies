@@ -1,0 +1,9 @@
+{
+  "source": "https://www.kaggle.com/datasets/datasnaek/youtube-new",
+  "version": 115,
+  "files": {
+    "USvideos.csv": "09b4eb71295752705e472ebefeac9d2afab4177b7a818af795dea62744a48eb2",
+    "CAvideos.csv": "e7ff7f574d1e3d685e5a9406cde3ed2aa0b83d8f07d6d989e03c36d815f430b3",
+    "GBvideos.csv": "5f5c100e150be2baaf7f9a3198a8216ce107b7e03e4572790c15e698d8e763cb"
+  }
+}

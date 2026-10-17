@@ -1,0 +1,29 @@
+{
+  "SMTPD": {
+    "source": "https://huggingface.co/datasets/zw773577332/SMTPD",
+    "revision": "455c030cf97efd1614d32cd009b903db87edb146",
+    "sha256": "1c7647f513d69c5926319bc690004b5efabd6f058938c741a81c979cd84a1ed5",
+    "declared_license": "apache-2.0 in dataset metadata",
+    "decision": "not used for temporal evaluation",
+    "reason": "public CSV lacks publication dates; numerical metadata already standardized; contains cover images, not full videos. No dates invented."
+  },
+  "MicroLens": {
+    "source": "https://github.com/westlake-repl/MicroLens",
+    "decision": "not downloaded",
+    "reason": "likes/views do not establish a common post-publication horizon; interaction timestamps are not publication timestamps."
+  },
+  "KenJee": {
+    "source": "https://www.kaggle.com/datasets/kenjee/ken-jee-youtube-data",
+    "version": 2,
+    "archive_sha256": "7b2c9c351b0d3c01629962aa33e56b11be47cd125a0382a943dd2df32f469e79",
+    "declared_license": "Other; owner shares for community analysis, references YouTube API terms",
+    "decision": "retrospective single-channel calendar-week benchmark"
+  },
+  "YouTubeTrending": {
+    "source": "https://www.kaggle.com/datasets/datasnaek/youtube-new",
+    "version": 115,
+    "archive_sha256": "9f59324bd23ebd95aa16f854de1e0a6299bacf988b30c5e7db5f1e4216d8deda",
+    "declared_license": "CC0 listed by publisher",
+    "decision": "retrospective benchmark restricted to selected trending videos; calendar-day target, not exact 168h"
+  }
+}

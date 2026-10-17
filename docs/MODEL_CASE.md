@@ -1,5 +1,7 @@
 # O case está no modelo e na evidência
 
+> **Atualização de 17/10/2026:** já há [testes em duas bases públicas reais](REAL_DATA_RESULTS.md), com resultado desfavorável à hipótese de ganho consistente sobre o histórico. Leia esse relatório primeiro. Os números de desempenho apresentados nesta página são do estudo sintético anterior e não medem eficácia real.
+
 **A entrega é uma infraestrutura de pesquisa executável. Ainda não é um modelo com eficácia comprovada em campanhas reais.** A interface permite inspecioná-la; a qualidade depende dos dados, da representação do vídeo e do teste que tenta refutar o ganho do modelo.
 
 A proposta técnica é combinar conteúdo multimodal com contexto disponível antes da publicação, estimar desempenho em um horizonte fixo e comparar criativos sob o mesmo contexto. A família vencedora precisa ser escolhida por avaliação temporal, não por preferência por uma arquitetura.
@@ -99,11 +101,11 @@ O último resultado é uma limitação importante. O acerto de ranking dessa coo
 
 | Evidência necessária | Como produzir | Situação |
 |---|---|---|
-| Rótulos corretos e representativos | Métrica no mesmo horizonte, origem e disponibilidade verificáveis, distribuição paga separada | Falta base real autorizada |
+| Rótulos corretos e representativos | Métrica no mesmo horizonte, origem e disponibilidade verificáveis, distribuição paga separada | Duas bases públicas auditadas; falta base representativa com versões pré-publicação verificadas |
 | Representação semântica útil | Comparar texto, frames/segmentos, áudio, embeddings e rubrica nos mesmos cortes; medir concordância humana e erros de extração | Adaptadores existentes; eficácia não demonstrada |
-| Valor além do tamanho do canal | Superar contexto forte em erro e ordenação no futuro; reportar setores e canais | Protocolo implementado; só exercitado com simulação |
+| Valor além do histórico | Superar referências simples e contexto aprendido em erro e ordenação no futuro; reportar setores e canais | Testes públicos de metadados executados; ganho consistente não demonstrado |
 | Generalização para novos clientes | Canais/clientes excluídos e calibração dedicada; manter abstenção enquanto falhar | Diagnóstico implementado e falha registrada |
-| Robustez a mudança temporal | Várias janelas e acompanhamento de cobertura/erro; política de recalibração | Backtest implementado; faltam observações reais |
+| Robustez a mudança temporal | Várias janelas e acompanhamento de cobertura/erro; política de recalibração | Teste público temporal executado; seleção instável e limitações de cobertura registradas |
 | Utilidade antes da publicação | Registrar previsões e versão antes de publicar; avaliar resultados maduros | Registro prospectivo implementado |
 | Melhoria efetiva de campanha | Experimento controlado com condições de distribuição comparáveis | Não executado |
 

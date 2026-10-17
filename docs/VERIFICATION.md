@@ -1,8 +1,8 @@
 # O que foi verificado
 
-Verificação local em 6 de outubro de 2026, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve uma execução; o resultado da CI remota precisa ser consultado separadamente.
+Última verificação local em **17 de outubro de 2026**, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve execuções locais; o resultado da CI remota precisa ser consultado separadamente.
 
-**Resultado: 55 testes passaram**, sem skips no ambiente local com FFmpeg disponível. Ruff, formatação e build também passaram. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; o reforço atual se concentrou na modelagem.
+**Resultado atual: 62 testes passaram**, sem skips no ambiente local com FFmpeg disponível. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; a atualização atual se concentrou na avaliação com dados públicos reais.
 
 | Camada | Verificação realizada |
 |---|---|
@@ -14,6 +14,7 @@ Verificação local em 6 de outubro de 2026, Python 3.12.13, macOS. O [lockfile]
 | Seleção e confirmação | Regra protege erro de contagens; hashes rejeitam alteração de dados/código; avaliação final de uso único; promoção real exige seleção verificada |
 | Famílias | Ridge, CatBoost, LightGBM e blend em alvos absolutos e residuais; persistência nativa e atribuições aditivas |
 | Diagnósticos | Embaralhamento preserva contexto/alvos; interval score penaliza amplitude e falhas |
+| Bases públicas | Sete testes novos: dias ausentes não viram zero; snapshots no horizonte; deduplicação entre regiões e por canal/título; histórico sem resultados futuros; encoder ajustado só no treino; hashes e teste final único; reamostragem pareada |
 | Decisão | Modelo sintético e entrada simulada bloqueiam recomendação; atributos ausentes são sinalizados |
 | API | Contratos, rastros, autenticação, restrição de origem e importação inválida |
 | Treinamento assíncrono | Job persistido chega a `completed`; processo MCP/API vivo não é interrompido por outra instância |
@@ -37,11 +38,17 @@ uv build
 
 Os testes usam diretórios temporários, dados sintéticos determinísticos e nenhuma credencial externa. O processo MCP é separado; a cobertura padrão do processo pai não atribui suas linhas, embora o teste de protocolo o execute. A suíte de experimentos e os comandos CLI também foram executados manualmente. A competição completa de 12 configurações, ablações, controles negativos, seeds e canais excluídos tem [resultados salvos](results/research/development.json); a [avaliação final](results/research/final.json) confirma uma seleção previamente congelada em dados sintéticos.
 
-A cobertura instrumentada foi 73% no total, 99% em `estimators`, 97% em `metrics`, 91% em `protocol` e 91% em `research`. CLI, MCP subprocessado e extratores opcionais limitam essa medida; cobertura de linhas não equivale a validade estatística. A comparação HTTP com o modelo residual selecionado também foi confrontada com a saída CLI.
+A cobertura instrumentada **da execução anterior, em 06/10**, foi 73% no total, 99% em `estimators`, 97% em `metrics`, 91% em `protocol` e 91% em `research`; não foi recalculada para esta atualização. CLI, MCP subprocessado e extratores opcionais limitam essa medida; cobertura de linhas não equivale a validade estatística. A comparação HTTP com o modelo residual selecionado também foi confrontada com a saída CLI na entrega anterior.
+
+## Evidência empírica adicionada em 17/10
+
+O [estudo real](REAL_DATA_RESULTS.md) treinou 12 configurações em duas janelas de desenvolvimento para cada uma de duas bases públicas. Seleção, dados e código foram congelados antes dos testes finais com 30 vídeos do Ken Jee e 377 do Trending. O CatBoost residual anterior, a seleção automática e uma referência aprendida de contexto foram comparados com medianas históricas. Modelos e previsões estão preservados em `.runtime/reports/public/`; os relatórios auditáveis estão em [docs/results/public](results/public/).
+
+**Resultado: nenhum ganho consistente sobre o histórico foi demonstrado.** São dados reais, mas apenas metadados retrospectivos, com alvos por calendário e limitações de seleção e disponibilidade. O estudo não certifica vídeo/áudio completos, publicação prospectiva ou campanhas da Galaxies. O campo `eligible_for_production` permanece `false` nos dois relatórios.
 
 ## Ainda exige ambiente e dados externos
 
-- Desempenho preditivo em publicações/campanhas reais.
+- Ganho preditivo consistente em campanhas representativas da Galaxies e validação prospectiva; o teste público de metadados já executado não demonstrou esse ganho.
 - Qualidade de Whisper, OpenCLIP, OCR e VLM, incluindo avaliação cega da rubrica.
 - Coleta autenticada de snapshots do YouTube.
 - Conexão com a plataforma interna da Galaxies.

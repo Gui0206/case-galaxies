@@ -2,6 +2,12 @@
 
 **Pergunta de controle:** essa informação estava disponível no momento em que a escolha seria feita?
 
+## Bases públicas já testadas
+
+O [estudo público de metadados](REAL_DATA_RESULTS.md) usa Ken Jee (196 vídeos elegíveis) e YouTube Trending (2.534 vídeos elegíveis). Fontes, versões, hashes, alvos por calendário e resultados estão documentados. **O modelo não demonstrou ganho consistente sobre o histórico.**
+
+Essas bases não comprovam versões originais anteriores à publicação nem observações em exatamente 168 horas. Por isso são processadas por `public_benchmark.py`, separadamente do contrato abaixo. Não inventamos datas ou setores para importá-las como dados prontos para produção. Os CSVs ficam em `.runtime/public/`, ignorado pelo Git; não são a base sintética da interface.
+
 ```mermaid
 timeline
     title Disponibilidade da informação
@@ -80,6 +86,6 @@ Registros sem observação no horizonte permanecem pendentes; o comando informa 
 
 Use arquivos originais de criadores que autorizaram seu processamento ou datasets com condições compatíveis. Consulte as [políticas da API](https://developers.google.com/youtube/terms/developer-policies) e as [condições adicionais para métricas/armazenamento](https://developers.google.com/youtube/terms/derived-metrics-policy) para o caso concreto. Acesso público não equivale a autorização irrestrita de armazenamento, agregação, download e treinamento.
 
-SMTPD e MicroLens são referências metodológicas, não bases já incluídas, verificadas ou licenciadas por este repositório. Métricas, população, modalidade e disponibilidade temporal precisam ser conferidas antes de qualquer adaptação.
+O CSV público de SMTPD foi baixado e auditado, mas excluído da avaliação temporal por não fornecer datas de publicação. MicroLens foi considerado e não baixado: seus timestamps de interação não estabelecem o alvo comum após publicação. Veja a [auditoria de fontes](results/public/sources.json). Nenhum dos dois foi usado para alegar desempenho preditivo.
 
 Não transfira rótulos de uma plataforma para outra. Para novos clientes ou anúncios, mantenha um perfil próprio de alvo/horizonte, atributos e validação.

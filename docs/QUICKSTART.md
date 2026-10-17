@@ -1,5 +1,7 @@
 # Comece pelo fluxo completo
 
+**Para saber se o modelo funciona em dados reais, comece pelos [resultados públicos](REAL_DATA_RESULTS.md).** Eles incluem comandos para baixar as fontes e reproduzir a avaliação temporal. O resultado foi ausência de ganho consistente sobre o histórico. O fluxo de interface abaixo continua sendo uma demonstração sintética; ele não carrega esses estudos como modelos aprovados.
+
 ```mermaid
 flowchart LR
     A[Instalar] --> B[Gerar demonstração]
