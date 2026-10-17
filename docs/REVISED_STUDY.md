@@ -36,6 +36,8 @@ As datas abaixo são fixadas a partir do período declarado pela fonte, antes da
 
 O teste principal exige ao menos três publicações anteriores com alvos maduros do canal; os casos com pouco histórico são relatados à parte. Duplicatas de ID e de título normalizado dentro do canal são removidas antes das partições, mantendo a primeira. Não se excluem vídeos por serem difíceis de prever. Alvos ausentes não viram zero; textos, categorias e datas não são inventados.
 
+Antes do desenvolvimento, também se fixa um diagnóstico de títulos de Howto & Style que mencionam maquiagem, cuidados com a pele, cosméticos, batom, sombra, penteados, unhas, moda, lookbook, outfit, try-on, styling ou wardrobe, com termos em inglês/português/espanhol declarados no código. É uma seleção lexical aproximada, não uma anotação humana dos setores, e não substitui o teste principal. Serão mostrados todos os recortes, inclusive os desfavoráveis.
+
 ## O que contará como ganho
 
 O candidato com conteúdo deve reduzir pelo menos **5% do MAE macro em log** em relação tanto à melhor referência histórica quanto ao modelo escolhido só com contexto; o limite inferior do intervalo pareado de 95%, reamostrado por canal, deve ser positivo para ambas as comparações. São necessários pelo menos 500 vídeos e 50 canais no teste principal.
