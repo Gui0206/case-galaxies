@@ -167,3 +167,17 @@ def test_complete_frozen_study_and_single_final_opening(tmp_path, monkeypatch):
     (run / "development.json").write_text(json.dumps(value))
     with pytest.raises(ValueError, match="artifacts changed"):
         study.verify_frozen(root, run)
+
+
+def test_sparse_linear_forecast_survives_native_persistence(tmp_path):
+    channel = next(f"c{i}" for i in range(100) if not study.reserved_channel(f"c{i}"))
+    rows = [study.parse_record(source_record(i + 1, channel, f"v{i}")) for i in range(18)]
+    for i, row in enumerate(rows):
+        row["title"] = f"A new car model {i % 3}"
+        row["target_log"] += i % 3
+    frame, neighbors = study.history_features(pd.DataFrame(rows))
+    train, predict = np.arange(12), np.arange(12, 18)
+    matrices = study.ReachEncoder().fit_transform(frame, train, neighbors)
+    before = study.fit_candidate("linear_text_10", matrices, frame, train, predict, tmp_path)
+    after = study.predict_saved_candidate("linear_text_10", matrices, frame, predict, tmp_path)
+    np.testing.assert_allclose(before, after, rtol=1e-6, atol=1e-6)

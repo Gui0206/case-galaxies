@@ -156,6 +156,13 @@ def main():
             f"| {label} | {number(c['videos'], 0)} | {number(h['macro_mae_log'], 3)} | {number(c['macro_mae_log'], 3)} | {number(section['content_vs_history']['relative_reduction_pct'])}% |"
         )
     chosen = metrics[recommended]
+    control_summary = ""
+    if "semantic_control" in metrics:
+        control_summary = (
+            f"No controle congelado, o melhor modelo lexical teve erro {number(metrics['lexical_control']['macro_mae_log'], 3)}; "
+            f"o melhor semântico teve {number(metrics['semantic_control']['macro_mae_log'], 3)}. "
+            "Esses controles não alteram a escolha registrada nem constituem uma nova rodada de seleção."
+        )
     lines += [
         "",
         "Os recortes foram definidos antes do teste. São diagnósticos; não trocamos o resultado principal pelo recorte mais favorável.",
@@ -165,6 +172,8 @@ def main():
         "## O que foi melhorado no modelo",
         "",
         "O modelo aprende correções sobre o padrão recente do canal. Compara duração com a duração habitual, usa o texto do título e recupera até cinco publicações anteriores semelhantes, com resultados já maduros. Foram comparados 16 candidatos, incluindo versões lexicais, encoder semântico multilíngue congelado, regressão regularizada, CatBoost e uma mistura fixa. Não usamos visualizações iniciais, curtidas ou retenção do próprio vídeo.",
+        "",
+        control_summary,
         "",
         f"Treino final: **{number(result['train_videos'], 0)} vídeos**. Calibração separada: **{number(result['calibration_videos'], 0)}**. A avaliação final inclui **{number(result['all_test_videos'], 0)}** vídeos ao somar histórico suficiente, pouco histórico e canais reservados. Todos os alvos do treino/calibração amadurecem antes das respectivas fronteiras. O histórico pode incorporar resultados já maduros durante o teste; os pesos permanecem fixos.",
         "",
