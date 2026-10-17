@@ -22,16 +22,19 @@ parser.add_argument("--weights", type=Path, default=Path(".runtime/weights"))
 parser.add_argument("--runs", type=Path, default=Path(".runtime/reports/multimodal"))
 parser.add_argument("--output", type=Path)
 parser.add_argument("--wait-downloads", action="store_true")
+parser.add_argument("--speech-backend", choices=["cpu", "mlx"], default="cpu")
 args = parser.parse_args()
 
 if args.operation == "weights":
-    provision_weights(args.weights)
+    provision_weights(args.weights, args.speech_backend)
 elif args.operation == "download":
     download_metadata(args.root)
     plan = create_acquisition_plan(args.root)
     download_videos(args.root, plan["ids"])
 elif args.operation in ("extract", "analyze"):
-    analyzer = DeepMediaAnalyzer(args.weights, args.root / "features")
+    analyzer = DeepMediaAnalyzer(
+        args.weights, args.root / "features", speech_backend=args.speech_backend
+    )
     if args.operation == "analyze":
         if args.video is None:
             parser.error("analyze requer o caminho de um vídeo local")

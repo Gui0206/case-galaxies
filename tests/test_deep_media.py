@@ -9,7 +9,7 @@ import sys
 import numpy as np
 import pytest
 
-from galaxies.deep_media import audio_statistics, frame_times
+from galaxies.deep_media import audio_statistics, frame_times, model_specs, restore_speech_segments
 from galaxies.video_structure import shot_statistics
 
 
@@ -41,6 +41,26 @@ def test_shot_statistics_exclude_outside_and_duplicate_boundaries():
     assert result["cuts_per_second"] == 0.4
     assert result["first_shot_s"] == 1
     assert result["shot_mean_s"] == pytest.approx(5 / 3)
+
+
+def test_transcript_timestamps_restore_silence_and_respect_boundaries():
+    chunks = [{"start": 16000, "end": 32000}, {"start": 80000, "end": 112000}]
+
+    def segment(start, end):
+        return {
+            "start": start,
+            "end": end,
+            "text": "fala",
+            "avg_logprob": -0.5,
+            "no_speech_prob": 0.1,
+        }
+
+    restored = restore_speech_segments([segment(0, 1), segment(1, 2.5), segment(2.5, 4)], chunks, 7)
+    assert [(s["start"], s["end"]) for s in restored] == [(1, 2), (5, 6.5), (6.5, 7)]
+    assert restore_speech_segments([segment(0, 1)], [], 7) == []
+    assert "speech_mlx" in model_specs("mlx") and "speech" not in model_specs("mlx")
+    with pytest.raises(ValueError):
+        model_specs("unknown")
 
 
 @pytest.mark.skipif(

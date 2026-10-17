@@ -23,12 +23,14 @@ flowchart LR
 | Parte | Extração executada | O que ela não permite afirmar |
 |---|---|---|
 | Imagem | OpenCLIP ViT-B/32 em 12 momentos distribuídos pela duração e em 0,5, 1,5 e 2,5 segundos; representação média, abertura e variação visual | Não é compreensão contínua de cada ação nem uma anotação humana de qualidade |
-| Fala | Whisper Small multilíngue, detecção de fala, transcrição com início/fim de cada trecho; representação semântica multilíngue de todos os trechos | A transcrição pode errar; ela não mede emoção, intenção ou identidade do falante |
+| Fala | Whisper Large v3 Turbo multilíngue via MLX, detecção de fala Silero, transcrição com início/fim de cada trecho; representação semântica multilíngue de todos os trechos | A transcrição pode errar; ela não mede emoção, intenção ou identidade do falante |
 | Som | Energia RMS, variação de energia, silêncio por janelas e variação de sinal | Essas medidas não identificam qualidade narrativa ou o efeito causal da música |
 | Edição | Decodificação de todos os frames; cortes com PySceneDetect AdaptiveDetector; duração dos planos, ritmo inicial e fluxo óptico em até cerca de oito amostras por segundo | Cortes detectados são estimativas; movimento e flashes podem gerar erros |
 | Título | Mesmo encoder multilíngue usado na transcrição | O título exportado pode não ser a versão original anterior à publicação |
 
-O encoder de linguagem é [paraphrase-multilingual-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2). Textos longos são divididos em trechos; não descartamos silenciosamente o fim da fala. Usamos [OpenCLIP](https://github.com/mlfoundations/open_clip), [Faster Whisper](https://github.com/SYSTRAN/faster-whisper) e [PySceneDetect](https://www.scenedetect.com/docs/latest/api/detectors.html). Revisões dos pesos, hashes, versões de bibliotecas, FFmpeg e código ficam registrados com os atributos.
+O encoder de linguagem é [paraphrase-multilingual-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2). Textos longos são divididos em trechos; não descartamos silenciosamente o fim da fala. Usamos [OpenCLIP](https://github.com/mlfoundations/open_clip), [MLX Whisper](https://github.com/ml-explore/mlx-examples/tree/main/whisper), o detector de fala distribuído com [Faster Whisper](https://github.com/SYSTRAN/faster-whisper) e [PySceneDetect](https://www.scenedetect.com/docs/latest/api/detectors.html). Revisões dos pesos, hashes, versões de bibliotecas, FFmpeg e código ficam registrados com os atributos.
+
+O detector de fala remove intervalos sem fala antes da transcrição; os tempos são recolocados na posição original do vídeo. Áudio sem fala detectada produz transcrição vazia, sem texto fabricado para preencher o atributo. O modelo maior foi escolhido por viabilidade técnica no Mac, antes do desenvolvimento supervisionado e da abertura do teste. Não houve seleção de transcritor pelos resultados de retenção. O backend CPU com Whisper Small permanece como alternativa explícita, com outra identidade de extrator; seus atributos não são misturados neste estudo.
 
 Não há um LLM inventando uma “nota de viralidade”. Os encoders descrevem o conteúdo, e os regressores aprendem a relação com a retenção apenas nos dados de treino. Textos presentes em vídeos são processados como dados, sem executar instruções neles contidas.
 
@@ -76,12 +78,12 @@ Não calibramos intervalos preditivos individuais nessa janela curta. Os interva
 ## Como executar
 
 ```bash
-uv sync --frozen --group dev --extra audio --extra vision --extra semantic
+uv sync --frozen --group dev --extra audio --extra vision --extra semantic --extra apple
 
 # Pesos com revisões fixadas; dados e todos os vídeos elegíveis.
-uv run --no-sync python scripts/run_multimodal.py weights
+uv run --no-sync python scripts/run_multimodal.py weights --speech-backend mlx
 uv run --no-sync python scripts/run_multimodal.py download
-uv run --no-sync python scripts/run_multimodal.py extract
+uv run --no-sync python scripts/run_multimodal.py extract --speech-backend mlx
 
 # Escolha congelada e avaliação final de uso único.
 uv run --no-sync python scripts/run_multimodal.py develop
@@ -91,11 +93,13 @@ uv run --no-sync python scripts/run_multimodal.py final
 Para analisar um vídeo local:
 
 ```bash
-uv run --no-sync python scripts/run_multimodal.py analyze /caminho/video.mp4 \
+uv run --no-sync python scripts/run_multimodal.py analyze /caminho/video.mp4 --speech-backend mlx \
   --output .runtime/analise-video.json
 ```
 
 O resultado inclui transcrição com tempos, cortes detectados, atributos de fala/edição e representações visuais/semânticas. A análise aceita vídeo local de até 180 segundos, 150 MB e 4K. Não produz uma previsão de retenção sem o modelo e o contexto do estudo.
+
+Os comandos acima reproduzem o extrator usado no estudo, em Apple Silicon. Em outras plataformas, omita `--extra apple` e use `--speech-backend cpu` em `weights`, `extract` e `analyze`. Isso cria um **extrator diferente**, com Whisper Small, e exige outra avaliação; não reproduz os números do estudo MLX. Nenhum backend troca de modelo silenciosamente.
 
 A extração reutiliza os modelos na memória, processa até três vídeos em paralelo e mantém cache por conteúdo, legenda e identidade do extrator. O detector de edição roda em um processo separado para isolar bibliotecas nativas de vídeo. Uma execução pode continuar do cache; ela não inventa atributos para arquivos que falharam.
 
