@@ -3,6 +3,7 @@
 import argparse
 import json
 import shutil
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -26,6 +27,36 @@ if sha256_file(args.root / "features/index.json") != plan["provenance"]["index_s
 downloads = json.loads((args.root / "download.json").read_text())
 download_by_id = {x["creative_id"]: x for x in downloads["files"]}
 records = []
+cohort = pd.read_parquet(args.root / "cohort.parquet").set_index("creative_id")
+exclusions = []
+for video, reason in index["failures"].items():
+    path = args.root / "videos" / f"{video}.mp4"
+    actual_duration = None
+    if path.exists():
+        probe = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "json",
+                str(path),
+            ],
+            capture_output=True,
+            timeout=30,
+        )
+        if probe.returncode == 0:
+            actual_duration = float(json.loads(probe.stdout)["format"]["duration"])
+    exclusions.append(
+        {
+            "creative_id": video,
+            "reason": reason,
+            "log_duration_s": float(cohort.loc[video, "duration"]),
+            "file_duration_s": actual_duration,
+        }
+    )
 for video, entry in index["rows"].items():
     path = args.root / "features" / entry["file"]
     if sha256_file(path) != plan["provenance"]["feature_sha256"][video]:
@@ -53,6 +84,7 @@ audit = {
     "download_failures": downloads["failures"],
     "extracted_videos": len(records),
     "extraction_failures": index["failures"],
+    "exclusion_details": exclusions,
     "video_hours": sum(r["duration_s"] for r in records) / 3600,
     "decoded_frames": sum(r["editing"]["decoded_frames"] for r in records),
     "semantic_image_samples": sum(len(r["frame_times"]) for r in records),
