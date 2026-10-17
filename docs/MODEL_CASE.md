@@ -24,7 +24,7 @@ Há duas formulações concorrentes. Na absoluta, o modelo estima `log(1 + alvo)
 
 O contexto inclui estatísticas recentes, média móvel em log com decaimento temporal, tendência, idade do histórico, tamanho do canal, setor e regime de distribuição. Resultados que ainda não eram conhecidos são excluídos de cada consulta. Pesos de treino e métricas macro equilibram a participação dos canais.
 
-**O nível atual dos extratores importa:** texto usa hashing + SVD; os atributos básicos de vídeo/áudio são descritivos. Whisper, OpenCLIP, OCR e VLM têm adaptadores opcionais, mas não foram avaliados em vídeos reais deste domínio. Não se apresenta o núcleo lexical como um encoder semântico de fronteira. A próxima comparação de representações depende de vídeos autorizados, transcrições, amostragem temporal e anotação humana cega. Consulte [Multimodal](MULTIMODAL.md).
+**O nível dos extratores varia por estudo:** o núcleo anterior usa hashing + SVD e atributos descritivos de vídeo/áudio. O novo [pipeline de vídeo completo](FULL_VIDEO_METHOD.md) executa OpenCLIP, Whisper Large v3 Turbo, encoder semântico multilíngue e detector de cortes em todos os frames. Sua avaliação de retenção é separada da previsão de contagens. A precisão da transcrição e dos cortes ainda requer anotação humana cega; executar os encoders não comprova, por si só, ganho preditivo. Consulte [Multimodal](MULTIMODAL.md) para escolher o comando adequado.
 
 ## O protocolo que evita escolher pelo teste
 

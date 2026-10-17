@@ -2,7 +2,9 @@
 
 Última verificação local em **17 de outubro de 2026**, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve execuções locais; o resultado da CI remota precisa ser consultado separadamente.
 
-**Resultado atual: 62 testes passaram**, sem skips no ambiente local com FFmpeg disponível. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; a atualização atual se concentrou na avaliação com dados públicos reais.
+**Resultado atual: 73 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização se concentra na análise de vídeos completos e no teste temporal de retenção.
+
+A [CI do commit de modelagem e integridade `99fb771`](https://github.com/Gui0206/case-galaxies/actions/runs/39073856356) também terminou com sucesso. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
 
 | Camada | Verificação realizada |
 |---|---|
@@ -20,6 +22,8 @@
 | Treinamento assíncrono | Job persistido chega a `completed`; processo MCP/API vivo não é interrompido por outra instância |
 | MCP | Cliente oficial inicia servidor stdio, lista ferramentas e recebe `structuredContent` |
 | Mídia | FFmpeg gera um vídeo de teste original; o extrator lê frames/áudio e reutiliza o cache |
+| Vídeo completo | Corte conhecido em vídeo original de duas cenas; timestamps de fala recolocados após remoção de silêncio; rejeição de decodificação incompleta e vetores inválidos |
+| Retenção | Histórico aguarda o fim da observação; expurgo temporal; PCA somente no treino; remoção efetiva de modalidades; bootstrap pareado; escolha congelada e teste final de uso único |
 | Prospectivo | Resultado no horizonte correto; rejeição de sobrescrita e de evidência sintética |
 | Monitoramento | Ausência diferente de zero; latência; separação de níveis de evidência; concordância com anotação humana |
 | Interface | Navegação, comparação, evidências, troca de versão, upload/extração de vídeo, treinamento e layouts de desktop/tela estreita |

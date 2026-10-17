@@ -1,5 +1,22 @@
 # Do vídeo aos atributos
 
+## Análise completa do estudo real
+
+O [estudo de vídeo completo](FULL_VIDEO_METHOD.md) tem um pipeline próprio: OpenCLIP para imagem, Whisper Large v3 Turbo para fala, encoder semântico multilíngue e detecção de cortes sobre todos os frames. Esse pipeline usa pesos fixados, cache por conteúdo e verificações de integridade antes de treinar.
+
+```bash
+uv sync --frozen --group dev --extra audio --extra vision --extra semantic --extra apple
+uv run --no-sync python scripts/run_multimodal.py weights --speech-backend mlx
+uv run --no-sync python scripts/run_multimodal.py analyze /caminho/video.mp4 \
+  --speech-backend mlx --output .runtime/analise-completa.json
+```
+
+Esse perfil usa Apple Silicon. A alternativa CPU e suas diferenças estão no método. O JSON mostra o conteúdo extraído; não atribui uma nota de viralidade. O estudo de retenção permanece separado do contrato de previsão de visualizações/curtidas.
+
+As seções seguintes documentam o extrator básico da aplicação e seus adaptadores opcionais. O comando `galaxies extract` continua disponível, mas não executa automaticamente o pipeline do estudo acima.
+
+## Extrator básico da aplicação
+
 ```mermaid
 flowchart LR
     A["Vídeo original local"] --> B["FFprobe<br>duração e limites"]

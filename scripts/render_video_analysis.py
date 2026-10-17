@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("features", type=Path)
 parser.add_argument("--output", type=Path, default=Path("docs/assets/video-analysis-example.png"))
 args = parser.parse_args()
+video_id = args.features.stem.removeprefix("video-")
 record = json.loads(args.features.read_text())
 duration = record["duration_s"]
 cuts = record["editing"]["cut_times"]
@@ -59,7 +60,7 @@ axis.set_title(
     pad=17,
 )
 fig.supxlabel(
-    "Exemplo do período de treino, ID 13024 · Tsinghua ShortVideo\nAs marcações são estimativas automáticas. Sozinhas, não demonstram maior retenção.",
+    f"Exemplo de extração, ID {video_id} · Tsinghua ShortVideo\nAs marcações são estimativas automáticas. Sozinhas, não demonstram maior retenção.",
     fontsize=10,
 )
 args.output.parent.mkdir(parents=True, exist_ok=True)

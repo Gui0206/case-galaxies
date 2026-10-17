@@ -8,6 +8,8 @@ O [estudo público de metadados](REAL_DATA_RESULTS.md) usa Ken Jee (196 vídeos 
 
 Essas bases não comprovam versões originais anteriores à publicação nem observações em exatamente 168 horas. Por isso são processadas por `public_benchmark.py`, separadamente do contrato abaixo. Não inventamos datas ou setores para importá-las como dados prontos para produção. Os CSVs ficam em `.runtime/public/`, ignorado pelo Git; não são a base sintética da interface.
 
+O [estudo de vídeos completos](FULL_VIDEO_METHOD.md) usa uma terceira fonte, Tsinghua ShortVideo: arquivos de vídeo e logs com criador, duração e tempo assistido. O alvo é retenção no primeiro dia observado pelo painel, porque não há data de publicação verificável. `shortvideo.py` e `retention_benchmark.py` mantêm esse alvo separado do contrato de contagens; não preenchem a data de publicação com uma suposição. Vídeos completos, transcrições e logs permanecem fora do Git.
+
 ```mermaid
 timeline
     title Disponibilidade da informação

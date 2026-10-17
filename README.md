@@ -57,6 +57,7 @@ flowchart LR
 | Modelagem | Ridge, CatBoost, LightGBM e blend; alvos absolutos/residuais; quantis calibrados por setor |
 | Experimentos | Competição em três janelas, contexto forte, ablações, controles negativos, seeds e canais não vistos; seleção congelada e teste final de uso único |
 | Testes públicos reais | Dois estudos de metadados, duas janelas de desenvolvimento, versões/hashes das fontes, referências simples e resultados negativos preservados |
+| Vídeos completos | [Pipeline de imagem, fala e edição](docs/FULL_VIDEO_METHOD.md), pesos fixados, decodificação completa para cortes e protocolo temporal de retenção |
 | Avaliação | MAE, MAE em log, MAPE com zeros explícitos, Spearman, pares, arrependimento de seleção, F1 de faixas, interval score, cobertura/largura e médias equilibradas por canal |
 | Explicação | SHAP de árvores/decomposição linear, comparáveis históricos, evidências temporais, abstenção e rastros em JSON |
 | Vídeo local | FFmpeg, atributos visuais/acústicos, cache por conteúdo e versão |
@@ -108,6 +109,10 @@ src/galaxies/
   protocol.py      cortes, candidatos e regra de seleção
   research.py      competição, diagnósticos e avaliação final
   public_benchmark.py  estudo público de metadados com alvos por calendário
+  shortvideo.py      aquisição de vídeos completos e histórico de retenção
+  deep_media.py     imagem, fala e semântica com pesos fixados
+  video_structure.py  cortes em todos os frames e movimento
+  retention_benchmark.py  teste temporal de retenção com escolha congelada
   experiments.py   suíte exploratória complementar
   service.py       fluxo LangGraph e decisões
   registry.py      versões, integridade e ativação
@@ -123,6 +128,6 @@ examples/          requisições e configurações executáveis
 tests/             verificações de comportamento
 ```
 
-Dados, modelos, vídeos e rastros ficam em `.runtime/`, ignorado pelo Git. O repositório não contém arquivos do briefing, credenciais, dados de clientes ou vídeos de terceiros.
+Dados, modelos, vídeos e rastros ficam em `.runtime/`, ignorado pelo Git. O repositório não contém arquivos do briefing, credenciais privadas, dados de clientes ou vídeos de terceiros. O acesso público ao dataset usa as informações de download publicadas pelos próprios autores.
 
 Desenvolvido por **Guilherme Holanda**, no contexto Inteli Academy × Galaxies.
