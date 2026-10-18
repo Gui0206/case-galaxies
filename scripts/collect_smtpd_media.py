@@ -29,7 +29,9 @@ class RedactedLog:
         pass
 
 
-def collect(root, node):
+def collect(root, node, delay_seconds=5):
+    if delay_seconds < 3:
+        raise ValueError("The registered plan requires at least three seconds between videos")
     plan_path = root / "short-media-plan.json"
     plan = json.loads(plan_path.read_text())
     folder = root / "videos"
@@ -52,6 +54,9 @@ def collect(root, node):
         raise ValueError("Acquisition identity changed")
     if manifest.get("blocked"):
         raise ValueError("Previous access block: explicit cooldown review required before resuming")
+    manifest.setdefault("throttle_history", []).append(
+        {"at": utcnow(), "delay_seconds": delay_seconds}
+    )
     for number, video in enumerate(plan["ids"]):
         if not re.fullmatch(r"[A-Za-z0-9_-]{11}", video):
             raise ValueError("Invalid video ID")
@@ -117,7 +122,7 @@ def collect(root, node):
         )
         if manifest.get("blocked"):
             break
-        time.sleep(5)
+        time.sleep(delay_seconds)
     return {k: len(manifest[k]) for k in ("rows", "failures")}
 
 
@@ -125,5 +130,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(".runtime/public/smtpd"))
     parser.add_argument("--node", type=Path, required=True, help="Node >=22, as required by yt-dlp")
+    parser.add_argument("--delay-seconds", type=float, default=5)
     args = parser.parse_args()
-    print(collect(args.root, args.node))
+    print(collect(args.root, args.node, args.delay_seconds))
