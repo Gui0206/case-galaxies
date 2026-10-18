@@ -1,8 +1,32 @@
 # O que foi verificado
 
-Última verificação local em **17 de outubro de 2026**, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve execuções locais; o resultado da CI remota precisa ser consultado separadamente.
+## Estado mais recente documentado — 18/10/2026
 
-**Resultado atual: 81 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização acrescenta o estudo de alcance à análise de vídeos completos e ao teste temporal de retenção.
+Esta página separa **verificação de software**, **resultado preditivo real** e **partes não validadas**. Esta revisão foi somente documental: não executou suíte, inferência, coleta ou avaliação. Os totais de 81 e 88 testes nas seções antigas são registros de suas respectivas datas, não a contagem atual nem uma afirmação de que toda a suíte passou agora.
+
+### Avaliação real SMTPD encerrada
+
+O [relatório](SMTPD_RESULTS.md), as [515 previsões individuais](results/smtpd/final/test_predictions.csv) e a [verificação independente já salva](results/smtpd/final/verification.json) registram o teste de 165 canais. Erro macro em log: histórico **0,686802**, contexto **0,685355**, conteúdo **0,685569**. A redução de erro de 0,18% sobre o histórico não confirmou vantagem; contra contexto houve piora de 0,03%.
+
+O recorte multimodal contém 219 vídeos completos do teste. Imagem, fala e edição foram realmente executadas e comparadas; a combinação completa não melhorou a referência textual. A [auditoria de mídia](results/smtpd/final/media-audit.json) contabiliza 669 itens previstos, 667 baixados e 662 extrações válidas. Falhas não foram substituídas por atributos inventados.
+
+### Integração já verificada antes desta revisão
+
+- O adaptador de inferência reproduziu seis previsões publicadas com e sem mídia, incluindo as referências e o ordenador. Isso verifica carregamento e cálculo; não constitui novo teste de generalização.
+- Alterar resultados do próprio vídeo ou de publicações futuras não mudou a previsão verificada.
+- Python, HTTP e MCP foram conectados aos artefatos reais. Os testes de integração local usam os artefatos existentes e bloqueiam rede e ajuste nas verificações de inferência; podem ser omitidos em ambientes sem esses arquivos locais.
+- A interface foi verificada nos dois caminhos: vídeo próprio descritivo e exemplo histórico com previsão. A integração descritiva foi testada bloqueando a chamada ao preditor de views.
+- Esses registros não equivalem a uma nova execução da suíte completa, a validação de produção ou a um novo resultado estatístico.
+
+### Ainda não verificado
+
+Ganho prospectivo em campanhas atuais; previsão para novos canais/clientes; precisão dos extratores por anotação humana cega; rubrica VLM e OCR como fontes de ganho; operação prolongada do piloto e entrega efetiva das notificações locais. A rubrica VLM não foi validada apenas por existir um adaptador. O piloto foi interrompido com zero vídeos registrados e não adicionou evidência de eficácia. [Estado final e pendências](CURRENT_STATE.md).
+
+## Registro histórico de software — 17/10/2026
+
+Registro histórico de verificação local em **17 de outubro de 2026**, Python 3.12.13, macOS. O [lockfile](../uv.lock) fixa as dependências. Este registro descreve execuções locais; o resultado da CI remota precisa ser consultado separadamente.
+
+**Resultado daquela execução: 81 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização acrescenta o estudo de alcance à análise de vídeos completos e ao teste temporal de retenção.
 
 A [CI do congelamento do novo estudo `660999e`](https://github.com/Gui0206/case-galaxies/actions/runs/39080897379) também terminou com sucesso, antes da publicação dos resultados finais. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
 
@@ -30,7 +54,7 @@ A [CI do congelamento do novo estudo `660999e`](https://github.com/Gui0206/case-
 | Interface | Navegação, comparação, evidências, troca de versão, upload/extração de vídeo, treinamento e layouts de desktop/tela estreita |
 | Distribuição | Build de wheel e source archive; HTML, CSS, JavaScript e SVG incluídos no pacote |
 
-## Reproduzir
+## Comandos de referência para verificações futuras (não executados nesta revisão)
 
 ```bash
 uv sync --frozen --group dev
@@ -41,7 +65,7 @@ node --check src/galaxies/web/app.js
 uv build
 ```
 
-Os testes usam diretórios temporários, dados sintéticos determinísticos e nenhuma credencial externa. O processo MCP é separado; a cobertura padrão do processo pai não atribui suas linhas, embora o teste de protocolo o execute. A suíte de experimentos e os comandos CLI também foram executados manualmente. A competição completa de 12 configurações, ablações, controles negativos, seeds e canais excluídos tem [resultados salvos](results/research/development.json); a [avaliação final](results/research/final.json) confirma uma seleção previamente congelada em dados sintéticos.
+Os testes do núcleo histórico usam diretórios temporários, dados sintéticos determinísticos e nenhuma credencial externa. Os testes posteriores de integração SMTPD também dependem de artefatos reais locais, quando presentes. O processo MCP é separado; a cobertura padrão do processo pai não atribui suas linhas, embora o teste de protocolo o execute. A suíte de experimentos e os comandos CLI também foram executados manualmente. A competição completa de 12 configurações, ablações, controles negativos, seeds e canais excluídos tem [resultados salvos](results/research/development.json); a [avaliação final](results/research/final.json) confirma uma seleção previamente congelada em dados sintéticos.
 
 A cobertura instrumentada **da execução anterior, em 06/10**, foi 73% no total, 99% em `estimators`, 97% em `metrics`, 91% em `protocol` e 91% em `research`; não foi recalculada para esta atualização. CLI, MCP subprocessado e extratores opcionais limitam essa medida; cobertura de linhas não equivale a validade estatística. A comparação HTTP com o modelo residual selecionado também foi confrontada com a saída CLI na entrega anterior.
 
@@ -57,7 +81,7 @@ O estudo de vídeos completos descrito a seguir acrescenta execução real de Wh
 
 - Ganho preditivo consistente em campanhas representativas da Galaxies e validação prospectiva; a melhora no recorte público de 2016 não valida essa transferência.
 - Qualidade de Whisper, OpenCLIP, OCR e VLM, incluindo avaliação cega da rubrica.
-- Coleta autenticada de snapshots do YouTube.
+- Acompanhamento contínuo de uma coorte prospectiva até a maturidade. A API oficial já foi usada para metadados SMTPD e consultas iniciais do piloto; não confundir isso com coleta contínua validada.
 - Conexão com a plataforma interna da Galaxies.
 - Operação multiusuário, carga e identidade corporativa.
 

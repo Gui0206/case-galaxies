@@ -2,6 +2,18 @@
 
 O núcleo estatístico é compartilhado entre Python, HTTP e MCP. A interface é uma forma de inspecionar a ferramenta; não contém uma segunda implementação de predição.
 
+## Dois caminhos em uso
+
+| Caminho | Componentes reais | Limite |
+|---|---|---|
+| Exemplo histórico SMTPD | `real_service` → encoders/modelos salvos → API/MCP/Python → `web/real.*` | Inferência experimental; sem novo treino ou promoção para produção |
+| Vídeo próprio | Upload validado → `real_service.analyze_video` → cache/`DeepMediaAnalyzer` → descrição | Não consulta um canal substituto nem chama o preditor de views |
+| Demonstração sintética antiga | `PredictionService`, registry e núcleo genérico → `/synthetic` | Dados simulados e recomendações reais bloqueadas |
+
+O adaptador real não usa o fluxo de treinamento/registro do diagrama genérico abaixo para cada previsão. A presença de OCR/VLM nesse desenho representa adaptadores disponíveis, não modalidades cuja eficácia foi confirmada. [Matriz de evidências multimodais](MULTIMODAL.md) · [Estado e restrições de retomada](CURRENT_STATE.md).
+
+## Arquitetura genérica histórica
+
 ```mermaid
 flowchart TB
     subgraph Preparação

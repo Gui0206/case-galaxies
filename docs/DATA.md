@@ -2,7 +2,19 @@
 
 **Pergunta de controle:** essa informação estava disponível no momento em que a escolha seria feita?
 
-## Bases públicas já testadas
+## Fonte da demonstração real atual: SMTPD
+
+A [SMTPD](SMTPD_PROTOCOL.md) foi efetivamente usada. O CSV inicialmente não oferecia datas suficientes; posteriormente elas e os IDs estáveis dos canais foram recuperados pela **YouTube Data API v3**, sem usar a popularidade atual como alvo histórico. Dos 12.655 IDs sem duplicatas, **8.112 vídeos de 5.291 canais** tiveram metadados públicos utilizáveis.
+
+O alvo é a contagem nominal da primeira semana, recuperada conforme a codificação da fonte. O histórico recebe resultados somente após publicação + oito dias. Os timestamps exatos de coleta não estão no CSV; essa margem não os inventa. O treino principal tinha 796 vídeos com histórico, a calibração 129 e o teste reservado 515 vídeos de 165 canais. A investigação auxiliar de 40.781 vídeos anteriores não cria outra amostra de confirmação.
+
+A coleta de mídia contabilizou 669 itens: 667 baixados, 662 extrações válidas e falhas preservadas. O recorte multimodal reservado tem 219 vídeos completos. A [avaliação](SMTPD_RESULTS.md) não confirmou vantagem sobre histórico e contexto. Howto & Style é mais amplo que moda/beleza; a seleção e os históricos incompletos limitam a generalização.
+
+Vídeos, transcrições completas, pesos e dados brutos permanecem locais em `.runtime/`. Os [resultados e previsões versionados](results/smtpd/final/) permitem auditar a conclusão sem baixar a base ou treinar novamente. Não confundir ausência dos arquivos grandes no Git com ausência de dados reais no projeto.
+
+O [piloto prospectivo de quatro canais](CHANNEL_PILOT.md) foi interrompido por solicitação do usuário: zero vídeos novos, zero resultados maduros e agendamento desativado. Não há canal parceiro disponível nem base da Academy a aguardar. Não há autorização para nova coleta nesta atualização.
+
+## Outras bases públicas já testadas (estudos históricos)
 
 O [estudo público de metadados](REAL_DATA_RESULTS.md) usa Ken Jee (196 vídeos elegíveis) e YouTube Trending (2.534 vídeos elegíveis). Fontes, versões, hashes, alvos por calendário e resultados estão documentados. **O modelo não demonstrou ganho consistente sobre o histórico.**
 
@@ -31,7 +43,7 @@ O [teste final de alcance](REACH_RESULTS.md) confirmou redução de erro de 3,7%
 
 A base da Academy mencionada no TAPI não existe, conforme informado pelo usuário. Nenhuma evidência deste projeto depende de acesso presumido a ela.
 
-## Contrato de uma linha
+## Contrato genérico de importação — diferente dos adaptadores dos estudos públicos
 
 Veja [exemplo completo](../examples/post-record.json) e [JSON Schema](schemas/post-record.json).
 
@@ -79,7 +91,7 @@ uv run galaxies import-data minha-base.jsonl --name cliente-v1.jsonl
 
 JSON contém uma lista. JSONL contém um objeto por linha. Parquet mantém objetos complexos (`features`, `visual_embedding`, `evidence`) serializados como JSON; `save_records` produz o formato correto. CSV de terceiros precisa ser adaptado para esse contrato, com semântica de datas e métricas preservada.
 
-## Coletar observações oficiais
+## Referência para coletar observações oficiais — coleta atualmente interrompida
 
 ```bash
 export YOUTUBE_API_KEY="sua-chave"
@@ -100,6 +112,6 @@ Registros sem observação no horizonte permanecem pendentes; o comando informa 
 
 Use arquivos originais de criadores que autorizaram seu processamento ou datasets com condições compatíveis. Consulte as [políticas da API](https://developers.google.com/youtube/terms/developer-policies) e as [condições adicionais para métricas/armazenamento](https://developers.google.com/youtube/terms/derived-metrics-policy) para o caso concreto. Acesso público não equivale a autorização irrestrita de armazenamento, agregação, download e treinamento.
 
-O CSV público de SMTPD foi baixado e auditado, mas excluído da avaliação temporal por não fornecer datas de publicação. MicroLens foi considerado e não baixado: seus timestamps de interação não estabelecem o alvo comum após publicação. Veja a [auditoria de fontes](results/public/sources.json). Nenhum dos dois foi usado para alegar desempenho preditivo.
+A [auditoria inicial de fontes](results/public/sources.json) registrou a exclusão inicial da SMTPD por falta de datas. **Essa decisão foi superada pela recuperação oficial de metadados e pelo estudo SMTPD documentado no início desta página.** O arquivo de auditoria foi preservado como registro histórico. MicroLens foi considerado e não baixado: seus timestamps de interação não estabelecem o alvo comum após publicação.
 
 Não transfira rótulos de uma plataforma para outra. Para novos clientes ou anúncios, mantenha um perfil próprio de alvo/horizonte, atributos e validação.

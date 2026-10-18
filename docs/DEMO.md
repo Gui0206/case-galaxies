@@ -1,8 +1,8 @@
 # Apresente o case pelo que pode ser verificado
 
-> **Prioridade atual: [case de modelagem](MODEL_CASE.md).** Ele documenta a competição em três janelas, seleção congelada, contexto forte, controles negativos e falhas de generalização. As figuras e números abaixo são o registro histórico da demonstração inicial com 2.160 posts; não são a execução do protocolo atual de 2.400 posts.
+> **Registro histórico da demo sintética inicial.** Os 2.160 posts e números abaixo são artificiais e não representam a entrega atual. Para apresentar o case, comece pela [interface real](REAL_DEMO.md), pelo [teste SMTPD](SMTPD_RESULTS.md) e pelo [estado final](CURRENT_STATE.md). Há avaliações reais; a conclusão é ausência de ganho consistente, não ausência de dados reais. A segunda execução sintética de 2.400 posts também é histórica.
 
-## Mensagem central
+## Mensagem da demonstração inicial (histórica)
 
 “Construímos uma ferramenta que recebe criativo e contexto, calcula uma previsão estatística, explicita sua incerteza e entrega evidências para uma decisão pré-publicação. A engenharia está demonstrada; a eficácia comercial depende da validação em dados reais.”
 

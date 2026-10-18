@@ -1,6 +1,19 @@
 # Comece pelo fluxo completo
 
-**Para saber se o modelo funciona em dados reais, comece pelos [resultados públicos](REAL_DATA_RESULTS.md).** Eles incluem comandos para baixar as fontes e reproduzir a avaliação temporal. O resultado foi ausência de ganho consistente sobre o histórico. O fluxo de interface abaixo continua sendo uma demonstração sintética; ele não carrega esses estudos como modelos aprovados.
+**Comece pela [demonstração real](REAL_DEMO.md) e pelo [resultado SMTPD](SMTPD_RESULTS.md).** Existem dados e modelos reais integrados. O teste reservado não confirmou ganho sobre histórico e contexto. O trabalho está interrompido; esta página é documentação de uso, não uma instrução para retomar experimentos.
+
+## Uso atual, sem novo treino
+
+Com o ambiente e os artefatos locais já preparados e o servidor ativo, abra [http://127.0.0.1:8000/](http://127.0.0.1:8000/):
+
+- **Meu vídeo:** envie o arquivo para obter transcrição e medidas descritivas de edição/imagem, sem canal emprestado ou previsão de views.
+- **Canais da base:** escolha uma publicação histórica e recalcule previsão, histórico, intervalo e resultado observado.
+
+Para iniciar somente o servidor local, quando solicitado: `.venv/bin/galaxies serve`. Isso não treina nem coleta. A demonstração por comando é `scripts/demo_real.py`; os pesos e caches não acompanham um clone apenas do Git. Não execute `galaxies demo` para carregar os modelos SMTPD: esse comando gera dados e treina uma demonstração sintética.
+
+## Fluxo sintético histórico e treinamento genérico (opcional, separado)
+
+Os passos seguintes descrevem o núcleo genérico antigo. A interface correspondente está em `/synthetic`; não representa a avaliação real SMTPD.
 
 ```mermaid
 flowchart LR
@@ -26,7 +39,7 @@ uv run galaxies demo
 uv run galaxies serve
 ```
 
-Abra [http://127.0.0.1:8000](http://127.0.0.1:8000). Cada execução de `demo` cria uma versão de modelo e ativa essa demonstração. As datas de 2025 são parte do cenário sintético fixo; não representam um teste prospectivo.
+Abra [http://127.0.0.1:8000/synthetic](http://127.0.0.1:8000/synthetic). Cada execução de `demo` cria uma versão de modelo e ativa essa demonstração. As datas de 2025 são parte do cenário sintético fixo; não representam um teste prospectivo.
 
 ## 3. Explorar
 

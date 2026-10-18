@@ -1,8 +1,29 @@
 # O case está no modelo e na evidência
 
-> **Atualização de 17/10/2026:** o [novo teste de alcance](REACH_RESULTS.md), com 27.505 vídeos reservados de 10.621 canais, confirmou ganho estatisticamente positivo de **3,7% no erro sobre o histórico**, abaixo da meta de 5%, e ordenação de **60,6% contra 49,3%**. O título acrescentou 1,1% de redução do erro e 1,8 ponto de ordenação sobre o contexto. A fonte é retrospectiva, de 2016; não comprova eficácia em campanhas atuais. O [teste de vídeo completo](FULL_VIDEO_RESULTS.md) continua sem ganho confirmado de retenção.
+> **Estado em 18/10/2026:** existem avaliações com dados reais. A mais recente, [SMTPD](SMTPD_RESULTS.md), testou **515 vídeos de 165 canais** e não confirmou vantagem sobre histórico e contexto. O ganho modesto observado em 2016 não se generalizou nos estudos posteriores. Não há modelo promovido para produção. O trabalho e o piloto de coleta estão interrompidos; consulte [CURRENT_STATE.md](CURRENT_STATE.md).
 
-**Há evidência de ganho preditivo modesto no recorte público, e ainda não há validação de produção.** Os números apresentados mais abaixo nesta página são do estudo sintético anterior. O [protocolo específico de alcance](REVISED_STUDY.md) contém os 30 candidatos, oito referências e a escolha final por menor erro no desenvolvimento.
+## Evidência atual: real, sintética e ainda ausente
+
+| Evidência | O que foi executado | Conclusão permitida |
+|---|---|---|
+| **SMTPD: views nominais em sete dias** | 8.112 vídeos com metadados utilizáveis; teste reservado de 515 vídeos/165 canais; datas e identidades recuperadas pela API oficial | Erro 0,18% menor que histórico e 0,03% maior que contexto; ganho não confirmado |
+| **SMTPD: conteúdo do vídeo** | 669 mídias previstas, 667 baixadas, 662 extrações válidas; comparação multimodal em 219 vídeos completos do teste | Imagem, fala e edição juntas tiveram erro 0,5% maior que a referência textual; sem ganho confirmado |
+| **Outras bases reais** | Metadados, retenção com vídeos completos, alcance de 2016, transferência e adaptação recente | Evidência específica de cada população/alvo; não somar amostras nem transferir conclusões entre estudos |
+| **Protocolo sintético histórico** | 2.400 posts artificiais, 12 configurações, três janelas; resultados preservados abaixo | Verifica implementação; os 77,2% de ordenação não são desempenho em vídeos reais |
+| **Rubrica VLM** | Adaptador opcional disponível no extrator básico | Não há validação humana cega nem ganho preditivo real demonstrado da rubrica |
+| **Campanhas atuais e canal novo** | Não há confirmação prospectiva nem histórico do próprio usuário integrado à experiência atual | Não estimar views de um canal desconhecido usando outro canal como substituto |
+
+Artefatos auditáveis: [515 previsões individuais](results/smtpd/final/test_predictions.csv), [seleção congelada](results/smtpd/final/selection.json), [verificação independente](results/smtpd/final/verification.json) e [auditoria de mídia](results/smtpd/final/media-audit.json).
+
+## O que a ferramenta entrega agora
+
+A interface separa **Meu vídeo** (descrição de fala, edição e medidas visuais, sem views) de **Canais da base** (reprodução de previsões históricas com comparação ao resultado observado). O adaptador `real_service` carrega os modelos SMTPD salvos para Python, HTTP e MCP, sem novo ajuste. [Guia da demonstração real](REAL_DEMO.md).
+
+Na SMTPD, a previsão combina referências históricas, contexto e título; a correção multimodal escolhida no desenvolvimento usa **edição**, com alternativa textual para mídia ausente. O modelo de ordenação foi selecionado separadamente. O intervalo nominal de 90% cobriu 88,9% no teste. Não há probabilidade de viralização validada nem recomendação de investimento. SHAP e contribuições lineares explicam o cálculo, não efeitos causais de uma edição.
+
+## Arquitetura e protocolo históricos do núcleo genérico
+
+Os diagramas, as 12 configurações e as três janelas descritos nesta seção pertencem ao núcleo genérico e à execução sintética histórica; **não são o protocolo SMTPD**. Para os cortes e candidatos efetivamente usados na SMTPD, leia [SMTPD_PROTOCOL.md](SMTPD_PROTOCOL.md). A presença de uma rubrica no desenho abaixo não significa que ela tenha sido validada no estudo real.
 
 A proposta técnica é combinar conteúdo multimodal com contexto disponível antes da publicação, estimar desempenho em um horizonte fixo e comparar criativos sob o mesmo contexto. A família vencedora precisa ser escolhida por avaliação temporal, não por preferência por uma arquitetura.
 
@@ -46,7 +67,7 @@ flowchart TD
 
 Um treino isolado continua útil para exploração, mas **não habilita promoção para uso real**. Essa elegibilidade exige o fluxo `research → final-evaluation`, ganho versus referências, cobertura global e por setor e amostra mínima. A confirmação final testa uma escolha congelada; não procura novamente o melhor modelo.
 
-## Execução reproduzida: somente dados sintéticos
+## Registro histórico da execução sintética (não representa todo o projeto)
 
 ![Competição temporal, ablação e avaliação final em dados sintéticos](assets/research.png)
 
@@ -101,17 +122,19 @@ O último resultado é uma limitação importante. O acerto de ranking dessa coo
 
 | Evidência necessária | Como produzir | Situação |
 |---|---|---|
-| Rótulos corretos e representativos | Métrica no mesmo horizonte, origem e disponibilidade verificáveis, distribuição paga separada | Duas bases públicas auditadas; falta base representativa com versões pré-publicação verificadas |
-| Representação semântica útil | Comparar texto, frames/segmentos, áudio, embeddings e rubrica nos mesmos cortes; medir concordância humana e erros de extração | Adaptadores existentes; eficácia não demonstrada |
-| Valor além do histórico | Superar referências simples e contexto aprendido em erro e ordenação no futuro; reportar setores e canais | Testes públicos de metadados e de retenção com vídeos completos executados; ganho consistente não demonstrado |
+| Rótulos corretos e representativos | Métrica no mesmo horizonte, origem e disponibilidade verificáveis, distribuição paga separada | SMTPD e outras fontes públicas avaliadas; falta base representativa com versões pré-publicação verificadas |
+| Representação semântica útil | Comparar texto, frames/segmentos, áudio, embeddings e rubrica nos mesmos cortes; medir concordância humana e erros de extração | Imagem, fala e edição avaliadas em vídeos reais; sem ganho confirmado. Rubrica VLM e precisão dos extratores ainda sem auditoria humana cega |
+| Valor além do histórico | Superar referências simples e contexto aprendido em erro e ordenação no futuro; reportar setores e canais | SMTPD: comparação explícita com histórico e contexto, sem confirmação; estudos anteriores preservados |
 | Generalização para novos clientes | Canais/clientes excluídos e calibração dedicada; manter abstenção enquanto falhar | Diagnóstico implementado e falha registrada |
 | Robustez a mudança temporal | Várias janelas e acompanhamento de cobertura/erro; política de recalibração | Teste público temporal executado; seleção instável e limitações de cobertura registradas |
-| Utilidade antes da publicação | Registrar previsões e versão antes de publicar; avaliar resultados maduros | Registro prospectivo implementado |
+| Utilidade antes da publicação | Registrar previsões e versão antes de publicar; avaliar resultados maduros | Registro prospectivo implementado; piloto novo interrompido com zero vídeos registrados, sem confirmação prospectiva |
 | Melhoria efetiva de campanha | Experimento controlado com condições de distribuição comparáveis | Não executado |
 
 Sem essas evidências, aumentar complexidade, trocar de LLM ou acrescentar um ensemble não permite afirmar “melhor solução possível”. A arquitetura oferece hipóteses comparáveis e rastreáveis; a escolha de produção deve seguir o resultado real, incluindo a possibilidade de um modelo mais simples vencer.
 
-## Reproduzir e auditar
+## Referência histórica de reprodução sintética — não executar nesta revisão
+
+Os comandos abaixo geram dados e treinam modelos; não são necessários para consultar os resultados já publicados e não foram executados nesta atualização documental. O trabalho permanece interrompido.
 
 No macOS, instale `brew install libomp ffmpeg`; no Ubuntu, `sudo apt-get install libgomp1 ffmpeg`. Em um workspace novo:
 
