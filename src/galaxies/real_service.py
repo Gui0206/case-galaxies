@@ -172,6 +172,13 @@ class RealPredictionService:
                 raise ValueError(
                     "O vídeo deve ser um arquivo local dentro de .runtime; URLs não são baixadas"
                 )
+            # Uploading an existing video reuses its verified extraction, regardless of filename.
+            digest = sha256_file(path)
+            for video_id, entry in self.index["rows"].items():
+                if entry.get("content_hash") == digest:
+                    return self._media(
+                        request.model_copy(update={"media_path": None, "cached_video_id": video_id})
+                    )
             if request.duration_seconds > 180:
                 return None, "Vídeo acima de 180 segundos: usada previsão textual congelada."
             if self._analyzer is None:

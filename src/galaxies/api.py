@@ -1,6 +1,8 @@
 """Local HTTP application and visual workbench. All data access stays in the workspace."""
 
 import hmac
+import json
+import math
 import re
 import uuid
 from contextlib import asynccontextmanager
@@ -98,6 +100,57 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.exception_handler(ValueError)
     async def validation_error(request, exc):
         return JSONResponse({"detail": str(exc)}, status_code=422)
+
+    @app.get("/api/real/options", dependencies=protected)
+    def real_options():
+        real = real_service(settings.workspace)
+        channels = []
+        for channel, rows in real.cohort.groupby("channel_id"):
+            if len(rows) >= 3:
+                channels.append(
+                    {
+                        "id": channel,
+                        "publications": len(rows),
+                        "category": str(rows.iloc[-1].category),
+                        "example_title": str(rows.iloc[-1].title),
+                    }
+                )
+        return {
+            "channels": channels,
+            "max_upload_mb": min(settings.max_upload_mb, 150),
+            "max_duration_seconds": 180,
+            "model_id": "smtpd-frozen-2024",
+        }
+
+    @app.get("/api/real/media/{media_id}", dependencies=protected)
+    def real_media_metadata(media_id: str):
+        from galaxies.media import _run
+
+        if not re.fullmatch(r"[a-f0-9]{32}\.(mp4|mov|webm|m4v)", media_id):
+            raise ValueError("Identificador de mídia inválido")
+        path = settings.contained(media_id, "media")
+        metadata = json.loads(
+            _run(
+                [
+                    "ffprobe",
+                    "-v",
+                    "error",
+                    "-protocol_whitelist",
+                    "file,pipe",
+                    "-show_format",
+                    "-show_streams",
+                    "-of",
+                    "json",
+                    str(path),
+                ]
+            )
+        )
+        duration = float(metadata.get("format", {}).get("duration", 0))
+        if not math.isfinite(duration) or not 0 < duration <= 180:
+            raise ValueError("Envie um vídeo com duração de até 180 segundos")
+        if not any(stream.get("codec_type") == "video" for stream in metadata.get("streams", [])):
+            raise ValueError("O arquivo não contém uma faixa de vídeo")
+        return {"media_path": f"media/{media_id}", "duration_seconds": duration}
 
     @app.post("/api/real/predict", dependencies=protected)
     def predict_real(request: RealCreativeRequest):
@@ -275,6 +328,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
         @app.get("/", include_in_schema=False)
         def index():
+            return FileResponse(static / "real.html")
+
+        @app.get("/synthetic", include_in_schema=False)
+        def synthetic_index():
             return FileResponse(static / "index.html")
 
     return app

@@ -1,0 +1,55 @@
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => new Intl.NumberFormat('pt-BR', {maximumFractionDigits:0}).format(v);
+let options, preview, busy = false;
+async function api(path, init = {}) {
+  const headers = {...init.headers};
+  const token = sessionStorage.getItem('galaxies_token');
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (init.body && !(init.body instanceof FormData)) {headers['Content-Type']='application/json';init.body=JSON.stringify(init.body);}
+  const response = await fetch(path, {...init, headers});
+  let data; try {data = await response.json();} catch {throw new Error('O servidor não respondeu corretamente. Verifique se ele continua aberto.');}
+  if (!response.ok) throw new Error(response.status===401 ? 'Informe o token em Configurar acesso.' : Array.isArray(data.detail) ? data.detail.map(d=>d.msg).join('; ') : data.detail || 'Falha no processamento local. Nenhuma previsão foi produzida.');
+  return data;
+}
+function fail(error){$('#error').textContent=error.message;$('#error').hidden=false;$('#status').textContent='Não foi possível concluir.';}
+function setBusy(value){busy=value;$('#inputs').disabled=value||!options;$('#example').disabled=value||!options;$('#connect').disabled=value;}
+function clearResult(){if(!busy){$('#result').hidden=true;$('#error').hidden=true;$('#status').textContent='Envie um vídeo ou abra o exemplo real para ver uma previsão.';}}
+async function load(){try{options=await api('/api/real/options');$('#channel').innerHTML='<option value="">Escolha um canal da base pública</option>'+options.channels.map(c=>`<option value="${esc(c.id)}">${esc(c.id)} · ${c.publications} publicações</option>`).join('');$('#file-info').textContent=`Até ${options.max_upload_mb} MB. O arquivo fica neste computador.`;setBusy(false);clearResult();}catch(e){fail(e);}}
+function render(r, title){
+ $('#status').textContent='Concluído. Estimativa experimental, sem recomendação de investimento.';
+ const observed=r.demonstration?.observed_views_7d;
+ $('#result').innerHTML=`<span class="tag">Modelo real · confiança baixa</span><h3>${esc(title)}</h3><p class="muted">Canal ${esc(r.channel_id)} · contexto em ${esc(new Date(r.history_available_before).toLocaleString('pt-BR'))}</p>
+ <div class="cards"><div class="card"><span>Previsão em 7 dias</span><strong>${num(r.predicted_metric)}</strong><span>visualizações</span></div><div class="card"><span>Referência do histórico</span><strong>${num(r.historical_baseline)}</strong><span>visualizações</span></div></div>
+ <p class="interval"><strong>Intervalo: ${num(r.interval_low)} a ${num(r.interval_high)} views</strong><br>Nominalmente 90%; cobertura observada de 88,93% no teste de 2024. Não é garantia para hoje.</p>
+ ${observed==null?'':`<p><strong>Resultado real deste exemplo: ${num(observed)} views.</strong> Anexado depois da previsão; não foi usado como entrada.</p>`}
+ <p>${esc(r.explanation)}</p><h3>O que foi usado?</h3><p>${r.media_used_for_prediction?'Histórico, contexto, título e atributos de edição do vídeo.':'Histórico, contexto e título. A previsão não usou mídia.'} ${r.observed_content?'Imagem e fala também foram extraídas, mas não entram na correção multimodal selecionada.':''}</p>
+ <h3>Limitações desta previsão</h3><ul>${r.confidence_reasons.map(reason=>`<li>${esc(reason)}</li>`).join('')}</ul>
+ <details><summary>Ver o histórico usado como referência</summary><p>${num(r.history_count)} resultados anteriores disponíveis. A referência usa até 20; abaixo estão os cinco mais recentes. Não é uma média aritmética.</p><table><thead><tr><th>Publicação anterior</th><th>Views em 7 dias</th></tr></thead><tbody>${r.recent_history.map(h=>`<tr><td>${esc(h.caption)}<br><small>${esc(new Date(h.published_at).toLocaleDateString('pt-BR'))}</small></td><td>${num(h.views_7d)}</td></tr>`).join('')}</tbody></table></details>
+ ${r.observed_content?`<details><summary>Ver análise do vídeo</summary><p>${num(r.observed_content.duration_seconds)} segundos · ${r.observed_content.semantic_frames} quadros analisados.</p><p>Medidas de edição descrevem o vídeo; não provam que mais cortes causam mais views.</p><h3>Fala reconhecida</h3><pre>${esc(r.observed_content.transcript||'Nenhuma fala reconhecida.')}</pre></details>`:''}`;
+ $('#result').hidden=false;
+}
+$('#predict-form').addEventListener('submit',async event=>{
+ event.preventDefault();if(busy)return;clearResult();setBusy(true);
+ try{
+  const file=$('#video').files[0];if(!file)throw new Error('Selecione um vídeo.');
+  if(file.size>options.max_upload_mb*1024*1024)throw new Error(`O arquivo excede ${options.max_upload_mb} MB.`);
+  const caption=$('#caption').value.trim();if(!caption)throw new Error('Informe o título ou legenda.');
+  const date=new Date($('#date').value);if(!Number.isFinite(date.getTime()))throw new Error('Informe uma data válida.');
+  $('#status').textContent='1 de 2 · Salvando e verificando o vídeo local…';
+  const body=new FormData();body.append('file',file);
+  const upload=await api('/api/media',{method:'POST',body});
+  const media=await api(`/api/real/media/${upload.media_id}`);
+  $('#status').textContent='2 de 2 · Analisando o vídeo com os pesos locais e calculando a previsão. Isso pode levar alguns minutos. Mantenha esta página aberta.';
+  const result=await api('/api/real/predict',{method:'POST',body:{creative_id:crypto.randomUUID(),channel_id:$('#channel').value,caption,planned_datetime:date.toISOString(),category:$('#category').value,...media}});
+  render(result,file.name);
+ }catch(e){fail(e);}finally{setBusy(false);}
+});
+$('#example').addEventListener('click',async()=>{if(busy)return;clearResult();setBusy(true);$('#status').textContent='Recalculando o exemplo com os modelos reais e a extração já salva…';try{render(await api('/api/real/replay/a4TPwpWGN2I'),'Exemplo histórico · a4TPwpWGN2I');}catch(e){fail(e);}finally{setBusy(false);}});
+$('#video').addEventListener('change',()=>{if(preview)URL.revokeObjectURL(preview);const file=$('#video').files[0];$('#preview').hidden=!file;if(file){preview=URL.createObjectURL(file);$('#preview').src=preview;}else{$('#preview').removeAttribute('src');}});
+$('#channel').addEventListener('change',()=>{const c=options?.channels.find(c=>c.id===$('#channel').value);$('#channel-info').textContent=c?`Exemplo de publicação deste canal: ${c.example_title}`:'';if(c)$('#category').value=c.category;});
+$('#predict-form').addEventListener('input',clearResult);
+$('#connect').addEventListener('click',()=>{sessionStorage.setItem('galaxies_token',$('#token').value);load();});
+const local=new Date();local.setMinutes(local.getMinutes()-local.getTimezoneOffset());$('#date').value=local.toISOString().slice(0,16);
+load();

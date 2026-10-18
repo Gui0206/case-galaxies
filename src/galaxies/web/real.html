@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Galaxies · Testar vídeo real</title><link rel="icon" href="/assets/mark.svg"><link rel="stylesheet" href="/assets/real.css"><script src="/assets/real.js" defer></script></head>
+<body><header><img src="/assets/mark.svg" width="40" height="40" alt=""><strong>galaxies <small>MODELOS REAIS · EXPERIMENTAL</small></strong><a href="/synthetic">Demo sintética separada ↗</a></header>
+<main><h1>O que esperar deste vídeo?</h1><p class="lead">Envie um vídeo e veja a estimativa de visualizações em sete dias, junto do histórico do canal.</p>
+<aside class="warning"><strong>Ainda não comprovamos vantagem sobre o histórico.</strong> A base é de 2023–2024 e não representa campanhas atuais. Use para explorar o case, não para decidir investimento.</aside>
+<div class="layout"><section class="panel"><h2>1. Seu vídeo e contexto</h2><p>O canal define a referência histórica. Não conseguimos identificar o canal pelo vídeo nem estimar um canal fora da base.</p>
+<form id="predict-form"><fieldset id="inputs" disabled>
+<label for="video">Vídeo local <span>MP4, MOV, WebM ou M4V · até 3 minutos</span></label><input id="video" type="file" accept=".mp4,.mov,.webm,.m4v" required><p id="file-info" class="muted"></p><video id="preview" controls hidden preload="metadata"></video>
+<label for="caption">Título ou legenda</label><textarea id="caption" required maxlength="5000" rows="3" placeholder="O texto que acompanha a publicação"></textarea>
+<label for="channel">Histórico de qual canal?</label><select id="channel" required><option value="">Escolha um canal da base pública</option></select><p id="channel-info" class="muted"></p>
+<div class="row"><div><label for="category">Categoria</label><select id="category"><option value="2">Autos & Vehicles</option><option value="26">Howto & Style</option></select></div><div><label for="date">Publicação planejada</label><input id="date" type="datetime-local" required min="2024-01-05T00:00"></div></div>
+<p class="muted">A data usa seu fuso local. Escolher hoje não atualiza o histórico de 2024.</p>
+<button id="submit" type="submit">Analisar meu vídeo</button>
+</fieldset></form><hr><h3>Quer entender antes de enviar?</h3><p>Recalcule um exemplo real de 2024, com mídia já analisada e resultado conhecido.</p><button id="example" type="button" class="secondary" disabled>Abrir exemplo real</button>
+<details><summary>Configurar acesso</summary><label for="token">Token local, somente se exigido pelo servidor</label><input id="token" type="password" autocomplete="off"><button id="connect" class="secondary" type="button">Conectar</button></details>
+</section><section class="panel output" aria-labelledby="result-heading"><h2 id="result-heading">2. Previsão e limites</h2><p id="status" role="status" aria-live="polite">Carregando modelos disponíveis…</p><div id="error" role="alert" hidden></div><div id="result" hidden></div></section></div>
+<footer>Processamento local com pesos salvos. Sem novos treinos, downloads ou coleta. <a href="/docs">Referência da API</a></footer></main></body></html>

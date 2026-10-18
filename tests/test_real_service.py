@@ -129,3 +129,37 @@ def test_mcp_real_call(saved_service):
             assert structured["media_used_for_prediction"] is True
         finally:
             jobs.close()
+
+
+def test_uploaded_video_reuses_verified_extraction(saved_service):
+    source = WORKSPACE / "public/smtpd/videos/a4TPwpWGN2I.mp4"
+    row = saved_service.cohort.loc[saved_service.cohort.creative_id.eq("a4TPwpWGN2I")].iloc[0]
+    request = RealCreativeRequest(
+        creative_id="upload-check",
+        channel_id=row.channel_id,
+        caption=row.title,
+        planned_datetime="2024-01-05T00:00:00Z",
+        duration_seconds=row.duration,
+        category=row.category,
+        media_path=str(source.relative_to(WORKSPACE)),
+    )
+    with patch(
+        "galaxies.deep_media.DeepMediaAnalyzer", side_effect=AssertionError("Reuse the extraction")
+    ):
+        record, warning = saved_service._media(request)
+    assert record is not None
+    assert warning is None
+
+
+def test_video_metadata_and_real_home(tmp_path):
+    from galaxies.api import create_app
+
+    with TestClient(create_app(Settings(workspace=tmp_path))) as client:
+        assert "real.js" in client.get("/").text
+        assert "app.js" in client.get("/synthetic").text
+        upload = client.post(
+            "/api/media", files={"file": ("broken.mp4", b"invalid video", "video/mp4")}
+        )
+        assert upload.status_code == 201
+        media_id = upload.json()["media_id"]
+        assert client.get(f"/api/real/media/{media_id}").status_code == 422

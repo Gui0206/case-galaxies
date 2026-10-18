@@ -9,7 +9,9 @@
 
 ## Execute os modelos reais, sem treinar
 
-No ambiente local já preparado:
+Abra **http://127.0.0.1:8000/** com o servidor local ativo: envie um vídeo, escolha o histórico e veja a previsão com suas limitações. A tela inicial usa os modelos reais; a demonstração sintética fica em `/synthetic`.
+
+Para a demonstração por comando, no ambiente local já preparado:
 
 ```bash
 .venv/bin/python scripts/demo_real.py
@@ -33,7 +35,7 @@ A pergunta é: **antes de publicar, analisar o conteúdo ajuda mais que olhar o 
 
 Leia o [teste mais recente explicado](docs/SMTPD_RESULTS.md), a [adaptação recente](docs/RECENT_ADAPTATION_RESULTS.md), a [transferência entre épocas](docs/TRANSFER_RESULTS.md), o [resultado de alcance anterior](docs/REACH_RESULTS.md) e o [teste de vídeos completos](docs/FULL_VIDEO_RESULTS.md). Os resultados negativos permanecem visíveis. Os dados de 2016 e 2020–2024 são públicos e selecionados; nenhum deles representa diretamente campanhas atuais da Galaxies.
 
-As novas tentativas e a auditoria de fontes estão no [registro de pesquisa](docs/NEXT_EVIDENCE.md). A base mencionada no briefing não existe, conforme informado pelo responsável pelo projeto. A interface visual antiga continua sintética. A demonstração real acima e as ferramentas com `real` no nome usam os modelos SMTPD salvos; seu funcionamento não altera a conclusão estatística.
+As novas tentativas e a auditoria de fontes estão no [registro de pesquisa](docs/NEXT_EVIDENCE.md). A base mencionada no briefing não existe, conforme informado pelo responsável pelo projeto. A interface antiga em `/synthetic` continua sintética. A demonstração real acima e as ferramentas com `real` no nome usam os modelos SMTPD salvos; seu funcionamento não altera a conclusão estatística.
 
 ## A qualidade está na avaliação do modelo
 

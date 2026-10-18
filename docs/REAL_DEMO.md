@@ -2,6 +2,18 @@
 
 **A ferramenta agora executa os modelos SMTPD salvos. Não treina nem coleta dados.** Ela estima visualizações em sete dias, mostra a referência histórica e a incerteza, e pode ordenar criativos do mesmo canal. Continua experimental: não houve ganho comprovado no teste reservado.
 
+## Teste pelo navegador
+
+Abra **http://127.0.0.1:8000/** enquanto o servidor local estiver ativo. A página inicial agora usa os modelos reais.
+
+1. Escolha um vídeo local de até três minutos e 100 MB (limite padrão).
+2. Escreva o título e selecione um canal da base como referência histórica.
+3. Confira a categoria e a data; clique em **Analisar meu vídeo**.
+
+A tela mostra previsão, histórico, intervalo e limitações. **Abrir exemplo real** permite testar sem enviar arquivo. O vídeo fica local; se já houver extração idêntica, ela é reutilizada. A duração é verificada pelo servidor. Arquivos novos são processados com os pesos já instalados, sem treino ou download.
+
+A seleção de um canal é um cenário condicionado àquele histórico, não uma identificação automática do canal do seu vídeo. A interface não cria histórico para canais novos.
+
 ## Rode a demonstração
 
 Na pasta do projeto, com o ambiente e os artefatos locais já existentes:
@@ -66,7 +78,7 @@ Com o servidor existente (`.venv/bin/galaxies serve`), os novos endpoints são:
 
 O servidor MCP (`.venv/bin/galaxies-mcp`) expõe `predict_real_creative`, `compare_real_creatives` e `replay_real_creative`. Os dois primeiros recebem `request`; o terceiro recebe `creative_id`. Os contratos completos aparecem no catálogo MCP e em `/docs` da API. A configuração de autenticação existente também protege os endpoints reais.
 
-A interface visual antiga e as funções sem `real` continuam ligadas ao registro de demonstração sintética. Para usar os modelos reais, use os comandos e ferramentas desta página. Nenhum modelo foi promovido para produção.
+A interface visual antiga fica em `/synthetic`; as funções sem `real` continuam ligadas ao registro de demonstração sintética. A página inicial, os comandos e as ferramentas desta página usam os modelos reais. Nenhum modelo foi promovido para produção.
 
 ## Como interpretar a resposta
 
