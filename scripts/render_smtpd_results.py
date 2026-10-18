@@ -1,9 +1,12 @@
 """Publish a plain-language SMTPD result and a compact, reproducible scientific figure."""
 
+import hashlib
 import shutil
 from pathlib import Path
 
 import matplotlib
+import numpy as np
+import pandas as pd
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -23,6 +26,20 @@ def main():
     selection = read_json(RUN / "selection.json")
     verification = read_json(RUN / "verification.json")
     assert verification["prediction_sha256"] == report["predictions_sha256"]
+    predictions = pd.read_csv(RUN / "test_predictions.csv")
+    examples = (
+        predictions.assign(
+            order=predictions.creative_id.map(lambda v: hashlib.sha256(v.encode()).hexdigest())
+        )
+        .sort_values("order")
+        .head(6)
+    )
+    example_rows = "\n".join(
+        f"| [{row.creative_id}](https://www.youtube.com/watch?v={row.creative_id}) | {round(np.expm1(row.history)):,} | {round(np.expm1(row.context)):,} | {round(np.expm1(row.content)):,} | {int(row.target):,} |".replace(
+            ",", "."
+        )
+        for row in examples.itertuples()
+    )
     destination = DOCS / "results/smtpd/final"
     destination.mkdir(parents=True, exist_ok=True)
     for name in [
@@ -185,11 +202,19 @@ def main():
 |---|---:|---:|---:|
 {rows}
 
-O erro do modelo mudou **{percent(gain["history"]["relative_reduction_pct"])}% para melhor contra histórico** e **{percent(gain["context"]["relative_reduction_pct"])}% contra contexto**. Valor negativo significa piora. Isso mede erro da previsão; não representa aumento causado nas visualizações.
+A redução do erro foi **{percent(gain["history"]["relative_reduction_pct"])}% contra histórico** e **{percent(gain["context"]["relative_reduction_pct"])}% contra contexto**. Valor negativo significa piora. Isso mede erro da previsão; não representa aumento causado nas visualizações.
 
 {error_conclusion}
 
 A incerteza foi calculada reamostrando canais inteiros, 5.000 vezes. Ganho absoluto de erro contra histórico: **{gain["history"]["macro_log_error_reduction"]:.4f}**, IC95% **[{gain["history"]["ci95"][0]:.4f}; {gain["history"]["ci95"][1]:.4f}]**. Contra contexto: **{gain["context"]["macro_log_error_reduction"]:.4f}**, IC95% **[{gain["context"]["ci95"][0]:.4f}; {gain["context"]["ci95"][1]:.4f}]**. Positivo significa melhora; um intervalo que cruza zero não confirma vantagem.
+
+### Seis exemplos com números de visualizações
+
+| Vídeo | Histórico previa | Contexto previa | Modelo previa | Real na primeira semana |
+|---|---:|---:|---:|---:|
+{example_rows}
+
+Os exemplos são escolhidos pela ordem do hash do ID, independentemente de o modelo acertar ou errar. Os números previstos foram arredondados; a [tabela completa](results/smtpd/final/test_predictions.csv) preserva todos os {report["primary_videos"]} casos. Links podem ficar indisponíveis; a contagem real vem da coleta histórica, não do contador atual do YouTube.
 
 ## 2. Escolher entre vídeos do mesmo canal
 

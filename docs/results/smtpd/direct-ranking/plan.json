@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-10-18 01:50:42.329360+00:00",
+  "code_sha256": "a046fb4037b10505bb046e2a8d3eaa25e5c20f014758d747198f3fc51cd457dd",
+  "base_selection_sha256": "1f27651d67e124ddb72af960376512cbee993071f04b5b5cdeb06715cdd039dc",
+  "folds": [
+    [
+      "2023-11-17",
+      "2023-11-28"
+    ],
+    [
+      "2023-12-18",
+      "2023-12-23"
+    ]
+  ],
+  "candidates": {
+    "pair_context_d3_l230": {
+      "bundle": "context",
+      "depth": 3,
+      "penalty": 30
+    },
+    "pair_context_d3_l2100": {
+      "bundle": "context",
+      "depth": 3,
+      "penalty": 100
+    },
+    "pair_context_d5_l230": {
+      "bundle": "context",
+      "depth": 5,
+      "penalty": 30
+    },
+    "pair_context_d5_l2100": {
+      "bundle": "context",
+      "depth": 5,
+      "penalty": 100
+    },
+    "pair_semantic_retrieval_d3_l230": {
+      "bundle": "semantic_retrieval",
+      "depth": 3,
+      "penalty": 30
+    },
+    "pair_semantic_retrieval_d3_l2100": {
+      "bundle": "semantic_retrieval",
+      "depth": 3,
+      "penalty": 100
+    },
+    "pair_semantic_retrieval_d5_l230": {
+      "bundle": "semantic_retrieval",
+      "depth": 5,
+      "penalty": 30
+    },
+    "pair_semantic_retrieval_d5_l2100": {
+      "bundle": "semantic_retrieval",
+      "depth": 5,
+      "penalty": 100
+    }
+  },
+  "iterations": 400,
+  "shrinkage": [
+    0.5,
+    1.0
+  ],
+  "training_pairs": "same channel and week, mature before each fold",
+  "weights": "equal total pair weight per channel",
+  "adoption_rule": "at least 3 percentage points above existing content ranking, and no worse in either validation fold; independently maintain the strongest context control",
+  "test_opened": false
+}
