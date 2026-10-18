@@ -6,6 +6,7 @@ from mcp.server.fastmcp import FastMCP
 
 from galaxies.config import Settings
 from galaxies.jobs import Jobs
+from galaxies.real_service import RealCompareRequest, RealCreativeRequest, real_service
 from galaxies.schemas import CompareRequest, PredictRequest, TrainConfig
 from galaxies.service import PredictionService
 
@@ -25,6 +26,21 @@ def create_mcp(settings: Settings | None = None):
     def compare_creatives(request: CompareRequest) -> dict[str, Any]:
         """Compare 2–10 creatives in the SAME channel/context. Synthetic results cannot recommend campaigns."""
         return service.compare(request)
+
+    @mcp.tool(structured_output=True)
+    def predict_real_creative(request: RealCreativeRequest) -> dict[str, Any]:
+        """Run frozen real SMTPD models locally. Experimental, 7-day views, no proven gain; never trains."""
+        return real_service(settings.workspace).predict(request)
+
+    @mcp.tool(structured_output=True)
+    def compare_real_creatives(request: RealCompareRequest) -> dict[str, Any]:
+        """Indicative ranking in one channel/context; no recommendation because gain is unconfirmed."""
+        return real_service(settings.workspace).compare(request)
+
+    @mcp.tool(structured_output=True)
+    def replay_real_creative(creative_id: str) -> dict[str, Any]:
+        """Recompute a historical real prediction; attach the observed outcome only after inference."""
+        return real_service(settings.workspace).replay(creative_id)
 
     @mcp.tool(structured_output=True)
     def train_model(dataset: str, config: TrainConfig | None = None) -> dict[str, Any]:

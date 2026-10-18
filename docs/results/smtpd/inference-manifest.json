@@ -1,0 +1,24 @@
+{
+  "model_id": "smtpd-frozen-2024",
+  "purpose": "inference only; no new evaluation",
+  "files": {
+    "public/smtpd/cohort.parquet": "f4a24d719fd9e1cb6c9f39ad3e875bfd5119638456707ea5b311ccd0690115e5",
+    "public/smtpd/features/extractor.json": "5d6772495f1cf7fd2371a2446057aee35f437d0b677df8f1e3742e2faa9f4ece",
+    "public/smtpd/features/index.json": "0a787abd5a5981721e5b1d1736ad24e7d943faeaf9bb6ce5e9f5f693941da1b3",
+    "public/smtpd/semantic.json": "b8f3168bc3b31b9edd1d5c446f6ce6185ce1c4333200c41c37339d3b33b913b5",
+    "public/smtpd/semantic.npy": "e9efee752faf0f288359d5df590230ba3341c8b51f0511a3d2618dd00bad0415",
+    "reports/smtpd-final/calibration.json": "8000793bd6e718b55391f7c35fc72e27628d7d4b3b5a5cf8283f518f42b714fa",
+    "reports/smtpd-final/final.json": "225107aa46a3e45884d59d8343514f26633b88a0b429dc9e8de5c4b0ae3b1f04",
+    "reports/smtpd-final/models/auxiliary/auxiliary_models.npz": "c133241623fdfaf497ff7d5a25ca916324158d6612cec6e420f626cc5dc500db",
+    "reports/smtpd-final/models/base/context_d5_logmean_20.cbm": "7863a982986599aa188ed84f29ee1685a202b932024d96a5b931b5f0690b4bf0",
+    "reports/smtpd-final/models/base/retrieval_d3_median_20.cbm": "29e16450219bdc36783986f891d822739f2fd338e66d4b6e54f66f16f41809f7",
+    "reports/smtpd-final/models/base/within_semantic_100.npz": "1c918b051d6a03cc9c7150e6cb0f34e900eaa627701393a2acb464f6f7d436d7",
+    "reports/smtpd-final/models/base_encoder/encoder.json": "e4226cea82d7cd7714f15c10b8dc02bfda667c53694633ba808f62e18054cdce",
+    "reports/smtpd-final/models/base_encoder/encoder.npz": "52bd44990f9e2414cf7855b993a66ff3aff1dbd4c86845b494712c5b558da5e1",
+    "reports/smtpd-final/models/base_encoder/semantic_pca.npz": "39ba8b3225efa83d640c48e354b58110eb2fd68f07d6cbf14ad40da83d2b866a",
+    "reports/smtpd-final/models/media/editing-tree3/media_encoder.json": "a5a59692f2be9f03cc7f02fa62afb4a2af535b64b4de42d7b53e281206e3d2b4",
+    "reports/smtpd-final/models/media/editing-tree3/media_encoder.npz": "78939bdf7f834688819744310657352b40618be95e8f0cbbe173d4cb3a5a78eb",
+    "reports/smtpd-final/models/media/editing-tree3/model.cbm": "e10951676d4a13823bac0c302275be34611fbfcc5313ac4d7ebefcd9268dfe41",
+    "reports/smtpd-final/selection.json": "7e691ddd03a8967040e2fa8524a4a4a4b52763c05f943e414076fdf2ccade27f"
+  }
+}

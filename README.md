@@ -7,6 +7,16 @@
 
 > **Resultado mais recente — 18/10/2026:** não comprovamos ganho real. No teste reservado da **SMTPD, com 515 vídeos de 165 canais**, o erro foi **0,18% menor que o histórico** e **0,03% maior que histórico + contexto**; os intervalos de incerteza incluem ausência de ganho. Em 219 vídeos completos do teste, imagem, fala e edição juntas tiveram erro **0,5% maior** que a referência textual. [Veja os números e exemplos reais](docs/SMTPD_RESULTS.md). O modelo não foi promovido para produção.
 
+## Execute os modelos reais, sem treinar
+
+No ambiente local já preparado:
+
+```bash
+.venv/bin/python scripts/demo_real.py
+```
+
+Veja previsão, histórico e resultado observado lado a lado. Para uma entrada nova, use `--request examples/real-creative.json`. Python, API e MCP estão conectados aos mesmos modelos congelados. **[Guia simples da demonstração real](docs/REAL_DEMO.md)** — entradas, limites e exemplos. Nenhuma nova coleta ou treino é executada.
+
 ## Entenda o resultado em um minuto
 
 A pergunta é: **antes de publicar, analisar o conteúdo ajuda mais que olhar o desempenho habitual do canal?** O modelo parte do histórico e ajusta a previsão com contexto, título e vídeos comparáveis. A avaliação usa resultados futuros reservados e histórias disponíveis antes de cada publicação.
@@ -23,7 +33,7 @@ A pergunta é: **antes de publicar, analisar o conteúdo ajuda mais que olhar o 
 
 Leia o [teste mais recente explicado](docs/SMTPD_RESULTS.md), a [adaptação recente](docs/RECENT_ADAPTATION_RESULTS.md), a [transferência entre épocas](docs/TRANSFER_RESULTS.md), o [resultado de alcance anterior](docs/REACH_RESULTS.md) e o [teste de vídeos completos](docs/FULL_VIDEO_RESULTS.md). Os resultados negativos permanecem visíveis. Os dados de 2016 e 2020–2024 são públicos e selecionados; nenhum deles representa diretamente campanhas atuais da Galaxies.
 
-As novas tentativas e a auditoria de fontes estão no [registro de pesquisa](docs/NEXT_EVIDENCE.md). A base mencionada no briefing não existe, conforme informado pelo responsável pelo projeto. O aplicativo abaixo continua sendo uma demonstração com dados sintéticos; seu funcionamento não é prova de precisão no mundo real.
+As novas tentativas e a auditoria de fontes estão no [registro de pesquisa](docs/NEXT_EVIDENCE.md). A base mencionada no briefing não existe, conforme informado pelo responsável pelo projeto. A interface visual antiga continua sintética. A demonstração real acima e as ferramentas com `real` no nome usam os modelos SMTPD salvos; seu funcionamento não altera a conclusão estatística.
 
 ## A qualidade está na avaliação do modelo
 
@@ -31,7 +41,7 @@ O estudo de alcance compara **30 candidatos e oito referências históricas** em
 
 O [case de modelagem](docs/MODEL_CASE.md) também documenta o protocolo geral da aplicação e os estudos anteriores. A evidência sintética verifica a implementação; a eficácia real é medida nos estudos públicos, com suas limitações explícitas.
 
-## Execute em três comandos
+## Demonstração sintética opcional (envolve treino)
 
 Requisitos: [uv](https://docs.astral.sh/uv/getting-started/installation/), Python 3.12 (gerenciado pelo uv) e OpenMP para LightGBM (`brew install libomp` no macOS; `libgomp1` no Ubuntu). FFmpeg é necessário para vídeos locais.
 

@@ -19,6 +19,7 @@ from galaxies.jobs import Jobs, Store
 from galaxies.media import capabilities, extract_media
 from galaxies.prospective import record_outcome, register
 from galaxies.prospective import report as prospective_report
+from galaxies.real_service import RealCompareRequest, RealCreativeRequest, real_service
 from galaxies.schemas import CompareRequest, Contract, PredictRequest, TrainRequest
 from galaxies.service import PredictionService
 
@@ -97,6 +98,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.exception_handler(ValueError)
     async def validation_error(request, exc):
         return JSONResponse({"detail": str(exc)}, status_code=422)
+
+    @app.post("/api/real/predict", dependencies=protected)
+    def predict_real(request: RealCreativeRequest):
+        return real_service(settings.workspace).predict(request)
+
+    @app.post("/api/real/compare", dependencies=protected)
+    def compare_real(request: RealCompareRequest):
+        return real_service(settings.workspace).compare(request)
+
+    @app.get("/api/real/replay/{creative_id}", dependencies=protected)
+    def replay_real(creative_id: str):
+        return real_service(settings.workspace).replay(creative_id)
 
     @app.get("/health")
     def health():
