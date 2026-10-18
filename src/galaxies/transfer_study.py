@@ -41,6 +41,10 @@ from galaxies.reach_study import (
 ROOT = Path(".runtime/public/modern-trending")
 RUN = Path(".runtime/reports/transfer")
 STOP = "2024-04-01"
+SOURCE_STOP = "2016-08-20"
+FOLDS = [("2016-08-01", "2016-08-08"), ("2016-08-08", "2016-08-15")]
+FIT_BEFORE = "2016-08-17"
+CALIBRATION = ("2016-08-17", "2016-08-20")
 REGRESSORS = {
     f"{bundle}_mae{depth}": {"bundle": bundle, "depth": depth}
     for bundle in ("context", "lexical", "semantic", "analogy")
@@ -376,7 +380,7 @@ def fingerprint():
 def source_data():
     # Closed final publications cannot enter training, feature vocabularies, or neighbors.
     full = pd.read_parquet(SOURCE / "cohort.parquet")
-    selected = full.published_at < epoch("2016-08-11")
+    selected = full.published_at < epoch(SOURCE_STOP)
     semantic = load_semantic(SOURCE, full)[selected]
     frame, neighbors = history_features(full[selected].reset_index(drop=True))
     return frame, neighbors, semantic
@@ -400,12 +404,16 @@ def develop(run=RUN):
             "baselines": BASELINES,
             "selection": "Minimum macro log MAE for counts; maximum macro channel pair accuracy for ordering. Context selected separately for each task. Exact ties use name.",
             "external_target_labels_used_for_selection": False,
+            "folds": FOLDS,
+            "source_publications_before": SOURCE_STOP,
+            "final_fit_outcomes_available_before": FIT_BEFORE,
+            "calibration_publications": CALIBRATION,
             "primary": "Known external channels with >=3 mature in-sample outcomes; 2020 to March 2024",
             "success": ">=5% error reduction and positive paired 95% CI versus both references; >=500 videos/50 channels. Ranking separately positive 95% lower versus both; >=200 pairs/30 channels.",
         },
     )
     saved = []
-    for start, stop in [("2016-07-25", "2016-08-01"), ("2016-08-01", "2016-08-08")]:
+    for start, stop in FOLDS:
         train, valid = indices(frame, start, train=True), indices(frame, start, stop)
         encoder = ReachEncoder()
         matrices = model_matrices(encoder, encoder.fit_transform(frame, train, neighbors, semantic))
@@ -506,8 +514,8 @@ def final(root=ROOT, run=RUN):
     frame, neighbors, semantic = source_data()
     external, external_neighbors = history_features(pd.read_parquet(root / "cohort.parquet"))
     external_semantic = load_semantic(root, external)
-    train = indices(frame, "2016-08-08", train=True)
-    calibration = indices(frame, "2016-08-08", "2016-08-11")
+    train = indices(frame, FIT_BEFORE, train=True)
+    calibration = indices(frame, *CALIBRATION)
     encoder = ReachEncoder()
     source_matrices = model_matrices(
         encoder, encoder.fit_transform(frame, train, neighbors, semantic)
