@@ -139,7 +139,7 @@ def freeze(run=RUN):
             specs[label] = {"family": "auxiliary", "name": name}
             result[label] = auxiliary.loc[result.index, name]
     for name in media:
-        if name.startswith("full:"):
+        if name.startswith(("image:", "speech:", "editing:", "full:")):
             label = f"media/{name}"
             specs[label] = {"family": "media", "name": name}
             result[label] = media.loc[result.index, name]
