@@ -56,3 +56,10 @@ A primeira rodada reduziu o erro de desenvolvimento de 0,5342 para 0,5280 (1,2%)
 Revisão: aproveitar os dados anteriores a 20/08/2016, mantendo **inteiramente excluídas as publicações do teste encerrado de 20–31/08**. Desenvolvimento em 01–07/08 e 08–14/08; cada treino usa somente resultados maduros antes de começar sua validação. Ajuste final com resultados disponíveis antes de 17/08; calibração com publicações de 17–19/08, que amadurecem muito antes da avaliação externa de 2020–2024. Mantêm-se candidatos, métricas e critérios de sucesso. A [primeira seleção](results/transfer-development-v1/selection.json) e seu [plano](results/transfer-development-v1/plan.json) ficam preservados. Isso é mais desenvolvimento, não uma segunda confirmação.
 
 Fontes adicionais: [WebShorts/Shorts-Cast](https://github.com/ryang1119/Shorts-cast), artigo de maio de 2026 com alvo de sete dias, ainda contém somente um README anunciando publicação futura (commit `d08729a`). [AdsTrace](https://huggingface.co/datasets/Xiuze/AdsTrace) é acessível e oferece 2.833 anúncios de beleza com áudio, frames a 1 FPS, transcrições, produto e conversão. Falta publicação/canal; é candidata a uma avaliação **complementar de conteúdo e conversão**, não substituta da comprovação de alcance sobre histórico.
+
+
+## Congelamento da transferência externa
+
+A segunda rodada terminou: erro de desenvolvimento **0,5449 no histórico**, **0,5403 no contexto** e **0,5313 no conteúdo com analogias** (redução de 2,5% sobre histórico). Para ordenar pares, o vencedor foi o modelo lexical treinado diretamente: **56,9%**, contra **50,5%** do histórico e **52,6%** do contexto. Esses resultados ainda são desenvolvimento.
+
+O [plano final](results/transfer/plan.json) e a [seleção final](results/transfer/selection.json) ficam congelados antes da primeira avaliação externa de 2020–2024. Os 88 testes passaram. Não haverá escolha de outra configuração após abrir o teste.
