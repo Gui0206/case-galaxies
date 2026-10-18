@@ -152,6 +152,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise ValueError("O arquivo não contém uma faixa de vídeo")
         return {"media_path": f"media/{media_id}", "duration_seconds": duration}
 
+    @app.post("/api/real/media/{media_id}/analyze", dependencies=protected)
+    def analyze_own_video(media_id: str):
+        metadata = real_media_metadata(media_id)
+        return real_service(settings.workspace).analyze_video(**metadata)
+
     @app.post("/api/real/predict", dependencies=protected)
     def predict_real(request: RealCreativeRequest):
         return real_service(settings.workspace).predict(request)

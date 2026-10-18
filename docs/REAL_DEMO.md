@@ -4,15 +4,20 @@
 
 ## Teste pelo navegador
 
-Abra **http://127.0.0.1:8000/** enquanto o servidor local estiver ativo. A página inicial agora usa os modelos reais.
+Abra **http://127.0.0.1:8000/** enquanto o servidor local estiver ativo. Existem dois caminhos separados:
 
-1. Escolha um vídeo local de até três minutos e 100 MB (limite padrão).
-2. Escreva o título e selecione um canal da base como referência histórica.
-3. Confira a categoria e a data; clique em **Analisar meu vídeo**.
+| Caminho | Entrada | Entrega | O que não promete |
+|---|---|---|---|
+| **Meu vídeo · análise descritiva** | Arquivo local de até três minutos e 100 MB (limite padrão) | Transcrição, idioma detectado, planos/cortes, duração dos planos, luminosidade e quantidade de quadros amostrados | Views, probabilidade de viralização, nota de qualidade ou identificação de produtos |
+| **Canais da base · demonstração de previsão** | Uma das três publicações históricas disponíveis na tela | Previsão congelada, histórico, intervalo e resultado observado | Previsão para um canal diferente ou ganho comprovado |
 
-A tela mostra previsão, histórico, intervalo e limitações. **Abrir exemplo real** permite testar sem enviar arquivo. O vídeo fica local; se já houver extração idêntica, ela é reutilizada. A duração é verificada pelo servidor. Arquivos novos são processados com os pesos já instalados, sem treino ou download.
+No primeiro caminho, clique em **Analisar conteúdo do meu vídeo**. Não existe seletor de canal: o backend executa apenas extração e descrição, sem chamar o preditor de views. O endpoint é `POST /api/real/media/{media_id}/analyze`, após o upload em `/api/media`. Extrações existentes são reutilizadas por hash; arquivos novos usam os pesos locais. Transcrição e cortes são estimativas automáticas, sujeitas a erro. Os vetores visuais não são apresentados como identificação confiável de produtos ou qualidade.
 
-A seleção de um canal é um cenário condicionado àquele histórico, não uma identificação automática do canal do seu vídeo. A interface não cria histórico para canais novos.
+No segundo, escolha o exemplo e clique em **Recalcular exemplo da base**. Os primeiros três exemplos do teste publicado são oferecidos em ordem temporal, sem seleção pelo acerto. O resultado observado é anexado depois da inferência.
+
+**Conclusão do case:** a ferramenta implementa e demonstra previsão pré-publicação em canais com histórico disponível e extração multimodal. Na avaliação realizada, o conteúdo não superou de forma comprovada as referências. Mantemos o histórico como referência, sem recomendar o modelo para decisões de conteúdo ou investimento. A análise descritiva complementa a entrega; não substitui a validação preditiva nem representa prova de eficácia.
+
+Não houve novos treinos, coletas ou reabertura do teste. A mudança separa os usos que os dados existentes permitem sustentar.
 
 ## Rode a demonstração
 

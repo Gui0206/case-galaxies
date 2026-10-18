@@ -163,3 +163,39 @@ def test_video_metadata_and_real_home(tmp_path):
         assert upload.status_code == 201
         media_id = upload.json()["media_id"]
         assert client.get(f"/api/real/media/{media_id}").status_code == 422
+
+
+def test_own_video_analysis_never_forecasts(saved_service):
+    import shutil
+
+    from galaxies.api import create_app
+
+    source = WORKSPACE / "public/smtpd/videos/a4TPwpWGN2I.mp4"
+    media_id = "e" * 32 + ".mp4"
+    destination = WORKSPACE / "media" / media_id
+    shutil.copyfile(source, destination)
+    try:
+        with (
+            patch("galaxies.api.real_service", return_value=saved_service),
+            patch.object(
+                saved_service, "predict", side_effect=AssertionError("No predictions for own video")
+            ),
+        ):
+            with TestClient(create_app(Settings(workspace=WORKSPACE))) as client:
+                response = client.post(f"/api/real/media/{media_id}/analyze")
+                assert response.status_code == 200
+                result = response.json()
+                assert result["mode"] == "descriptive_analysis"
+                assert result["performance_prediction_available"] is False
+                assert (
+                    not {
+                        "predicted_metric",
+                        "historical_baseline",
+                        "channel_id",
+                        "ranking_score_log",
+                    }
+                    & result.keys()
+                )
+                assert result["editing"]["shot_count"] >= 1
+    finally:
+        destination.unlink(missing_ok=True)

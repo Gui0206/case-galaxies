@@ -9,7 +9,7 @@
 
 ## Execute os modelos reais, sem treinar
 
-Abra **http://127.0.0.1:8000/** com o servidor local ativo: envie um vídeo, escolha o histórico e veja a previsão com suas limitações. A tela inicial usa os modelos reais; a demonstração sintética fica em `/synthetic`.
+Abra **http://127.0.0.1:8000/** com o servidor local ativo. A interface separa **Meu vídeo** (descrição de fala, edição e medidas visuais, sem views nem canal emprestado) de **Canais da base** (previsão histórica demonstrável, com comparação ao resultado observado). A conclusão do case aparece na tela: não houve ganho preditivo comprovado. A demonstração sintética fica em `/synthetic`.
 
 Para a demonstração por comando, no ambiente local já preparado:
 

@@ -202,6 +202,43 @@ class RealPredictionService:
             raise ValueError("Duração informada difere da mídia")
         return record, None
 
+    def analyze_video(self, media_path: str, duration_seconds: float) -> dict:
+        """Describe the supplied video only; no channel, forecast or performance score."""
+
+        class MediaInput(BaseModel):
+            media_path: str | None
+            duration_seconds: float
+            caption: str = ""
+            creative_id: str = ""
+            cached_video_id: str | None = None
+
+        media = MediaInput(
+            media_path=media_path,
+            duration_seconds=duration_seconds,
+            caption="",
+            creative_id="",
+            cached_video_id=None,
+        )
+        record, warning = self._media(media)
+        if record is None:
+            raise ValueError(warning or "Não foi possível analisar o vídeo")
+        return {
+            "mode": "descriptive_analysis",
+            "performance_prediction_available": False,
+            "duration_seconds": record["duration_s"],
+            "sampled_frames": len(record["frame_times"]),
+            "transcript": record["transcript"],
+            "language": record["language_detected"],
+            "editing": record["editing"]["features"],
+            "speech": record["speech_features"],
+            "limitations": [
+                "Sem histórico do seu canal, esta análise não estima visualizações nem compara desempenho.",
+                "Transcrição e detecção de cortes são automáticas e podem conter erros.",
+                "Quadros amostrados geram representações visuais; não identificamos produtos, emoções ou qualidade criativa.",
+                "Ritmo, luminosidade e fala descrevem o arquivo. Não são notas de qualidade nem provas de alcance.",
+            ],
+        }
+
     def predict(self, request: RealCreativeRequest) -> dict:
         frame, prior, x, pure, within_x = self._inputs(request)
         row = frame.iloc[-1]
