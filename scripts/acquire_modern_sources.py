@@ -42,7 +42,13 @@ def acquire(region):
     with target.open("rb") as stream:
         digest = hashlib.file_digest(stream, "sha256").hexdigest()
     print(f"Verified {region}: {target.stat().st_size:,} bytes", flush=True)
-    return {"region": region, "url": url, "file": name, "bytes": target.stat().st_size, "sha256": digest}
+    return {
+        "region": region,
+        "url": url,
+        "file": name,
+        "bytes": target.stat().st_size,
+        "sha256": digest,
+    }
 
 
 def main():
@@ -50,7 +56,11 @@ def main():
     # Independent public downloads; bounded concurrency and no authentication workaround.
     with ThreadPoolExecutor(max_workers=3) as pool:
         files = list(pool.map(acquire, REGIONS))
-    manifest = {"dataset": "rsrishav/youtube-trending-video-dataset", "version": VERSION, "files": files}
+    manifest = {
+        "dataset": "rsrishav/youtube-trending-video-dataset",
+        "version": VERSION,
+        "files": files,
+    }
     (ROOT / "acquisition.json").write_text(json.dumps(manifest, indent=2) + "\n")
 
 
