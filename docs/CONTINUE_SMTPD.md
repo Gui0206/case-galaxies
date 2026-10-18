@@ -9,7 +9,7 @@ uv run python scripts/smtpd_status.py
 Antes de iniciar outro processo, confira os existentes:
 
 ```bash
-ps -axo pid,etime,command | rg 'collect_smtpd_media|extract_smtpd_media|develop_smtpd_extensions|finalize_smtpd'
+ps -axo pid,etime,command | rg 'collect_smtpd_media|extract_smtpd_media|develop_smtpd_extensions|finalize_smtpd|smtpd_finish_worker'
 ```
 
 ## Caminho restante
@@ -24,6 +24,8 @@ ps -axo pid,etime,command | rg 'collect_smtpd_media|extract_smtpd_media|develop_
 | Verificação | `smtpd-final/verification.json` existente | Gerar figura/relatório e atualizar README |
 
 Arquivos de coleta ficam em `.runtime/public/smtpd/`; relatórios de pesquisa em `.runtime/reports/`. Logs ativos: `media-acquisition.log`, `media-extraction.log` e `media-development.log`, dentro da pasta de dados.
+
+Uma continuação local em `.runtime/smtpd_finish_worker.py` aguarda a mídia e executa congelamento, commit/push da seleção, teste único, verificação e geração do relatório. O status informa sua fase e se o processo está vivo. **Enquanto estiver vivo, não execute essas etapas em paralelo.** O log fica em `.runtime/public/smtpd/completion-worker.log`. Depois de pronto, ainda é necessário inspecionar a figura, atualizar o README e publicar o resultado. Se o worker parar, sua causa fica em `completion-worker.json`; preservar esse registro antes de uma retomada revisada.
 
 Os comandos finais, **somente após a etapa anterior estar concluída**, são:
 

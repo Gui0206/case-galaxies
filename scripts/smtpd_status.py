@@ -1,6 +1,7 @@
 """Fast, read-only checkpoint. No network, model loading, fitting or test evaluation."""
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from statistics import median
@@ -17,6 +18,14 @@ def main():
     acquisition = read(root / "media-acquisition.json")
     features = read(root / "features/index.json")
     final = reports / "smtpd-final"
+    worker = read(root / "completion-worker.json")
+    worker_alive = False
+    if worker.get("pid"):
+        try:
+            os.kill(int(worker["pid"]), 0)
+            worker_alive = True
+        except ProcessLookupError:
+            pass
     count = len(acquisition.get("rows", {}))
     failed = len(acquisition.get("failures", {}))
     remaining = max(0, plan.get("count", 0) - count - failed)
@@ -37,6 +46,8 @@ def main():
     next_step = (
         "Review and publish the verified report; do not rerun final evaluation."
         if verified
+        else "Existing completion worker owns freeze/evaluation; monitor its phase, do not duplicate it."
+        if worker_alive
         else "Recompute metrics with verify_smtpd_results.py."
         if complete
         else "Inspect the existing evaluation log; never delete its opening record."
@@ -67,6 +78,8 @@ def main():
                 "test_opened": opened,
                 "test_complete": complete,
                 "independently_verified": verified,
+                "completion_worker_phase": worker.get("phase"),
+                "completion_worker_alive": worker_alive,
                 "next_step": next_step,
             },
             indent=2,
