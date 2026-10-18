@@ -1,0 +1,49 @@
+{
+  "created_at": "2026-10-18 00:54:54.465488+00:00",
+  "code_sha256": "525707722c1af3b5385dc42f05dbc9b2cd1856a8b4914528e0fe5c6c41869bc8",
+  "inputs": {
+    ".runtime/public/modern-trending/cohort.parquet": "577ddfd72234073b532fe445d88cb9f9083e6d16bc5bba47087bfe2341f302bf",
+    ".runtime/public/modern-trending/semantic.json": "3aae8221d8650de37de0933edcf367c2a9b01f098b1cd5c0a9080eba59079827",
+    ".runtime/public/modern-trending/audit.json": "e15f4dc12defc3b6d827286a7fe5f72f14f13ea89a141e31a20c5156c38f4410",
+    ".runtime/public/trending-expansion/cohort.parquet": "2c26cc02076c634f820522ae14a9e0228f4952968c1f5580e83403b8accc8837",
+    ".runtime/public/trending-expansion/semantic.json": "4872bb0c4323d24a4028b69558680600540ea6ee2f13a7f6ef263d9c807395e6",
+    ".runtime/public/trending-expansion/audit.json": "efa743f78c2441131227d916468e65d215e92b0393d57af44aebb0a583c94021"
+  },
+  "folds": [
+    [
+      "2021-07-01",
+      "2022-01-01"
+    ],
+    [
+      "2022-01-01",
+      "2022-05-01"
+    ]
+  ],
+  "fit_before": "2022-05-01",
+  "calibration": [
+    "2022-05-01",
+    "2022-06-21"
+  ],
+  "test_start": "2022-07-01",
+  "models": [
+    "context_mae3",
+    "context_mae5",
+    "lexical_mae3",
+    "lexical_mae5",
+    "semantic_mae3",
+    "semantic_mae5",
+    "ridge_100",
+    "ridge_1000"
+  ],
+  "shrinkage": [
+    0.0,
+    0.1,
+    0.25,
+    0.5,
+    1.0
+  ],
+  "training": "at least one mature historical result; evaluation >=3",
+  "selection": "minimum macro log MAE; shrinkage multiplies correction to logmean20; independent context selection",
+  "success": ">=500 videos/50 channels; >=5% error reduction and positive paired channel bootstrap CI against history AND context",
+  "test_ids_exclude_every_id_previously_observed": true
+}

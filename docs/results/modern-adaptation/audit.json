@@ -1,0 +1,34 @@
+{
+  "snapshots": 973972,
+  "unique_ids": 259761,
+  "invalid_snapshot_metadata": 26019,
+  "inconsistent_identity_or_publication": 46,
+  "sector_videos": 14932,
+  "videos_with_title_changes": 318,
+  "conflicting_target_counts": 49,
+  "eligible_videos": 2123,
+  "prior_observed_ids_excluded": 229115,
+  "warm_videos": 1192,
+  "warm_channels": 134,
+  "year_coverage": {
+    "2023": 415,
+    "2022": 400,
+    "2021": 306,
+    "2024": 61,
+    "2020": 10
+  },
+  "cohort_sha256": "2c26cc02076c634f820522ae14a9e0228f4952968c1f5580e83403b8accc8837",
+  "performance_measured": false,
+  "since_2022-01-01": {
+    "videos": 876,
+    "channels": 119
+  },
+  "since_2022-07-01": {
+    "videos": 665,
+    "channels": 110
+  },
+  "since_2023-01-01": {
+    "videos": 476,
+    "channels": 101
+  }
+}
