@@ -58,3 +58,59 @@ def test_cohort_requires_recovered_identity_and_never_uses_source_normalization(
     assert cohort.available_at.iloc[0] - cohort.published_at.iloc[0] == 8 * 86400
     assert "user_subscribers" not in cohort and "viewCount" not in cohort
     assert audit["metadata_unusable"] == 2
+
+
+def test_official_metadata_does_not_request_statistics_and_retains_missing(monkeypatch):
+    from galaxies.youtube import YouTubeCollector
+
+    client = YouTubeCollector("test-key")
+    calls = []
+
+    def fake(resource, params):
+        calls.append(params)
+        return {
+            "items": [
+                {
+                    "id": "abcdefghijk",
+                    "snippet": {
+                        "publishedAt": "2024-01-01T00:00:00Z",
+                        "channelId": "UCaaaaaaaaaaaaaaaaaaaaaa",
+                    },
+                    "contentDetails": {"duration": "P1DT2H3M4S"},
+                    "status": {"privacyStatus": "public"},
+                }
+            ]
+        }
+
+    monkeypatch.setattr(client, "_get", fake)
+    result = client.publication_metadata(["abcdefghijk", "bcdefghijkl"])
+    assert "statistics" not in calls[0]["part"]
+    assert result[0]["duration"] == 93784
+    assert result[0]["is_live"] is False
+    assert result[1]["playability"] == "NOT_RETURNED"
+
+
+def test_api_errors_do_not_expose_keys_or_retry_rate_limits(monkeypatch):
+    import httpx
+
+    from galaxies.youtube import YouTubeCollector
+
+    client = YouTubeCollector("NEVER_PRINT_SECRET")
+
+    def fail(*args, **kwargs):
+        raise httpx.ConnectError("https://example.test?key=NEVER_PRINT_SECRET")
+
+    monkeypatch.setattr(httpx, "get", fail)
+    with pytest.raises(ValueError) as error:
+        client.publication_metadata(["abcdefghijk"])
+    assert "NEVER_PRINT_SECRET" not in str(error.value)
+    calls = []
+
+    def limited(*args, **kwargs):
+        calls.append(1)
+        return httpx.Response(429)
+
+    monkeypatch.setattr(httpx, "get", limited)
+    with pytest.raises(ValueError, match="429"):
+        client.publication_metadata(["abcdefghijk"])
+    assert len(calls) == 1

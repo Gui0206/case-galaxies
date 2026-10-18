@@ -13,13 +13,13 @@ REGIONS = ("BR", "US", "GB", "CA", "DE", "FR", "MX")
 VERSION = 1346
 
 
-def acquire(region):
+def acquire(region, root=ROOT):
     name = f"{region}_youtube_trending_data.csv"
     url = (
         "https://www.kaggle.com/api/v1/datasets/download/"
         f"rsrishav/youtube-trending-video-dataset/{name}?datasetVersionNumber={VERSION}"
     )
-    archive = ROOT / f"{region}.zip"
+    archive = root / f"{region}.zip"
     if not archive.exists():
         with httpx.stream("GET", url, follow_redirects=True, timeout=90) as response:
             response.raise_for_status()
@@ -33,7 +33,7 @@ def acquire(region):
     with zipfile.ZipFile(archive) as source:
         if source.namelist() != [name]:
             raise ValueError("Unexpected archive contents")
-        target = ROOT / name
+        target = root / name
         if not target.exists():
             with source.open(name) as stream, target.with_suffix(".partial").open("wb") as out:
                 while block := stream.read(1024 * 1024):

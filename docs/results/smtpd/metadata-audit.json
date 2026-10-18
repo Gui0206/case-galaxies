@@ -1,0 +1,12 @@
+{
+  "stopped_on_access_restriction": true,
+  "intended_videos": 4671,
+  "videos": 9,
+  "recovered": 4,
+  "status_counts": {
+    "OK": 4,
+    "ERROR": 4,
+    "LOGIN_REQUIRED": 1
+  },
+  "metadata_sha256": "28d323f3e3e9c49db166f81c5ebc07297465d90a344aecca2696f0950c7fe074"
+}
