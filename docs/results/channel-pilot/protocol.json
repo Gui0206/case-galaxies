@@ -1,0 +1,35 @@
+{
+  "started_at": 1792331327.135652,
+  "enrollment_ends_at": 1792504127.135652,
+  "ends_at": 1793119727.135652,
+  "interval_seconds": 7200,
+  "channels": [
+    {
+      "id": "UCsqjHFMB_JYTaEnf_vmTNqg",
+      "name": "Doug DeMuro",
+      "segment": "automotivo",
+      "uploads": "UUsqjHFMB_JYTaEnf_vmTNqg"
+    },
+    {
+      "id": "UCUhFaUpnq31m6TNX2VKVSVA",
+      "name": "carwow",
+      "segment": "automotivo",
+      "uploads": "UUUhFaUpnq31m6TNX2VKVSVA"
+    },
+    {
+      "id": "UCzlgsdcnqJq8BDWY7bqWUmA",
+      "name": "Alexandra Anele",
+      "segment": "beleza",
+      "uploads": "UUzlgsdcnqJq8BDWY7bqWUmA"
+    },
+    {
+      "id": "UCzTKskwIc_-a0cGvCXA848Q",
+      "name": "NikkieTutorials",
+      "segment": "beleza",
+      "uploads": "UUzTKskwIc_-a0cGvCXA848Q"
+    }
+  ],
+  "scope": "Public metadata only; no full videos, training or proven uplift",
+  "selection": "Two automotive and two beauty channels, purposive convenience pilot; not representative",
+  "delivery": "2026-10-20; collection validation only, not 7-day model evaluation"
+}

@@ -1,4 +1,6 @@
-# Retomar sem repetir trabalho
+# Registro histórico da avaliação SMTPD
+
+> **Trabalho interrompido por solicitação do usuário em 18/10/2026.** Não execute as instruções antigas abaixo nem reative coleta, treino ou automações sem nova solicitação. Leia primeiro [CURRENT_STATE.md](CURRENT_STATE.md). Os passos abaixo registram o procedimento do estudo já encerrado.
 
 **Etapa concluída:** o teste reservado foi aberto uma vez, verificado e documentado em [SMTPD_RESULTS.md](SMTPD_RESULTS.md). Não há ganho confirmado. Reutilize as previsões publicadas para conferir os números; não repita coleta ou treinamento.
 
@@ -14,7 +16,7 @@ Antes de iniciar outro processo, confira os existentes:
 ps -axo pid,etime,command | rg 'collect_smtpd_media|extract_smtpd_media|develop_smtpd_extensions|finalize_smtpd|smtpd_finish_worker'
 ```
 
-## Caminho restante
+## Procedimento histórico (não executar novamente)
 
 | Etapa | Sinal de conclusão | Próxima ação |
 |---|---|---|

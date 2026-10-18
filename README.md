@@ -7,6 +7,8 @@
 
 > **Resultado mais recente — 18/10/2026:** não comprovamos ganho real. No teste reservado da **SMTPD, com 515 vídeos de 165 canais**, o erro foi **0,18% menor que o histórico** e **0,03% maior que histórico + contexto**; os intervalos de incerteza incluem ausência de ganho. Em 219 vídeos completos do teste, imagem, fala e edição juntas tiveram erro **0,5% maior** que a referência textual. [Veja os números e exemplos reais](docs/SMTPD_RESULTS.md). O modelo não foi promovido para produção.
 
+> **Estado do trabalho:** interrompido a pedido do usuário em 18/10/2026. Piloto de coleta desativado; nenhuma retomada automática. [Estado completo e pendências](docs/CURRENT_STATE.md) · [Protocolo e interrupção do piloto](docs/CHANNEL_PILOT.md).
+
 ## Execute os modelos reais, sem treinar
 
 Abra **http://127.0.0.1:8000/** com o servidor local ativo. A interface separa **Meu vídeo** (descrição de fala, edição e medidas visuais, sem views nem canal emprestado) de **Canais da base** (previsão histórica demonstrável, com comparação ao resultado observado). A conclusão do case aparece na tela: não houve ganho preditivo comprovado. A demonstração sintética fica em `/synthetic`.

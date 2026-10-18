@@ -1,0 +1,18 @@
+{
+  "tracked_videos": 0,
+  "mature_7d": 0,
+  "mature_by_channel": {},
+  "missed_7d_windows": 0,
+  "completed": false,
+  "horizon": "observed age 168–171 hours; exact timestamps retained, never relabeled as exact 168h",
+  "no_training": true,
+  "no_media_downloads": true,
+  "last_success_at": "2026-10-18T13:50:03.764965+00:00",
+  "consecutive_failures": 0,
+  "error": null,
+  "checked_at": "2026-10-18T13:50:03.767439+00:00",
+  "events": [],
+  "operational_state": "stopped_by_user",
+  "scheduler_disabled_verified": true,
+  "note": "Final persisted collector observation; no new collection or evaluation during documentation."
+}
