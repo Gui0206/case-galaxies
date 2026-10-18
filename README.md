@@ -3,9 +3,9 @@
 <h1 align="center">Galaxies · Creative Intelligence</h1>
 <p align="center">Prever visualizações antes de publicar.<br>Medir se o modelo supera o histórico do canal em dados reservados.</p>
 
-<p align="center"><a href="docs/TRANSFER_RESULTS.md">Resultado mais recente</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
+<p align="center"><a href="docs/RECENT_ADAPTATION_RESULTS.md">Resultado mais recente</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
 
-> **Resultado mais recente — 18/10/2026 UTC:** o ganho não se manteve em outra época. Em **922 vídeos de 119 canais de 2020–2024**, o modelo com conteúdo teve erro **3,3% maior que o histórico**. Não há ganho confirmado nesse teste. O modelo não foi promovido para produção.
+> **Resultado mais recente — 18/10/2026 UTC:** treinar em dados recentes ainda não confirmou a vantagem. Em **665 vídeos novos de 110 canais**, o conteúdo teve erro **2,1% menor que o histórico**, mas **1,3% maior que contexto + histórico**, com incerteza que inclui ausência de ganho. O modelo não foi promovido para produção. A investigação atual usa a [SMTPD com alvo de sete dias e vídeos completos](docs/SMTPD_PROTOCOL.md).
 
 ## Entenda o resultado em um minuto
 
@@ -15,11 +15,12 @@ A pergunta é: **antes de publicar, analisar o conteúdo ajuda mais que olhar o 
 |---|---|---|
 | Alcance de 2016: 27.505 vídeos de teste | Erro 3,7% menor; ordenação 60,6% vs. 49,3% | Ganho modesto nessa população; abaixo da meta de 5% de redução do erro |
 | **Transferência para 2020–2024: 922 vídeos de teste** | **Erro 3,3% maior** | **O ganho não se generalizou; sem confirmação** |
+| **Adaptação recente: 665 vídeos novos de teste** | **Erro 2,1% menor que histórico; 1,3% maior que contexto** | **Sem ganho confirmado** |
 | Vídeos completos: retenção, 177 vídeos de teste | Sem ganho estatisticamente confirmado | Imagem, fala e edição funcionam como extração; eficácia preditiva não comprovada |
 
 ![Teste externo em outra época](docs/assets/transfer-results.png)
 
-Leia o [teste mais recente explicado](docs/TRANSFER_RESULTS.md), o [resultado de alcance anterior](docs/REACH_RESULTS.md) e o [teste de vídeos completos](docs/FULL_VIDEO_RESULTS.md). Os resultados negativos permanecem visíveis. Os dados de 2016 e 2020–2024 são públicos e selecionados; nenhum deles representa diretamente campanhas atuais da Galaxies.
+Leia o [teste mais recente explicado](docs/RECENT_ADAPTATION_RESULTS.md), a [transferência entre épocas](docs/TRANSFER_RESULTS.md), o [resultado de alcance anterior](docs/REACH_RESULTS.md) e o [teste de vídeos completos](docs/FULL_VIDEO_RESULTS.md). Os resultados negativos permanecem visíveis. Os dados de 2016 e 2020–2024 são públicos e selecionados; nenhum deles representa diretamente campanhas atuais da Galaxies.
 
 As novas tentativas e a auditoria de fontes estão no [registro de pesquisa](docs/NEXT_EVIDENCE.md). A base mencionada no briefing não existe, conforme informado pelo responsável pelo projeto. O aplicativo abaixo continua sendo uma demonstração com dados sintéticos; seu funcionamento não é prova de precisão no mundo real.
 

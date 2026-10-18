@@ -97,3 +97,8 @@ O Google Cloud foi configurado com autorização expressa do responsável e uma 
 Antes de qualquer comparação preditiva da SMTPD, ampliamos a recuperação para todos os 12.655 IDs não duplicados das duas categorias. Isso inclui canais com poucas publicações para ampliar o treino e não depende do valor das visualizações. O acesso oficial funciona em lotes de 50; não requer pesquisar vídeos nem coletar engajamento atual. Preservamos os arquivos da recuperação inicial.
 
 Na adaptação recente de Trending, o desenvolvimento selecionou semântica com erro 0,4124 contra 0,4304 do histórico (4,2% de redução). O contexto selecionado ficou em 0,4346. Foram comparados oito regressores com cinco intensidades de ajuste (inclusive zero), além de oito históricos; não adicionamos uma arquitetura maior. O treino usa exemplos com ao menos um resultado anterior maduro, e a avaliação exige três. A calibração termina em 20/06/2022, com maturação antes do início do teste em julho. O plano e a seleção serão publicados antes da avaliação inédita de 665 vídeos/110 canais.
+
+
+A recuperação completa da SMTPD trouxe **8.112 vídeos de 5.291 canais**. O [protocolo específico](SMTPD_PROTOCOL.md) reserva 515 vídeos de 165 canais publicados desde 05/01/2024. A API resolveu a ausência de datas sem coletar engajamento atual. Um download de vídeo completo com áudio foi validado; a aquisição e extração sequenciais dos 669 vídeos curtos previstos começaram antes de medir desempenho.
+
+A adaptação recente foi encerrada: **2,1% de redução de erro contra histórico, 1,3% de aumento contra contexto**, com intervalos incluindo zero. Publicamos [resultado, previsões e verificação](RECENT_ADAPTATION_RESULTS.md); o teste não será reutilizado para selecionar modelos.

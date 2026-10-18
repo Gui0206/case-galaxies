@@ -1,0 +1,13 @@
+{
+  "verified_at": "2026-10-18 01:06:52.394519+00:00",
+  "prediction_sha256": "d96b3788bc445f0f5c7ee268cddc038082b56bd38fa87a83594e67612cea17ed",
+  "metrics_independently_recomputed": {
+    "history": 0.4656988254868949,
+    "context": 0.44973942150506124,
+    "content": 0.45569373700852767
+  },
+  "development_test_disjoint": true,
+  "targets_match_source": true,
+  "videos": 665,
+  "channels": 110
+}
