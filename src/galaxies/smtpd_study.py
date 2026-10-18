@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from catboost import CatBoostRegressor
+from scipy import sparse
 from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 
@@ -138,40 +139,53 @@ def matrices(frame, neighbors, semantic, train):
     values["within_semantic"] = np.column_stack(
         [pure, frame[TEXT_STATS], encoder.semantic_pca.transform(semantic)]
     )
+    values["within_semantic_full"] = np.column_stack([pure, frame[TEXT_STATS], semantic])
+    prefix = np.column_stack([pure, frame[TEXT_STATS]])
+    prefix = StandardScaler().fit(prefix[train]).transform(prefix)
+    values["within_lexical"] = sparse.hstack([sparse.csr_matrix(prefix), title], format="csr")
     return encoder, values
 
 
 def within_prediction(x, frame, train, neighbors, predict, alpha, folder=None, name="within"):
     """Fixed-effects ridge; no target channel ID or future outcome is a deployment feature."""
-    scaler = StandardScaler().fit(x[train])
-    normalized = scaler.transform(x)
+    scaler = None if sparse.issparse(x) else StandardScaler().fit(x[train])
+    normalized = x if scaler is None else scaler.transform(x)
     frequency = frame.iloc[train].channel_id.value_counts()
     train = train[frame.iloc[train].channel_id.map(frequency).to_numpy() >= 2]
     if len(train) < 10:
         raise ValueError("Too few repeated training channels")
     groups = frame.iloc[train].channel_id.to_numpy()
-    train_x = pd.DataFrame(normalized[train])
-    centered_x = train_x.to_numpy() - train_x.groupby(groups).transform("mean").to_numpy()
+    if sparse.issparse(normalized):
+        _, inverse, counts = np.unique(groups, return_inverse=True, return_counts=True)
+        assignment = sparse.csr_matrix(
+            (np.ones(len(train)), (np.arange(len(train)), inverse)), shape=(len(train), len(counts))
+        )
+        means = sparse.diags(1 / counts) @ assignment.T @ normalized[train]
+        centered_x = normalized[train] - assignment @ means
+    else:
+        train_x = pd.DataFrame(normalized[train])
+        centered_x = train_x.to_numpy() - train_x.groupby(groups).transform("mean").to_numpy()
     target = frame.target_log.to_numpy()
     train_y = pd.Series(target[train])
     centered_y = train_y.to_numpy() - train_y.groupby(groups).transform("mean").to_numpy()
-    model = Ridge(alpha=alpha, fit_intercept=False).fit(
+    model = Ridge(alpha=alpha, fit_intercept=False, solver="lsqr").fit(
         centered_x, centered_y, sample_weight=weights(frame.iloc[train])
     )
+    scores = model.predict(normalized)
     output = []
     for i in predict:
         prior = neighbors[i][-20:]
         if prior:
-            output.append(
-                float(np.mean(target[prior]))
-                + model.predict((normalized[i] - normalized[prior].mean(axis=0))[None])[0]
-            )
+            output.append(float(np.mean(target[prior])) + scores[i] - scores[prior].mean())
         else:
             output.append(frame.category_prior.iloc[i])
     if folder:
         folder.mkdir(parents=True, exist_ok=True)
         np.savez_compressed(
-            folder / f"{name}.npz", coef=model.coef_, mean=scaler.mean_, scale=scaler.scale_
+            folder / f"{name}.npz",
+            coef=model.coef_,
+            mean=scaler.mean_ if scaler is not None else np.zeros(x.shape[1]),
+            scale=scaler.scale_ if scaler is not None else np.ones(x.shape[1]),
         )
     return np.maximum(0, output)
 
@@ -185,6 +199,17 @@ def candidates():
                 result[name] = {"kind": "tree", "bundle": bundle, "depth": depth, "anchor": anchor}
     for bundle in ["within_context", "within_text", "within_semantic"]:
         for penalty in [10, 100, 1000]:
+            result[f"{bundle}_{penalty}"] = {
+                "kind": "within",
+                "bundle": bundle,
+                "alpha": penalty,
+                "anchor": "logmean_20",
+            }
+    for bundle, penalties in [
+        ("within_semantic_full", [100, 1000, 10000]),
+        ("within_lexical", [1, 10, 100]),
+    ]:
+        for penalty in penalties:
             result[f"{bundle}_{penalty}"] = {
                 "kind": "within",
                 "bundle": bundle,

@@ -1,0 +1,177 @@
+{
+  "created_at": "2026-10-18 01:09:29.044265+00:00",
+  "code_sha256": "9c3eb222f0fdf171b20a7fe65ed82d0bd91cace461644b43a97bd9b250dbc3d2",
+  "inputs": {
+    ".runtime/public/smtpd/cohort.parquet": "f4a24d719fd9e1cb6c9f39ad3e875bfd5119638456707ea5b311ccd0690115e5",
+    ".runtime/public/smtpd/semantic.json": "b8f3168bc3b31b9edd1d5c446f6ce6185ce1c4333200c41c37339d3b33b913b5"
+  },
+  "folds": [
+    [
+      "2023-11-17",
+      "2023-11-28"
+    ],
+    [
+      "2023-12-18",
+      "2023-12-23"
+    ]
+  ],
+  "train_end": "2023-12-23",
+  "calibration": [
+    "2023-12-23",
+    "2023-12-28"
+  ],
+  "test_start": "2024-01-05",
+  "candidates": {
+    "context_d3_median_20": {
+      "kind": "tree",
+      "bundle": "context",
+      "depth": 3,
+      "anchor": "median_20"
+    },
+    "context_d3_logmean_20": {
+      "kind": "tree",
+      "bundle": "context",
+      "depth": 3,
+      "anchor": "logmean_20"
+    },
+    "context_d5_median_20": {
+      "kind": "tree",
+      "bundle": "context",
+      "depth": 5,
+      "anchor": "median_20"
+    },
+    "context_d5_logmean_20": {
+      "kind": "tree",
+      "bundle": "context",
+      "depth": 5,
+      "anchor": "logmean_20"
+    },
+    "retrieval_d3_median_20": {
+      "kind": "tree",
+      "bundle": "retrieval",
+      "depth": 3,
+      "anchor": "median_20"
+    },
+    "retrieval_d3_logmean_20": {
+      "kind": "tree",
+      "bundle": "retrieval",
+      "depth": 3,
+      "anchor": "logmean_20"
+    },
+    "retrieval_d5_median_20": {
+      "kind": "tree",
+      "bundle": "retrieval",
+      "depth": 5,
+      "anchor": "median_20"
+    },
+    "retrieval_d5_logmean_20": {
+      "kind": "tree",
+      "bundle": "retrieval",
+      "depth": 5,
+      "anchor": "logmean_20"
+    },
+    "semantic_retrieval_d3_median_20": {
+      "kind": "tree",
+      "bundle": "semantic_retrieval",
+      "depth": 3,
+      "anchor": "median_20"
+    },
+    "semantic_retrieval_d3_logmean_20": {
+      "kind": "tree",
+      "bundle": "semantic_retrieval",
+      "depth": 3,
+      "anchor": "logmean_20"
+    },
+    "semantic_retrieval_d5_median_20": {
+      "kind": "tree",
+      "bundle": "semantic_retrieval",
+      "depth": 5,
+      "anchor": "median_20"
+    },
+    "semantic_retrieval_d5_logmean_20": {
+      "kind": "tree",
+      "bundle": "semantic_retrieval",
+      "depth": 5,
+      "anchor": "logmean_20"
+    },
+    "within_context_10": {
+      "kind": "within",
+      "bundle": "within_context",
+      "alpha": 10,
+      "anchor": "logmean_20"
+    },
+    "within_context_100": {
+      "kind": "within",
+      "bundle": "within_context",
+      "alpha": 100,
+      "anchor": "logmean_20"
+    },
+    "within_context_1000": {
+      "kind": "within",
+      "bundle": "within_context",
+      "alpha": 1000,
+      "anchor": "logmean_20"
+    },
+    "within_text_10": {
+      "kind": "within",
+      "bundle": "within_text",
+      "alpha": 10,
+      "anchor": "logmean_20"
+    },
+    "within_text_100": {
+      "kind": "within",
+      "bundle": "within_text",
+      "alpha": 100,
+      "anchor": "logmean_20"
+    },
+    "within_text_1000": {
+      "kind": "within",
+      "bundle": "within_text",
+      "alpha": 1000,
+      "anchor": "logmean_20"
+    },
+    "within_semantic_10": {
+      "kind": "within",
+      "bundle": "within_semantic",
+      "alpha": 10,
+      "anchor": "logmean_20"
+    },
+    "within_semantic_100": {
+      "kind": "within",
+      "bundle": "within_semantic",
+      "alpha": 100,
+      "anchor": "logmean_20"
+    },
+    "within_semantic_1000": {
+      "kind": "within",
+      "bundle": "within_semantic",
+      "alpha": 1000,
+      "anchor": "logmean_20"
+    }
+  },
+  "shrinkage": [
+    0.25,
+    0.5,
+    1.0
+  ],
+  "history": [
+    "median_5",
+    "median_20",
+    "mean_20",
+    "logmean_20",
+    "shrunk_2",
+    "shrunk_5",
+    "median_50",
+    "logmean_50",
+    "recent_median_30",
+    "recent_median_90"
+  ],
+  "context_rules": [
+    "duration_05",
+    "duration_10",
+    "format_median"
+  ],
+  "primary": ">=3 mature same-channel results; equal weight per channel",
+  "success": ">=500 videos/50 channels; >=5% lower log MAE and positive paired channel-bootstrap CI against BOTH selected history and context",
+  "test_opened": false
+}

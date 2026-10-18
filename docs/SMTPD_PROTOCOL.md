@@ -45,3 +45,18 @@ O teste de vídeos curtos é uma ablação exploratória menor, mesmo se apresen
 ## Limites que um bom resultado não apagaria
 
 A fonte tem lacunas no histórico, exclui vídeos com dias ausentes e extremos de popularidade. Somente vídeos ainda públicos puderam ser recuperados. Howto & Style inclui assuntos além de moda e beleza. A mídia recuperada agora pode ter sido editada desde a coleta. Likes no mesmo horizonte e validação prospectiva na população da Galaxies continuam sem base adequada. Uma vitória aqui não equivale a causalidade, garantia de viralização ou validação de campanhas.
+
+
+## Desenvolvimento preservado e novas hipóteses
+
+A primeira rodada encontrou erro 0,6714 no histórico, 0,6459 em contexto e 0,6540 no melhor modelo individual de conteúdo. Aumentar a representação textual de 32 para 384 dimensões e adicionar regressão lexical esparsa não melhorou o vencedor. A segunda rodada preserva essas tentativas e escolhe uma combinação com pesos iguais de contexto e regressão semântica dentro do canal: erro de desenvolvimento aproximadamente **0,6335**, redução de **5,6% contra histórico** e **1,9% contra contexto**. Ainda não atende à meta de 5% contra ambas as referências.
+
+A escolha para ordenação é separada: recuperação lexical obteve **63,8%**, contexto **57,5%** e histórico **50,0%**, em 251 pares de 35 canais de desenvolvimento. Esses números não são o resultado reservado. [Planos, escolhas e previsões de desenvolvimento](results/smtpd/development-v2/ensemble-selection.json) ficam preservados.
+
+Para investigar a limitação de tamanho de treino, acrescentamos uma fonte **auxiliar** do mesmo CSV: vídeos de outros setores cujos URLs de canal têm ao menos três registros. Identidades e datas precisam ser verificadas pela API. O arquivo de treino exporta exclusivamente publicações anteriores a 23/12/2023; cada validação ainda filtra a maturação. Os 515 vídeos do teste principal permanecem os mesmos. Essa fonte não cria uma nova população de confirmação.
+
+A transferência aprende diferenças dentro do canal e de intervalos de 28 dias, com pesos de influência de 0%, 10%, 30% ou 50%. O controle de 0% distingue um possível ganho de transferência de um simples ajuste do modelo. Seleção exclusivamente nas validações anteriores a 2024.
+
+A análise multimodal compara texto no mesmo subconjunto de treino, imagem, fala, edição e a combinação das três. Cada candidato só prevê onde a mídia está disponível e completa; o restante recebe a previsão textual congelada. O próprio fallback sem contribuição multimodal concorre na seleção. Não forçaremos um componente a entrar na solução se ele não melhorar a validação.
+
+A coleta de mídia inicialmente parou após 27 arquivos com HTTP 403. A auditoria encontrou ausência do componente `yt-dlp-ejs` e de um runtime JavaScript suportado. Após instalar a dependência fixada e configurar Node 24, o mesmo vídeo foi baixado normalmente. A evidência da tentativa original foi preservada; nenhuma conta, cookie, proxy ou troca de cliente foi usada. Configuração conforme a [documentação oficial do coletor](https://github.com/yt-dlp/yt-dlp/wiki/EJS).
