@@ -1,35 +1,37 @@
 <p align="center"><img src="src/galaxies/web/mark.svg" width="64" alt="Galaxies Creative Intelligence"></p>
 
 <h1 align="center">Galaxies · Creative Intelligence</h1>
-<p align="center">Imagem, fala e edição acrescentam valor ao histórico do canal?<br>Análise de vídeos e avaliação temporal com dados reais.</p>
+<p align="center">Prever visualizações antes de publicar.<br>Medir se o modelo supera o histórico do canal em dados reservados.</p>
 
-<p align="center"><a href="docs/FULL_VIDEO_RESULTS.md">Resultado com vídeos completos</a> · <a href="docs/FULL_VIDEO_METHOD.md">Como a análise funciona</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
+<p align="center"><a href="docs/REACH_RESULTS.md">Resultado mais recente</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
 
-> **Resultado real — 17/10/2026:** a análise de imagem, fala e edição foi implementada e testada em vídeos reservados. **Ainda não demonstrou vantagem confiável sobre o histórico.** O estudo mede retenção no painel de observação; não valida visualizações/curtidas após publicação nem campanhas da Galaxies. Nenhum modelo foi promovido para produção.
+> **Resultado real — 17/10/2026:** houve ganho estatisticamente positivo em **27.505 vídeos reservados de 10.621 canais**: erro de previsão **3,7% menor** que o histórico e acerto de ordenação **60,6% contra 49,3%**. A redução do erro ficou abaixo da meta registrada de 5%. A fonte é de 2016, com metadados e séries diárias; este resultado ainda não valida Shorts atuais, análise de imagem/fala ou campanhas da Galaxies.
 
-## A resposta em números
+## Entenda o resultado em um minuto
 
-Baixamos 954 arquivos do Tsinghua ShortVideo e aceitamos **945 vídeos íntegros**, após nove exclusões documentadas. Executamos análise de imagem, transcrição e edição em 13,8 horas de vídeo. A escolha dos modelos usou períodos anteriores; o teste final reservou **177 vídeos de 164 criadores**.
+O modelo começa pelo desempenho habitual do canal. Ajusta a previsão pela duração, calendário e comportamento recente, e consulta até cinco publicações anteriores com títulos parecidos. O alvo são as visualizações na data de publicação e nas seis datas seguintes. Nenhum engajamento inicial do próprio vídeo entra na previsão.
 
-| Como prever a retenção | Erro médio no teste ↓ |
-|---|---:|
-| Histórico do criador ajustado pela categoria | 24,1 pontos percentuais |
-| Histórico, categoria e duração | 23,3 pontos percentuais |
-| Contexto, título, imagem, fala/som e edição | 23,7 pontos percentuais |
+| Como prever | Redução do erro sobre o histórico ↑ | Acerto ao ordenar vídeos do mesmo canal ↑ |
+|---|---:|---:|
+| Histórico do canal | Referência | 49,3% |
+| Histórico + contexto | 2,7% | 58,9% |
+| **Histórico + contexto + título** | **3,7%** | **60,6%** |
 
-Retenção é quanto do vídeo as pessoas assistem. Prever 60% quando o observado é 50% representa erro de dez pontos percentuais. A pequena melhora de **1,6% no erro** sobre o histórico ajustado é incerta; a análise completa não superou a referência de contexto no erro observado. Apenas 27,7% das previsões completas ficaram a até dez pontos do valor real.
+A redução usa o erro em log, com peso igual por canal. A ordenação compara vídeos publicados pelo mesmo canal na mesma semana e dá peso igual aos canais. O conteúdo do título acrescentou **1,1% de redução do erro** e **1,8 ponto percentual de acerto** sobre o contexto, com intervalos de 95% favoráveis. O critério de ordenação foi cumprido; o de redução relevante do erro, de pelo menos 5% contra ambas as referências, não foi.
 
-![Resultado com vídeos completos](docs/assets/full-video-results.png)
+![Erro e ordenação no teste reservado](docs/assets/reach-results.png)
 
-**Leia primeiro o [resultado explicado](docs/FULL_VIDEO_RESULTS.md)**: comparações, incerteza, exemplos que incluem erros e arquivos auditáveis. O [método](docs/FULL_VIDEO_METHOD.md) mostra os atributos extraídos e os comandos para analisar um vídeo seu. Não se atribui uma “nota de viralidade” sem validação.
+**Leia o [resultado explicado](docs/REACH_RESULTS.md)**: números, incerteza, cinco exemplos incluindo erros e todos os recortes. O modelo acertou a faixa ampla entre metade e dobro do valor real em **73,8%** dos vídeos. Para canais sem histórico, o ganho foi apenas **0,4%**; a utilidade depende do contexto disponível.
 
-Os [estudos anteriores de metadados](docs/REAL_DATA_RESULTS.md), com Ken Jee e YouTube Trending, também não demonstraram ganho consistente. Seus testes com 30 e 377 vídeos permanecem preservados; não foram reutilizados para ajustar este estudo.
+Os 263.317 registros preparados vieram de uma fonte pública com categorias Automotivo e Howto & Style. Os vídeos finais eram novos para a avaliação, mas foram publicados em agosto de 2016. As regras, revisões feitas no desenvolvimento e limitações estão no [protocolo](docs/REVISED_STUDY.md). A [seleção foi publicada antes da abertura final](https://github.com/Gui0206/case-galaxies/commit/660999e).
+
+A análise de [imagem, fala e edição em vídeos completos](docs/FULL_VIDEO_RESULTS.md) permanece implementada, com o estudo anterior de retenção em 945 vídeos e sem ganho confirmado. Os [dois testes anteriores de metadados](docs/REAL_DATA_RESULTS.md) também permanecem preservados. Nenhum modelo foi promovido para produção.
 
 ## A qualidade está na avaliação do modelo
 
-O núcleo compara **12 configurações de Ridge, CatBoost, LightGBM e blend em três janelas temporais**, congela a escolha e só então abre uma avaliação final. O conteúdo precisa acrescentar valor sobre uma referência forte que já conhece o canal. Contagens, ranking, incerteza, ablações e canais novos são avaliados separadamente.
+O estudo de alcance compara **30 candidatos e oito referências históricas** em duas janelas de desenvolvimento. Congela modelos, dados e código antes da avaliação final. Ele usa referências com até 50 publicações maduras, modelos residuais, texto lexical/semântico e recuperação de comparáveis. A escolha final minimiza o erro por canal, sem consultar o teste.
 
-O **[case de modelagem](docs/MODEL_CASE.md)** descreve a arquitetura e o estudo sintético anterior. Os estudos públicos usam duas janelas de desenvolvimento devido ao tamanho das amostras após expurgo temporal. O estudo de retenção compara cinco configurações em seis grupos de atributos, preserva a escolha congelada e registra as exclusões. A evidência sintética verifica a implementação, mas não substitui o resultado real acima.
+O [case de modelagem](docs/MODEL_CASE.md) também documenta o protocolo geral da aplicação e os estudos anteriores. A evidência sintética verifica a implementação; a eficácia real é medida nos estudos públicos, com suas limitações explícitas.
 
 ## Execute em três comandos
 
@@ -57,7 +59,7 @@ flowchart LR
 
 **O modelo calcula os números.** LangGraph organiza validação, atributos e explicação; a saída é estruturada e inspecionável. O texto explicativo padrão é determinístico e usa as contribuições reais do modelo. O VLM opcional observa o vídeo; não inventa métricas futuras.
 
-Esse é o fluxo da aplicação de demonstração, que continua usando dados sintéticos. O estudo real de retenção é executado pelos scripts e relatórios próprios; não calibra intervalos individuais nem ativa o preditor de contagens da interface.
+Esse é o fluxo da aplicação de demonstração, que continua usando dados sintéticos. Os estudos reais de alcance e retenção são executados por scripts e relatórios próprios. O novo estudo de alcance preserva modelos e intervalos calibrados em `.runtime/reports/reach/`, mas não ativa o preditor da interface.
 
 ## O que está implementado
 
@@ -68,7 +70,7 @@ Esse é o fluxo da aplicação de demonstração, que continua usando dados sint
 | Prevenção de vazamento | Histórico ponto a ponto no tempo; expurgo de rótulos imaturos; deduplicação; separação de campanhas |
 | Modelagem | Ridge, CatBoost, LightGBM e blend; alvos absolutos/residuais; quantis calibrados por setor |
 | Experimentos | Competição em três janelas, contexto forte, ablações, controles negativos, seeds e canais não vistos; seleção congelada e teste final de uso único |
-| Testes públicos reais | Dois estudos de metadados, duas janelas de desenvolvimento, versões/hashes das fontes, referências simples e resultados negativos preservados |
+| Testes públicos reais | Novo estudo de alcance com ganho modesto confirmado, ordenação superior ao histórico/contexto, hashes e teste final único; resultados anteriores preservados |
 | Vídeos completos | [Imagem, fala e edição](docs/FULL_VIDEO_METHOD.md) em 945 vídeos íntegros; teste reservado com 177 vídeos; vantagem não confirmada |
 | Avaliação | MAE, MAE em log, MAPE com zeros explícitos, Spearman, pares, arrependimento de seleção, F1 de faixas, interval score, cobertura/largura e médias equilibradas por canal |
 | Explicação | SHAP de árvores/decomposição linear, comparáveis históricos, evidências temporais, abstenção e rastros em JSON |
@@ -84,6 +86,8 @@ Esse é o fluxo da aplicação de demonstração, que continua usando dados sint
 
 | Quero… | Leia |
 |---|---|
+| Saber se o modelo supera o histórico | [Resultado de alcance](docs/REACH_RESULTS.md) |
+| Entender a seleção da base e do modelo | [Protocolo revisado](docs/REVISED_STUDY.md) |
 | Saber se imagem, fala e edição ajudaram | [Resultado com vídeos completos](docs/FULL_VIDEO_RESULTS.md) |
 | Conferir os testes anteriores de metadados | [Ken Jee e YouTube Trending](docs/REAL_DATA_RESULTS.md) |
 | Avaliar a qualidade do modelo | [Case de modelagem e evidência](docs/MODEL_CASE.md) |
@@ -121,6 +125,7 @@ src/galaxies/
   model.py         treino, calibração, avaliação e SHAP
   protocol.py      cortes, candidatos e regra de seleção
   research.py      competição, diagnósticos e avaliação final
+  reach_study.py   alcance semanal, histórico, comparáveis e avaliação reservada
   public_benchmark.py  estudo público de metadados com alvos por calendário
   shortvideo.py      aquisição de vídeos completos e histórico de retenção
   deep_media.py     imagem, fala e semântica com pesos fixados

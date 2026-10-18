@@ -1,0 +1,360 @@
+{
+  "status": "OK",
+  "data": {
+    "id": 3480977,
+    "identifier": "DVN/L3UWZT",
+    "persistentUrl": "https://doi.org/10.7910/DVN/L3UWZT",
+    "protocol": "doi",
+    "authority": "10.7910",
+    "separator": "/",
+    "publisher": "Harvard Dataverse",
+    "publicationDate": "2019-08-08",
+    "storageIdentifier": "s3://10.7910/DVN/L3UWZT",
+    "effectiveDatasetFileCountLimit": 1000,
+    "datasetFileUploadsAvailable": 996,
+    "datasetType": "dataset",
+    "locks": [],
+    "latestVersion": {
+      "id": 172511,
+      "datasetId": 3480977,
+      "datasetPersistentId": "doi:10.7910/DVN/L3UWZT",
+      "datasetType": "dataset",
+      "storageIdentifier": "s3://10.7910/DVN/L3UWZT",
+      "versionNumber": 1,
+      "internalVersionNumber": 3,
+      "versionMinorNumber": 1,
+      "versionState": "RELEASED",
+      "latestVersionPublishingState": "RELEASED",
+      "deaccessionLink": "",
+      "lastUpdateTime": "2019-08-23T10:26:21Z",
+      "releaseTime": "2019-08-23T10:26:21Z",
+      "createTime": "2019-08-23T10:26:11Z",
+      "publicationDate": "2019-08-08",
+      "citationDate": "2019-08-08",
+      "effectiveDatasetFileCountLimit": 1000,
+      "datasetFileUploadsAvailable": 996,
+      "license": {
+        "name": "CC0 1.0",
+        "uri": "http://creativecommons.org/publicdomain/zero/1.0",
+        "iconUri": "https://licensebuttons.net/p/zero/1.0/88x31.png",
+        "rightsIdentifier": "CC0-1.0",
+        "rightsIdentifierScheme": "SPDX",
+        "schemeUri": "https://spdx.org/licenses/",
+        "languageCode": "en"
+      },
+      "fileAccessRequest": false,
+      "metadataBlocks": {
+        "citation": {
+          "displayName": "Citation Metadata",
+          "name": "citation",
+          "fields": [
+            {
+              "typeName": "title",
+              "multiple": false,
+              "typeClass": "primitive",
+              "value": "Replication Data for: Beyond Views: Measuring and Predicting Engagement in Online Videos"
+            },
+            {
+              "typeName": "author",
+              "multiple": true,
+              "typeClass": "compound",
+              "value": [
+                {
+                  "authorName": {
+                    "typeName": "authorName",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Wu, Siqi"
+                  },
+                  "authorAffiliation": {
+                    "typeName": "authorAffiliation",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Australian National University"
+                  },
+                  "authorIdentifierScheme": {
+                    "typeName": "authorIdentifierScheme",
+                    "multiple": false,
+                    "typeClass": "controlledVocabulary",
+                    "value": "ORCID"
+                  },
+                  "authorIdentifier": {
+                    "typeName": "authorIdentifier",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "https://orcid.org/0000-0002-1384-6908"
+                  }
+                },
+                {
+                  "authorName": {
+                    "typeName": "authorName",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Rizoiu, Marian-Andrei"
+                  },
+                  "authorAffiliation": {
+                    "typeName": "authorAffiliation",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Australian National University"
+                  }
+                },
+                {
+                  "authorName": {
+                    "typeName": "authorName",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Xie, Lexing"
+                  },
+                  "authorAffiliation": {
+                    "typeName": "authorAffiliation",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Australian National University"
+                  }
+                }
+              ]
+            },
+            {
+              "typeName": "datasetContact",
+              "multiple": true,
+              "typeClass": "compound",
+              "value": [
+                {
+                  "datasetContactName": {
+                    "typeName": "datasetContactName",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Wu, Siqi"
+                  },
+                  "datasetContactAffiliation": {
+                    "typeName": "datasetContactAffiliation",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Australian National University"
+                  },
+                  "datasetContactEmail": {
+                    "typeName": "datasetContactEmail",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Siqi.Wu@anu.edu.au"
+                  }
+                }
+              ]
+            },
+            {
+              "typeName": "dsDescription",
+              "multiple": true,
+              "typeClass": "compound",
+              "value": [
+                {
+                  "dsDescriptionValue": {
+                    "typeName": "dsDescriptionValue",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "The dataset is first introduced in the following paper:\r\n<br>\r\nSiqi Wu, Marian-Andrei Rizoiu, and Lexing Xie. <a href=\"https://avalanchesiqi.github.io/files/icwsm2018engagement.pdf\" target=\"_blank\"><b>Beyond Views: Measuring and Predicting Engagement in Online Videos</b></a>. In AAAI International Conference on Weblogs and Social Media (ICWSM), 2018.\r\n<br>\r\n<br>\r\n<b> Tweeted videos dataset </b>\r\n<br>\r\nThis dataset contains YouTube videos published between July 1st and August 31st, 2016. To be collected, the video needs (a) be mentioned on Twitter during aforementioned collection period; (b) have insight statistics available; (c) have at least 100 views within the first 30 days after upload.\r\n<br>\r\n<br>\r\n<b> Quality videos datasets </b>\r\n<br>\r\nThese datasets contain videos deemed of high quality by domain experts.\r\n<ul>\r\n      <li>\r\n        Vevo videos: Videos of verified Vevo artists, as of August 31st, 2016.\r\n      </li> \r\n      <li>\r\n        Billboard16 videos: Videos of 2016 Billboard Hot 100 chart.\r\n      </li> \r\n      <li>\r\n        Top news videos: Videos of top 100 most viewed News channels.\r\n      </li> \r\n</ul>\r\n<b> freebase_mid_type_name.csv </b>\r\n<br>\r\nIt maps a freebase mid to a real-world entity.\r\n<br>\r\n<br>\r\nSee more details in this <a href=\"https://github.com/avalanchesiqi/youtube-engagement/tree/master/data\" target=\"_blank\">data description</a>."
+                  },
+                  "dsDescriptionDate": {
+                    "typeName": "dsDescriptionDate",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "2019-08-02"
+                  }
+                }
+              ]
+            },
+            {
+              "typeName": "subject",
+              "multiple": true,
+              "typeClass": "controlledVocabulary",
+              "value": [
+                "Computer and Information Science",
+                "Social Sciences"
+              ]
+            },
+            {
+              "typeName": "keyword",
+              "multiple": true,
+              "typeClass": "compound",
+              "value": [
+                {
+                  "keywordValue": {
+                    "typeName": "keywordValue",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "YouTube"
+                  }
+                },
+                {
+                  "keywordValue": {
+                    "typeName": "keywordValue",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "online media"
+                  }
+                }
+              ]
+            },
+            {
+              "typeName": "publication",
+              "multiple": true,
+              "typeClass": "compound",
+              "value": [
+                {
+                  "publicationCitation": {
+                    "typeName": "publicationCitation",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "Siqi Wu, Marian-Andrei Rizoiu, and Lexing Xie. Beyond Views: Measuring and Predicting Engagement in Online Videos. In AAAI International Conference on Weblogs and Social Media (ICWSM), 2018."
+                  },
+                  "publicationIDType": {
+                    "typeName": "publicationIDType",
+                    "multiple": false,
+                    "typeClass": "controlledVocabulary",
+                    "value": "url"
+                  },
+                  "publicationURL": {
+                    "typeName": "publicationURL",
+                    "multiple": false,
+                    "typeClass": "primitive",
+                    "value": "http://users.cecs.anu.edu.au/~siqi.wu/files/icwsm2018engagement.pdf"
+                  }
+                }
+              ]
+            },
+            {
+              "typeName": "depositor",
+              "multiple": false,
+              "typeClass": "primitive",
+              "value": "Wu, Siqi"
+            },
+            {
+              "typeName": "dateOfDeposit",
+              "multiple": false,
+              "typeClass": "primitive",
+              "value": "2019-08-02"
+            }
+          ]
+        }
+      },
+      "files": [
+        {
+          "description": "mapping a freebase mid to a real-world entity. ",
+          "label": "freebase_mid_type_name.tar.bz2",
+          "restricted": false,
+          "version": 1,
+          "datasetVersionId": 172511,
+          "dataFile": {
+            "id": 3493371,
+            "persistentId": "doi:10.7910/DVN/L3UWZT/HDLQXV",
+            "pidURL": "https://doi.org/10.7910/DVN/L3UWZT/HDLQXV",
+            "filename": "freebase_mid_type_name.tar.bz2",
+            "contentType": "application/x-bzip2",
+            "friendlyType": "Bzip Archive",
+            "filesize": 632723297,
+            "description": "mapping a freebase mid to a real-world entity. ",
+            "storageIdentifier": "s3://dvn-cloud:16c742618ee-5b19dacacad0",
+            "rootDataFileId": -1,
+            "md5": "60cf4c000ec374b12999c9a96d0426b3",
+            "checksum": {
+              "type": "MD5",
+              "value": "60cf4c000ec374b12999c9a96d0426b3"
+            },
+            "tabularData": false,
+            "creationDate": "2019-08-08",
+            "publicationDate": "2019-08-08",
+            "lastUpdateTime": "2019-08-23T10:26:21Z",
+            "fileAccessRequest": false
+          }
+        },
+        {
+          "description": "3 quality videos datasets:\r\nVevo videos, Billboard16 videos, Top news videos",
+          "label": "quality_videos.tar.bz2",
+          "restricted": false,
+          "version": 1,
+          "datasetVersionId": 172511,
+          "dataFile": {
+            "id": 3481014,
+            "persistentId": "doi:10.7910/DVN/L3UWZT/NNLQ9L",
+            "pidURL": "https://doi.org/10.7910/DVN/L3UWZT/NNLQ9L",
+            "filename": "quality_videos.tar.bz2",
+            "contentType": "application/x-bzip2",
+            "friendlyType": "Bzip Archive",
+            "filesize": 376268888,
+            "description": "3 quality videos datasets:\r\nVevo videos, Billboard16 videos, Top news videos",
+            "storageIdentifier": "s3://dvn-cloud:16c5af498c6-bb95e08e63be",
+            "rootDataFileId": -1,
+            "md5": "1fd1307630eeeef3c28a89c062b54de8",
+            "checksum": {
+              "type": "MD5",
+              "value": "1fd1307630eeeef3c28a89c062b54de8"
+            },
+            "tabularData": false,
+            "creationDate": "2019-08-04",
+            "publicationDate": "2019-08-08",
+            "lastUpdateTime": "2019-08-23T10:26:21Z",
+            "fileAccessRequest": false
+          }
+        },
+        {
+          "description": "categories: activism, autos, comedy, film, howto, music, news, people",
+          "label": "tweeted_videos1.tar.bz2",
+          "restricted": false,
+          "version": 1,
+          "datasetVersionId": 172511,
+          "dataFile": {
+            "id": 3489832,
+            "persistentId": "doi:10.7910/DVN/L3UWZT/E5D7LQ",
+            "pidURL": "https://doi.org/10.7910/DVN/L3UWZT/E5D7LQ",
+            "filename": "tweeted_videos1.tar.bz2",
+            "contentType": "application/x-bzip2",
+            "friendlyType": "Bzip Archive",
+            "filesize": 2512142102,
+            "description": "categories: activism, autos, comedy, film, howto, music, news, people",
+            "storageIdentifier": "s3://dvn-cloud:16c65e05290-0c9674546b15",
+            "rootDataFileId": -1,
+            "md5": "1f01676fb6abd3ddc47e1289d64a2803",
+            "checksum": {
+              "type": "MD5",
+              "value": "1f01676fb6abd3ddc47e1289d64a2803"
+            },
+            "tabularData": false,
+            "creationDate": "2019-08-06",
+            "publicationDate": "2019-08-08",
+            "lastUpdateTime": "2019-08-23T10:26:21Z",
+            "fileAccessRequest": false
+          }
+        },
+        {
+          "description": "categories: education, entertainment, gaming, movies, pets, science, shows, sports, trailers, travel",
+          "label": "tweeted_videos2.tar.bz2",
+          "restricted": false,
+          "version": 1,
+          "datasetVersionId": 172511,
+          "dataFile": {
+            "id": 3493078,
+            "persistentId": "doi:10.7910/DVN/L3UWZT/QWC4MB",
+            "pidURL": "https://doi.org/10.7910/DVN/L3UWZT/QWC4MB",
+            "filename": "tweeted_videos2.tar.bz2",
+            "contentType": "application/x-bzip2",
+            "friendlyType": "Bzip Archive",
+            "filesize": 2417615144,
+            "description": "categories: education, entertainment, gaming, movies, pets, science, shows, sports, trailers, travel",
+            "storageIdentifier": "s3://dvn-cloud:16c6ff9620e-b9c3f93eb62d",
+            "rootDataFileId": -1,
+            "md5": "625b1598aaa36c518d390b98c6ad59ff",
+            "checksum": {
+              "type": "MD5",
+              "value": "625b1598aaa36c518d390b98c6ad59ff"
+            },
+            "tabularData": false,
+            "creationDate": "2019-08-08",
+            "publicationDate": "2019-08-08",
+            "lastUpdateTime": "2019-08-23T10:26:21Z",
+            "fileAccessRequest": false
+          }
+        }
+      ]
+    }
+  }
+}

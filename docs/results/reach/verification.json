@@ -1,0 +1,59 @@
+{
+  "verified_at": "2026-10-18 00:01:27.667031+00:00",
+  "prediction_sha256": "6f98e67f3260d5fc3aa5e5cccaaa41bbc17772f926fd71107692f4876a95008f",
+  "checks": [
+    "Unique IDs; no overlap with development; final publication dates only",
+    "Targets and source cohort hashes match",
+    "History counts match independent per-channel binary searches",
+    "Primary macro/row errors, raw view errors, factor-two rates and coverage match",
+    "Independent pair enumeration reproduces ranking scores and both bootstrap intervals"
+  ],
+  "primary_videos": 27505,
+  "primary_channels": 10621,
+  "recomputed": {
+    "history": {
+      "macro_mae_log": 0.5508620910095318,
+      "mae_log": 0.5726934001656637,
+      "mae_views": 7764.07487327667,
+      "within_factor_two": 0.71561534266497,
+      "coverage90": 0.9090710779858208
+    },
+    "context": {
+      "macro_mae_log": 0.536133830179895,
+      "mae_log": 0.5548651801298539,
+      "mae_views": 7512.413750871425,
+      "within_factor_two": 0.7337574986366115,
+      "coverage90": 0.9082712234139247
+    },
+    "content": {
+      "macro_mae_log": 0.5302423974704897,
+      "mae_log": 0.5473992362531291,
+      "mae_views": 7491.660214075649,
+      "within_factor_two": 0.7383748409380113,
+      "coverage90": 0.9081621523359389
+    },
+    "lexical_control": {
+      "macro_mae_log": 0.5302423974704897,
+      "mae_log": 0.5473992362531291,
+      "mae_views": 7491.660214075649,
+      "within_factor_two": 0.7383748409380113,
+      "coverage90": 0.9081621523359389
+    },
+    "semantic_control": {
+      "macro_mae_log": 0.5278780298140324,
+      "mae_log": 0.5448339411502825,
+      "mae_views": 7454.923249665494,
+      "within_factor_two": 0.7408834757316851,
+      "coverage90": 0.9105253590256317
+    }
+  },
+  "ranking_pairs": 34598,
+  "ranking_channels": 4243,
+  "ranking_accuracy": {
+    "history": 0.4931420566228719,
+    "context": 0.5888007287191693,
+    "content": 0.6063451241725849,
+    "lexical_control": 0.6063451241725849,
+    "semantic_control": 0.609823809243104
+  }
+}

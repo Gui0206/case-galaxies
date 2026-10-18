@@ -27,6 +27,8 @@ O [protocolo revisado](REVISED_STUDY.md) usa Beyond Views / Harvard Dataverse, c
 
 O alvo soma a data de publicação e as seis datas seguintes. A disponibilidade do resultado é convencionada como publicação + nove datas; não se apresenta esse horário como se fosse um timestamp de coleta observado. `reach_study.py` mantém essa convenção separada do contrato de produção. Títulos e metadados são retrospectivos, a amostra não contém todos os uploads e os vídeos originais não acompanham a base. A licença declarada do registro é CC0 1.0; origem, hash integral e hashes dos dois arquivos extraídos são preservados.
 
+O [teste final de alcance](REACH_RESULTS.md) confirmou redução de erro de 3,7% sobre o histórico e melhora de ordenação, mantendo explícitos o limite de 2016 e a ausência de mídia original.
+
 A base da Academy mencionada no TAPI não existe, conforme informado pelo usuário. Nenhuma evidência deste projeto depende de acesso presumido a ela.
 
 ## Contrato de uma linha

@@ -4,7 +4,7 @@
 
 **Resultado atual: 81 testes passaram**, sem skips no ambiente local com FFmpeg e os extras do estudo multimodal instalados. Ruff, formatação e build também passaram. Houve sete avisos de depreciação de conversão temporal pandas/NumPy no estudo anterior, sem falhas. A sintaxe JavaScript e a interface foram verificadas na entrega inicial; esta atualização acrescenta o estudo de alcance à análise de vídeos completos e ao teste temporal de retenção.
 
-A [CI do commit de validação da extração `050d0da`](https://github.com/Gui0206/case-galaxies/actions/runs/39076952015) também terminou com sucesso. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
+A [CI do congelamento do novo estudo `660999e`](https://github.com/Gui0206/case-galaxies/actions/runs/39080897379) também terminou com sucesso, antes da publicação dos resultados finais. A CI usa o ambiente básico Linux; ela não baixa pesos nem reproduz a extração MLX executada localmente.
 
 | Camada | Verificação realizada |
 |---|---|
@@ -55,7 +55,7 @@ O [estudo real](REAL_DATA_RESULTS.md) treinou 12 configurações em duas janelas
 
 O estudo de vídeos completos descrito a seguir acrescenta execução real de Whisper/OpenCLIP e edição, mas não uma medição humana da precisão desses extratores.
 
-- Ganho preditivo consistente em campanhas representativas da Galaxies e validação prospectiva; o teste público de metadados já executado não demonstrou esse ganho.
+- Ganho preditivo consistente em campanhas representativas da Galaxies e validação prospectiva; a melhora no recorte público de 2016 não valida essa transferência.
 - Qualidade de Whisper, OpenCLIP, OCR e VLM, incluindo avaliação cega da rubrica.
 - Coleta autenticada de snapshots do YouTube.
 - Conexão com a plataforma interna da Galaxies.
@@ -72,3 +72,15 @@ Foram analisadas 13,81 horas: 1.984.272 frames decodificados, 14.173 imagens env
 O desenvolvimento executou cinco configurações em seis grupos de atributos e duas janelas temporais. A seleção foi congelada antes do teste final com 177 vídeos de 164 criadores, usando 623 vídeos no treino final. Erro médio: histórico ajustado **24,10 pp**, contexto **23,29 pp**, análise completa **23,70 pp**. O ganho da análise completa sobre o histórico ajustado foi **0,40 pp**, com intervalo de 95% de **−1,41 a 2,11 pp**. O critério de sucesso não foi cumprido e `eligible_for_production` permanece `false`.
 
 As métricas foram recalculadas independentemente a partir das previsões individuais e coincidiram com o relatório. A análise avulsa via CLI foi executada em arquivo real e preservou a identidade do extrator do benchmark, usando cache separado. Os gráficos foram renderizados e inspecionados. Relatórios e previsões estão em [results/multimodal](results/multimodal/); vídeos, transcrições completas e modelos treinados permanecem em `.runtime/`.
+
+## Alcance semanal: avaliação final nova
+
+O [novo estudo](REACH_RESULTS.md) preparou 263.317 vídeos de 68.411 canais do Beyond Views, categorias Automotivo e Howto & Style. A aquisição validou o MD5 integral publicado pela fonte e o SHA-256 de cada membro extraído. Foram exigidas sete observações diárias explícitas; resultados históricos entram somente após nove datas.
+
+O desenvolvimento passou por uma revisão da referência residual e uma correção declarada da regra de seleção. As rodadas anteriores estão preservadas, sem consulta aos resultados finais. As duas execuções da rodada revisada produziram **o mesmo hash de previsões de desenvolvimento**, demonstrando que a última alteração afetou a escolha, não os ajustes. O commit `660999e` publicou a configuração congelada no GitHub antes da abertura final.
+
+O teste principal contém **27.505 vídeos de 10.621 canais**, com 34.598 pares em 4.243 canais. O candidato selecionado reduziu o MAE macro em log de **0,550862 para 0,530242**, melhora de **3,743%**, com IC95% da redução absoluta **[0,018037; 0,023243]**. O acerto de ordenação foi **60,63%**, contra **49,31%** do histórico e **58,88%** do contexto. O ganho de ordenação sobre contexto foi **1,75 pp**, IC95% **[0,75; 2,78]**. A hipótese de ordenação cumpriu o critério registrado; a de redução relevante do erro (5% contra histórico e contexto) não cumpriu. `case_solved` e `production_eligible` permanecem `false`.
+
+A verificação independente recalculou erro em log, erro em visualizações, cobertura, proporção dentro de um fator dois e quantidade de resultados históricos maduros. Uma implementação que enumera pares diretamente reproduziu o ranking e seus intervalos, conferindo também a amostragem por canal. Todas as verificações passaram. Os modelos salvos reproduziram as previsões de calibração antes da publicação dos resultados. O gráfico foi renderizado e inspecionado.
+
+Os dados têm limitações substantivas: amostra selecionada de 2016, metadados retrospectivos, ausência dos arquivos originais e de informação de mídia paga. O teste não mede ganho de imagem/fala/edição sobre visualizações, não valida curtidas e não comprova benefício em campanhas atuais. Todos os resultados, inclusive recortes desfavoráveis e controles não escolhidos, estão em [results/reach](results/reach/).

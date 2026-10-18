@@ -70,3 +70,7 @@ A primeira rodada foi preservada em [results/reach-development-v1](results/reach
 A regra inicial de tolerância de 1% favorecia um blend por ele não possuir profundidade declarada e aplicava a tolerância novamente ao escolher entre famílias. Isso podia afastar a escolha do menor erro observado. Após a segunda rodada, retiramos essa tolerância: **o critério final é simplesmente o menor MAE macro em log no desenvolvimento**, com simplicidade somente para empates exatos. Essa alteração usa resultados de desenvolvimento, portanto é uma revisão exploratória declarada, não uma regra fixada antes de qualquer dado.
 
 A rodada com a regra anterior está em [results/reach-development-v2](results/reach-development-v2/). Os 30 candidatos, oito referências, pesos, partições, alvo e limiares de confirmação não mudaram. A execução foi refeita com a seleção corrigida, antes de abrir o teste final, que continua reservado. Não usamos o teste para escolher entre as duas regras.
+
+## Encerramento
+
+A configuração final foi congelada no commit `660999e` e o teste foi aberto uma vez, após esse commit chegar ao GitHub. O [resultado final](REACH_RESULTS.md) mostrou ganho estatisticamente positivo de 3,7% no erro sobre o histórico, abaixo da meta de 5%, e ganho confirmado de ordenação sobre histórico e contexto. O conjunto final agora está encerrado: qualquer ajuste posterior precisa de novos dados para nova confirmação.

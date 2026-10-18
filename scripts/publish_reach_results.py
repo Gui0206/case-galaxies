@@ -20,7 +20,7 @@ DEST = ROOT / "docs/results/reach"
 NAMES = {
     "history": "Histórico do canal",
     "context": "Histórico + contexto",
-    "content": "+ conteúdo do título",
+    "content": "Histórico + contexto + título",
 }
 
 
@@ -52,6 +52,7 @@ def main():
         "development_predictions.csv",
         "selection.json",
         "final.json",
+        "verification.json",
         "test_predictions.csv",
     ):
         shutil.copy2(RUN / filename, DEST / filename)
@@ -90,6 +91,11 @@ def main():
         conclusion = f"**Houve uma redução de {number(gain['relative_reduction_pct'])}% no erro sobre o histórico, com intervalo de 95% positivo, mas abaixo do objetivo registrado de 5%.**"
     else:
         conclusion = "**O novo estudo não confirmou superioridade sobre o histórico.**"
+    content_conclusion = "não confirmado pelo critério registrado"
+    if result["confirmed_error_gain"]:
+        content_conclusion = "confirmado pelo critério registrado"
+    elif all(primary[k]["ci95"][0] > 0 for k in ("content_vs_history", "content_vs_context")):
+        content_conclusion = "melhoria estatisticamente positiva, mas menor que o ganho relevante definido antes do teste"
     lines = [
         "# O novo modelo supera o histórico?",
         "",
@@ -135,9 +141,9 @@ def main():
         "",
         "Valores positivos significam menos erro. Um intervalo que inclui zero não estabelece superioridade. Os intervalos usam 5.000 reamostragens pareadas por canal; não são 5.000 experimentos independentes.",
         "",
-        f"**Ganho adicional do conteúdo sobre histórico e contexto:** {'confirmado pelo critério registrado' if result['confirmed_error_gain'] else 'não confirmado pelo critério registrado'}. O critério exige redução de pelo menos 5% e intervalo inteiramente positivo contra as duas referências.",
+        f"**Ganho adicional do conteúdo sobre histórico e contexto:** {content_conclusion}. O critério exige redução de pelo menos 5% e intervalo inteiramente positivo contra as duas referências.",
         "",
-        f"**Melhoria da escolha entre criativos:** {'confirmada neste recorte' if result['confirmed_ranking_gain'] else 'não confirmada'}. Foram {number(primary['ranking']['pairs'], 0)} pares, em {number(primary['ranking']['channels'], 0)} canais. Os pares não são independentes. A comparação exige intervalo positivo contra contexto e histórico.",
+        f"**Ordenação de vídeos do mesmo canal:** {'ganho confirmado neste recorte' if result['confirmed_ranking_gain'] else 'ganho não confirmado'}. Foram {number(primary['ranking']['pairs'], 0)} pares, em {number(primary['ranking']['channels'], 0)} canais. Os pares não são independentes. A comparação exige intervalo positivo contra contexto e histórico.",
         "",
         f"Ganho de ordenação do conteúdo, em pontos percentuais: sobre histórico, **{number(100 * primary['ranking']['content_vs_history_gain'])}**, IC95% [{number(100 * primary['ranking']['content_vs_history_ci95'][0])}; {number(100 * primary['ranking']['content_vs_history_ci95'][1])}]; sobre contexto, **{number(100 * primary['ranking']['content_vs_context_gain'])}**, IC95% [{number(100 * primary['ranking']['content_vs_context_ci95'][0])}; {number(100 * primary['ranking']['content_vs_context_ci95'][1])}].",
         "",
@@ -235,12 +241,15 @@ def main():
         "uv run python scripts/run_reach_study.py encode",
         "uv run python scripts/run_reach_study.py develop",
         "uv run python scripts/run_reach_study.py final",
+        "uv run python scripts/verify_reach_results.py",
         "uv run python scripts/publish_reach_results.py",
         "```",
         "",
         "O teste é de abertura única por fingerprint. Não apague o registro para retreinar e apresentar os mesmos dados como confirmação nova. Os modelos nativos e o encoder ficam em `.runtime/reports/reach/models/`; metadados brutos e pesos não foram publicados no Git.",
         "",
         "Auditoria: [protocolo e busca de bases](REVISED_STUDY.md), [fonte](results/reach/acquisition.json), [exclusões](results/reach/audit.json), [plano](results/reach/plan.json), [todos os modelos no desenvolvimento](results/reach/development.json), [previsões de desenvolvimento](results/reach/development_predictions.csv), [seleção](results/reach/selection.json), [registro da abertura final](results/reach/evaluation-opened.json), [teste completo](results/reach/final.json), [todas as previsões finais](results/reach/test_predictions.csv).",
+        "",
+        "A [verificação independente](results/reach/verification.json) recalcula erros e cobertura a partir de cada previsão e confere o histórico com uma segunda implementação. Ela não ajusta os modelos nem reabre a avaliação.",
     ]
     (ROOT / "docs/REACH_RESULTS.md").write_text("\n".join(lines) + "\n")
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 11})
@@ -275,7 +284,7 @@ def main():
         f"{number(metrics['content']['videos'], 0)} vídeos reservados · {number(metrics['content']['channels'], 0)} canais · YouTube, agosto de 2016",
         color="#4d596c",
     )
-    footer = f"Escolhido no desenvolvimento: {NAMES[recommended]}. Critério registrado de melhoria: {'atingido neste recorte' if success else 'não atingido'}."
+    footer = f"Redução do erro: {number(gain['relative_reduction_pct'])}% (meta de 5% {'atingida' if success else 'não atingida'}). Ordenação: ganho {'confirmado' if result['confirmed_ranking_gain'] else 'não confirmado'}."
     fig.text(0.06, 0.08, footer, fontsize=10)
     fig.text(
         0.06,

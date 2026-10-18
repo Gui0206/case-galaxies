@@ -1,8 +1,8 @@
 # O case está no modelo e na evidência
 
-> **Atualização de 17/10/2026:** o [teste com vídeos completos](FULL_VIDEO_RESULTS.md) executou imagem, fala e edição em 945 arquivos íntegros e avaliou 177 vídeos reservados. **Não demonstrou vantagem confiável sobre o histórico.** Os [dois estudos anteriores de metadados](REAL_DATA_RESULTS.md) também mantêm resultados negativos. Os números de desempenho apresentados nesta página são do estudo sintético anterior e não medem eficácia real.
+> **Atualização de 17/10/2026:** o [novo teste de alcance](REACH_RESULTS.md), com 27.505 vídeos reservados de 10.621 canais, confirmou ganho estatisticamente positivo de **3,7% no erro sobre o histórico**, abaixo da meta de 5%, e ordenação de **60,6% contra 49,3%**. O título acrescentou 1,1% de redução do erro e 1,8 ponto de ordenação sobre o contexto. A fonte é retrospectiva, de 2016; não comprova eficácia em campanhas atuais. O [teste de vídeo completo](FULL_VIDEO_RESULTS.md) continua sem ganho confirmado de retenção.
 
-**A entrega é uma infraestrutura de pesquisa executável. Ainda não é um modelo com eficácia comprovada em campanhas reais.** A interface permite inspecioná-la; a qualidade depende dos dados, da representação do vídeo e do teste que tenta refutar o ganho do modelo.
+**Há evidência de ganho preditivo modesto no recorte público, e ainda não há validação de produção.** Os números apresentados mais abaixo nesta página são do estudo sintético anterior. O [protocolo específico de alcance](REVISED_STUDY.md) contém os 30 candidatos, oito referências e a escolha final por menor erro no desenvolvimento.
 
 A proposta técnica é combinar conteúdo multimodal com contexto disponível antes da publicação, estimar desempenho em um horizonte fixo e comparar criativos sob o mesmo contexto. A família vencedora precisa ser escolhida por avaliação temporal, não por preferência por uma arquitetura.
 
