@@ -17,9 +17,18 @@ from sklearn.linear_model import Ridge
 from sklearn.preprocessing import StandardScaler
 
 from galaxies.io import read_json, sha256_file, utcnow, write_json
-from galaxies.reach_study import macro_error, weights
+from galaxies.reach_study import epoch, macro_error, weights
 from galaxies.retention_benchmark import validate_media_record
-from galaxies.smtpd_study import FOLDS, ROOT, data, matrices, partitions, selected_prediction
+from galaxies.smtpd_media_features import PROTOTYPES, derived
+from galaxies.smtpd_study import (
+    FOLDS,
+    ROOT,
+    TRAIN_END,
+    data,
+    matrices,
+    partitions,
+    selected_prediction,
+)
 from galaxies.transfer_study import ranking_scores
 
 BUNDLES = {
@@ -71,6 +80,20 @@ def load_media(frame, require_complete=True):
     }
 
 
+def development_media_ready():
+    """Read-only readiness, independent of targets and model performance."""
+    plan = read_json(ROOT / "short-media-plan.json")
+    frame = pd.read_parquet(ROOT / "cohort.parquet").set_index("creative_id")
+    expected = {v for v in plan["ids"] if frame.loc[v, "published_at"] < epoch(TRAIN_END)}
+    acquisition = read_json(ROOT / "media-acquisition.json")
+    index = read_json(ROOT / "features/index.json")
+    accounted = set(index["rows"]) | set(index["failures"]) | set(acquisition["failures"])
+    return expected <= accounted, {
+        "planned_development_videos": len(expected),
+        "remaining": len(expected - accounted),
+    }
+
+
 class MediaEncoder:
     def __init__(self, bundle):
         self.blocks = BUNDLES[bundle]
@@ -79,30 +102,16 @@ class MediaEncoder:
     def numeric(self, records):
         columns = []
         for block, keys in self.keys.items():
+            rows = [derived(r, block) for r in records]
             for key in keys:
-                columns.append(
-                    [
-                        r["speech_features" if block == "speech" else "editing"].get(key, np.nan)
-                        if block == "speech"
-                        else r["editing"]["features"].get(key, np.nan)
-                        for r in records
-                    ]
-                )
+                columns.append([r.get(key, np.nan) for r in rows])
         return np.column_stack(columns) if columns else np.empty((len(records), 0))
 
     def fit(self, records):
         self.keys = {}
-        for block in ["speech", "editing"]:
+        for block in ["image", "speech", "editing"]:
             if block in self.blocks:
-                self.keys[block] = sorted(
-                    {
-                        k
-                        for r in records
-                        for k in (
-                            r["speech_features"] if block == "speech" else r["editing"]["features"]
-                        )
-                    }
-                )
+                self.keys[block] = sorted({k for r in records for k in derived(r, block)})
         fields = []
         if "image" in self.blocks:
             fields += ["visual_mean", "visual_opening", "visual_variation"]
@@ -133,6 +142,8 @@ class MediaEncoder:
 
     def save(self, folder):
         folder.mkdir(exist_ok=True, parents=True)
+        if "image" in self.blocks:
+            write_json(folder / "visual-prototypes.json", read_json(PROTOTYPES))
         arrays = {"numeric_medians": self.imputer.statistics_ if self.imputer is not None else []}
         for field, projection in self.projections.items():
             arrays[f"{field}_mean"] = projection.mean_
@@ -202,7 +213,12 @@ def develop(base_run=Path(".runtime/reports/smtpd-v2"), run=Path(".runtime/repor
     if (run / "selection.json").exists():
         raise ValueError("Preserve previous media selection")
     frame, neighbors, semantic = data(development=True)
-    records, provenance = load_media(frame)
+    ready, counts = development_media_ready()
+    if not ready:
+        raise ValueError(f"Declared development media are incomplete: {counts}")
+    records, provenance = load_media(
+        frame[frame.published_at < epoch(TRAIN_END)], require_complete=False
+    )
     available = frame.creative_id.isin(records).to_numpy()
     selection = read_json(base_run / "ensemble-selection.json")
     base = pd.read_csv(base_run / "ensemble-development.csv").set_index("creative_id")
@@ -210,6 +226,11 @@ def develop(base_run=Path(".runtime/reports/smtpd-v2"), run=Path(".runtime/repor
         run / "plan.json",
         {
             "created_at": utcnow(),
+            "code_sha256": sha256_file(Path(__file__)),
+            "derived_features_code_sha256": sha256_file(
+                Path(__file__).with_name("smtpd_media_features.py")
+            ),
+            "visual_prototypes_sha256": sha256_file(PROTOTYPES),
             "provenance": provenance,
             "base_selection_sha256": sha256_file(base_run / "ensemble-selection.json"),
             "bundles": BUNDLES,

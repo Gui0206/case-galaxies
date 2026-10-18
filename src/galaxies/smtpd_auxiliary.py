@@ -148,6 +148,7 @@ def develop(
         run / "plan.json",
         {
             "created_at": utcnow(),
+            "code_sha256": sha256_file(Path(__file__)),
             "auxiliary_cohort_sha256": sha256_file(AUX / "cohort.parquet"),
             "auxiliary_semantic_manifest_sha256": sha256_file(AUX / "semantic.json"),
             "fractions": FRACTIONS,

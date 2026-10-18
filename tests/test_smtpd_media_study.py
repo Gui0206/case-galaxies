@@ -1,17 +1,31 @@
 import numpy as np
+import pytest
 
 from galaxies.smtpd_media_study import MediaEncoder, predict_base
 
 
 def record(value):
     return {
+        "duration_s": 12.0,
+        "caption_embedding": [value, 3, 4, 5],
+        "transcript_segments": [
+            {"start": 0.0, "end": 3.0, "text": "example words", "avg_logprob": -0.2}
+        ],
         "speech_features": {"has_audio": 1, "has_transcript": int(value > 0), "audio_rms": value},
-        "editing": {"features": {"cuts_per_second": value, "shot_count": 4}},
+        "editing": {
+            "features": {"cuts_per_second": value, "shot_count": 4},
+            "cut_times": [1, 2, 3],
+        },
         "visual_mean": [value, 1, 2, 3],
         "visual_opening": [value, 2, 4, 1],
         "visual_variation": [value, 3, 1, 2],
         "speech_embedding": [value, 3, 4, 5],
     }
+
+
+@pytest.fixture(autouse=True)
+def mocked_prototypes(monkeypatch):
+    monkeypatch.setattr("galaxies.smtpd_media_features.prototypes", lambda: np.eye(20, 4))
 
 
 def test_media_encoder_never_refits_on_unseen_video_and_keeps_absent_audio_explicit():
