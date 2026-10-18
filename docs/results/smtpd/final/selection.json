@@ -1,0 +1,1598 @@
+{
+  "history": "base/logmean_20",
+  "context": "auxiliary/aux_context0_ridge100@0.5",
+  "content": "media/editing:tree3@0.25",
+  "ranking_history": "base/mean_20",
+  "ranking_context": "auxiliary/aux_context0.5_ridge10000@1",
+  "ranking_content": "base/retrieval_d3_median_20@1",
+  "created_at": "2026-10-18 03:43:30.964409+00:00",
+  "code": {
+    "files": {
+      "smtpd.py": "719dad853c9a41d99b799467dee152a4f29eba71160a87848a12a793806c6056",
+      "smtpd_study.py": "8ad2904d2546a31a6f4fd5fcaa6adbb24f74bfafe5e9ca3f92835477b10c0a0d",
+      "smtpd_selection.py": "5af03a394e4de34965b7581a7438c61216e2aa6221f2e29971f0c95f57099a6a",
+      "smtpd_auxiliary.py": "6bed3c139855686de687305450c5127cb6f22c320582bc3ae39f7aa7eb26dfc9",
+      "smtpd_media_study.py": "66458facc7b2c3ea7f3d3d575fba65f09acbffdeb9ca9b7c14dc34b7bb04d332",
+      "smtpd_media_features.py": "d8704521152c6c3046696d28897e43283c12a26bbd05f36938012bd19f9e9922",
+      "smtpd_final.py": "16108f7f21cb33627962debb4a5480586b134aea429056f223ee0fcb34d8e29c",
+      "reach_study.py": "1de08525817e66a3985a9d6fdc376b51678ad9320976967a98794db52e3022de",
+      "transfer_study.py": "f86018c9c4b488e6d2177ba8fe06fc13623cd79d313eecfd9f6cf508ee27437d",
+      "retention_benchmark.py": "218cf9f373492c45650daa0a10938dcd1c1032b93d03deb8425ddaaf9c3feff2"
+    },
+    "packages": {
+      "numpy": "2.5.3",
+      "pandas": "2.3.3",
+      "scikit-learn": "1.9.1",
+      "catboost": "1.2.10",
+      "scipy": "1.18.1"
+    }
+  },
+  "inputs": {
+    ".runtime/public/smtpd/cohort.parquet": "f4a24d719fd9e1cb6c9f39ad3e875bfd5119638456707ea5b311ccd0690115e5",
+    ".runtime/public/smtpd/semantic.json": "b8f3168bc3b31b9edd1d5c446f6ce6185ce1c4333200c41c37339d3b33b913b5",
+    ".runtime/public/smtpd/semantic.npy": "e9efee752faf0f288359d5df590230ba3341c8b51f0511a3d2618dd00bad0415",
+    ".runtime/public/smtpd/short-media-plan.json": "f52d32cffa872e48bcaea9026b2ac2d2e1354cc457672dbd071fe1417d2bf228",
+    ".runtime/public/smtpd/media-acquisition.json": "c2968af677d565810f61310842e05ca8046f6f1f8b006cfdbfa17a60925b0b89",
+    ".runtime/public/smtpd/features/index.json": "0a787abd5a5981721e5b1d1736ad24e7d943faeaf9bb6ce5e9f5f693941da1b3",
+    ".runtime/public/smtpd/auxiliary/cohort.parquet": "57aa09c96ee667cbf2397abdc306029ba410074162b9257d1791737449132d8b",
+    ".runtime/public/smtpd/auxiliary/semantic.json": "7410a23db048a65e1071f1bb0911d9e6337538e914a3d098f0749c8fd5890d39",
+    ".runtime/public/smtpd/auxiliary/semantic.npy": "eac7484bcc194d21e1992aa30e52230061abd2aeebec61781156a3975355b67f",
+    ".runtime/public/smtpd/visual-prototypes.json": "2032028205848041e0373b15c83239ec714c869d36a798e06a77760ea62848b8",
+    ".runtime/reports/smtpd-v2/base-plan.json": "cb6fbf23810e784ea8136574a0f98bbe88cf7a1e6747164451ed22df9cfd6d0b",
+    ".runtime/reports/smtpd-v2/base-selection.json": "dbf1b3992bf88b5c6b753192ed48d9d1d479e611026b3dd724b98e98dd051d17",
+    ".runtime/reports/smtpd-v2/base-development.csv": "22c6531cc9f8f3e6c6012a11e934c377498dff273a1a955fa799f1d889260056",
+    ".runtime/reports/smtpd-v2/ensemble-selection.json": "1f27651d67e124ddb72af960376512cbee993071f04b5b5cdeb06715cdd039dc",
+    ".runtime/reports/smtpd-v2/ensemble-development.csv": "167e170fb9c18ce59d7a8117d806e2fbb687a1ff1a10202202e4002bbcca29a4",
+    ".runtime/reports/smtpd-media/plan.json": "dbaa81e7f537897ddca9d466c8d1e3c8235766149e5fa0e61bfb4c9b01d9fbe1",
+    ".runtime/reports/smtpd-media/selection.json": "8660531fdd98ffd18a0ca05b506882dc2c5dabe4f7050dcd0d59b243e93505ec",
+    ".runtime/reports/smtpd-media/development.csv": "35932cad5c73ce3b3cef38ee14828c0174bcbfae74534738a6587b11b20425c9",
+    ".runtime/reports/smtpd-auxiliary/plan.json": "bb09215be776d4859ef80fcefe848d56f599c52a8ef1102b023a53822bdebb6a",
+    ".runtime/reports/smtpd-auxiliary/selection.json": "593d4bcbaf0c80c16d940bbdac8e592bb29408a50409989b0c1421c90742147c",
+    ".runtime/reports/smtpd-auxiliary/development.csv": "3dcc5f6b1ff4d5c343a776a6719e4ec4bb3dedd3527d6a4fc9a323808d0ee04a"
+  },
+  "specs": {
+    "base/median_5": {
+      "family": "base",
+      "name": "median_5"
+    },
+    "base/median_20": {
+      "family": "base",
+      "name": "median_20"
+    },
+    "base/mean_20": {
+      "family": "base",
+      "name": "mean_20"
+    },
+    "base/logmean_20": {
+      "family": "base",
+      "name": "logmean_20"
+    },
+    "base/shrunk_2": {
+      "family": "base",
+      "name": "shrunk_2"
+    },
+    "base/shrunk_5": {
+      "family": "base",
+      "name": "shrunk_5"
+    },
+    "base/median_50": {
+      "family": "base",
+      "name": "median_50"
+    },
+    "base/logmean_50": {
+      "family": "base",
+      "name": "logmean_50"
+    },
+    "base/recent_median_30": {
+      "family": "base",
+      "name": "recent_median_30"
+    },
+    "base/recent_median_90": {
+      "family": "base",
+      "name": "recent_median_90"
+    },
+    "base/duration_05": {
+      "family": "base",
+      "name": "duration_05"
+    },
+    "base/duration_10": {
+      "family": "base",
+      "name": "duration_10"
+    },
+    "base/format_median": {
+      "family": "base",
+      "name": "format_median"
+    },
+    "base/context_d3_median_20@0.25": {
+      "family": "base",
+      "name": "context_d3_median_20@0.25"
+    },
+    "base/context_d3_median_20@0.5": {
+      "family": "base",
+      "name": "context_d3_median_20@0.5"
+    },
+    "base/context_d3_median_20@1": {
+      "family": "base",
+      "name": "context_d3_median_20@1"
+    },
+    "base/context_d3_logmean_20@0.25": {
+      "family": "base",
+      "name": "context_d3_logmean_20@0.25"
+    },
+    "base/context_d3_logmean_20@0.5": {
+      "family": "base",
+      "name": "context_d3_logmean_20@0.5"
+    },
+    "base/context_d3_logmean_20@1": {
+      "family": "base",
+      "name": "context_d3_logmean_20@1"
+    },
+    "base/context_d5_median_20@0.25": {
+      "family": "base",
+      "name": "context_d5_median_20@0.25"
+    },
+    "base/context_d5_median_20@0.5": {
+      "family": "base",
+      "name": "context_d5_median_20@0.5"
+    },
+    "base/context_d5_median_20@1": {
+      "family": "base",
+      "name": "context_d5_median_20@1"
+    },
+    "base/context_d5_logmean_20@0.25": {
+      "family": "base",
+      "name": "context_d5_logmean_20@0.25"
+    },
+    "base/context_d5_logmean_20@0.5": {
+      "family": "base",
+      "name": "context_d5_logmean_20@0.5"
+    },
+    "base/context_d5_logmean_20@1": {
+      "family": "base",
+      "name": "context_d5_logmean_20@1"
+    },
+    "base/retrieval_d3_median_20@0.25": {
+      "family": "base",
+      "name": "retrieval_d3_median_20@0.25"
+    },
+    "base/retrieval_d3_median_20@0.5": {
+      "family": "base",
+      "name": "retrieval_d3_median_20@0.5"
+    },
+    "base/retrieval_d3_median_20@1": {
+      "family": "base",
+      "name": "retrieval_d3_median_20@1"
+    },
+    "base/retrieval_d3_logmean_20@0.25": {
+      "family": "base",
+      "name": "retrieval_d3_logmean_20@0.25"
+    },
+    "base/retrieval_d3_logmean_20@0.5": {
+      "family": "base",
+      "name": "retrieval_d3_logmean_20@0.5"
+    },
+    "base/retrieval_d3_logmean_20@1": {
+      "family": "base",
+      "name": "retrieval_d3_logmean_20@1"
+    },
+    "base/retrieval_d5_median_20@0.25": {
+      "family": "base",
+      "name": "retrieval_d5_median_20@0.25"
+    },
+    "base/retrieval_d5_median_20@0.5": {
+      "family": "base",
+      "name": "retrieval_d5_median_20@0.5"
+    },
+    "base/retrieval_d5_median_20@1": {
+      "family": "base",
+      "name": "retrieval_d5_median_20@1"
+    },
+    "base/retrieval_d5_logmean_20@0.25": {
+      "family": "base",
+      "name": "retrieval_d5_logmean_20@0.25"
+    },
+    "base/retrieval_d5_logmean_20@0.5": {
+      "family": "base",
+      "name": "retrieval_d5_logmean_20@0.5"
+    },
+    "base/retrieval_d5_logmean_20@1": {
+      "family": "base",
+      "name": "retrieval_d5_logmean_20@1"
+    },
+    "base/semantic_retrieval_d3_median_20@0.25": {
+      "family": "base",
+      "name": "semantic_retrieval_d3_median_20@0.25"
+    },
+    "base/semantic_retrieval_d3_median_20@0.5": {
+      "family": "base",
+      "name": "semantic_retrieval_d3_median_20@0.5"
+    },
+    "base/semantic_retrieval_d3_median_20@1": {
+      "family": "base",
+      "name": "semantic_retrieval_d3_median_20@1"
+    },
+    "base/semantic_retrieval_d3_logmean_20@0.25": {
+      "family": "base",
+      "name": "semantic_retrieval_d3_logmean_20@0.25"
+    },
+    "base/semantic_retrieval_d3_logmean_20@0.5": {
+      "family": "base",
+      "name": "semantic_retrieval_d3_logmean_20@0.5"
+    },
+    "base/semantic_retrieval_d3_logmean_20@1": {
+      "family": "base",
+      "name": "semantic_retrieval_d3_logmean_20@1"
+    },
+    "base/semantic_retrieval_d5_median_20@0.25": {
+      "family": "base",
+      "name": "semantic_retrieval_d5_median_20@0.25"
+    },
+    "base/semantic_retrieval_d5_median_20@0.5": {
+      "family": "base",
+      "name": "semantic_retrieval_d5_median_20@0.5"
+    },
+    "base/semantic_retrieval_d5_median_20@1": {
+      "family": "base",
+      "name": "semantic_retrieval_d5_median_20@1"
+    },
+    "base/semantic_retrieval_d5_logmean_20@0.25": {
+      "family": "base",
+      "name": "semantic_retrieval_d5_logmean_20@0.25"
+    },
+    "base/semantic_retrieval_d5_logmean_20@0.5": {
+      "family": "base",
+      "name": "semantic_retrieval_d5_logmean_20@0.5"
+    },
+    "base/semantic_retrieval_d5_logmean_20@1": {
+      "family": "base",
+      "name": "semantic_retrieval_d5_logmean_20@1"
+    },
+    "base/within_context_10@0.25": {
+      "family": "base",
+      "name": "within_context_10@0.25"
+    },
+    "base/within_context_10@0.5": {
+      "family": "base",
+      "name": "within_context_10@0.5"
+    },
+    "base/within_context_10@1": {
+      "family": "base",
+      "name": "within_context_10@1"
+    },
+    "base/within_context_100@0.25": {
+      "family": "base",
+      "name": "within_context_100@0.25"
+    },
+    "base/within_context_100@0.5": {
+      "family": "base",
+      "name": "within_context_100@0.5"
+    },
+    "base/within_context_100@1": {
+      "family": "base",
+      "name": "within_context_100@1"
+    },
+    "base/within_context_1000@0.25": {
+      "family": "base",
+      "name": "within_context_1000@0.25"
+    },
+    "base/within_context_1000@0.5": {
+      "family": "base",
+      "name": "within_context_1000@0.5"
+    },
+    "base/within_context_1000@1": {
+      "family": "base",
+      "name": "within_context_1000@1"
+    },
+    "base/within_text_10@0.25": {
+      "family": "base",
+      "name": "within_text_10@0.25"
+    },
+    "base/within_text_10@0.5": {
+      "family": "base",
+      "name": "within_text_10@0.5"
+    },
+    "base/within_text_10@1": {
+      "family": "base",
+      "name": "within_text_10@1"
+    },
+    "base/within_text_100@0.25": {
+      "family": "base",
+      "name": "within_text_100@0.25"
+    },
+    "base/within_text_100@0.5": {
+      "family": "base",
+      "name": "within_text_100@0.5"
+    },
+    "base/within_text_100@1": {
+      "family": "base",
+      "name": "within_text_100@1"
+    },
+    "base/within_text_1000@0.25": {
+      "family": "base",
+      "name": "within_text_1000@0.25"
+    },
+    "base/within_text_1000@0.5": {
+      "family": "base",
+      "name": "within_text_1000@0.5"
+    },
+    "base/within_text_1000@1": {
+      "family": "base",
+      "name": "within_text_1000@1"
+    },
+    "base/within_semantic_10@0.25": {
+      "family": "base",
+      "name": "within_semantic_10@0.25"
+    },
+    "base/within_semantic_10@0.5": {
+      "family": "base",
+      "name": "within_semantic_10@0.5"
+    },
+    "base/within_semantic_10@1": {
+      "family": "base",
+      "name": "within_semantic_10@1"
+    },
+    "base/within_semantic_100@0.25": {
+      "family": "base",
+      "name": "within_semantic_100@0.25"
+    },
+    "base/within_semantic_100@0.5": {
+      "family": "base",
+      "name": "within_semantic_100@0.5"
+    },
+    "base/within_semantic_100@1": {
+      "family": "base",
+      "name": "within_semantic_100@1"
+    },
+    "base/within_semantic_1000@0.25": {
+      "family": "base",
+      "name": "within_semantic_1000@0.25"
+    },
+    "base/within_semantic_1000@0.5": {
+      "family": "base",
+      "name": "within_semantic_1000@0.5"
+    },
+    "base/within_semantic_1000@1": {
+      "family": "base",
+      "name": "within_semantic_1000@1"
+    },
+    "base/within_semantic_full_100@0.25": {
+      "family": "base",
+      "name": "within_semantic_full_100@0.25"
+    },
+    "base/within_semantic_full_100@0.5": {
+      "family": "base",
+      "name": "within_semantic_full_100@0.5"
+    },
+    "base/within_semantic_full_100@1": {
+      "family": "base",
+      "name": "within_semantic_full_100@1"
+    },
+    "base/within_semantic_full_1000@0.25": {
+      "family": "base",
+      "name": "within_semantic_full_1000@0.25"
+    },
+    "base/within_semantic_full_1000@0.5": {
+      "family": "base",
+      "name": "within_semantic_full_1000@0.5"
+    },
+    "base/within_semantic_full_1000@1": {
+      "family": "base",
+      "name": "within_semantic_full_1000@1"
+    },
+    "base/within_semantic_full_10000@0.25": {
+      "family": "base",
+      "name": "within_semantic_full_10000@0.25"
+    },
+    "base/within_semantic_full_10000@0.5": {
+      "family": "base",
+      "name": "within_semantic_full_10000@0.5"
+    },
+    "base/within_semantic_full_10000@1": {
+      "family": "base",
+      "name": "within_semantic_full_10000@1"
+    },
+    "base/within_lexical_1@0.25": {
+      "family": "base",
+      "name": "within_lexical_1@0.25"
+    },
+    "base/within_lexical_1@0.5": {
+      "family": "base",
+      "name": "within_lexical_1@0.5"
+    },
+    "base/within_lexical_1@1": {
+      "family": "base",
+      "name": "within_lexical_1@1"
+    },
+    "base/within_lexical_10@0.25": {
+      "family": "base",
+      "name": "within_lexical_10@0.25"
+    },
+    "base/within_lexical_10@0.5": {
+      "family": "base",
+      "name": "within_lexical_10@0.5"
+    },
+    "base/within_lexical_10@1": {
+      "family": "base",
+      "name": "within_lexical_10@1"
+    },
+    "base/within_lexical_100@0.25": {
+      "family": "base",
+      "name": "within_lexical_100@0.25"
+    },
+    "base/within_lexical_100@0.5": {
+      "family": "base",
+      "name": "within_lexical_100@0.5"
+    },
+    "base/within_lexical_100@1": {
+      "family": "base",
+      "name": "within_lexical_100@1"
+    },
+    "base/ensemble_0": {
+      "family": "base",
+      "name": "ensemble_0"
+    },
+    "base/ensemble_0.25": {
+      "family": "base",
+      "name": "ensemble_0.25"
+    },
+    "base/ensemble_0.5": {
+      "family": "base",
+      "name": "ensemble_0.5"
+    },
+    "base/ensemble_0.75": {
+      "family": "base",
+      "name": "ensemble_0.75"
+    },
+    "base/ensemble_1": {
+      "family": "base",
+      "name": "ensemble_1"
+    },
+    "auxiliary/aux_context0_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0_ridge100@0.5"
+    },
+    "auxiliary/aux_context0_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_context0_ridge100@1"
+    },
+    "auxiliary/aux_context0_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0_ridge1000@0.5"
+    },
+    "auxiliary/aux_context0_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0_ridge1000@1"
+    },
+    "auxiliary/aux_context0_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0_ridge10000@0.5"
+    },
+    "auxiliary/aux_context0_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0_ridge10000@1"
+    },
+    "auxiliary/aux_semantic0_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0_ridge100@0.5"
+    },
+    "auxiliary/aux_semantic0_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0_ridge100@1"
+    },
+    "auxiliary/aux_semantic0_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0_ridge1000@0.5"
+    },
+    "auxiliary/aux_semantic0_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0_ridge1000@1"
+    },
+    "auxiliary/aux_semantic0_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0_ridge10000@0.5"
+    },
+    "auxiliary/aux_semantic0_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0_ridge10000@1"
+    },
+    "auxiliary/aux_context0.1_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.1_ridge100@0.5"
+    },
+    "auxiliary/aux_context0.1_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.1_ridge100@1"
+    },
+    "auxiliary/aux_context0.1_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.1_ridge1000@0.5"
+    },
+    "auxiliary/aux_context0.1_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.1_ridge1000@1"
+    },
+    "auxiliary/aux_context0.1_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.1_ridge10000@0.5"
+    },
+    "auxiliary/aux_context0.1_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.1_ridge10000@1"
+    },
+    "auxiliary/aux_semantic0.1_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.1_ridge100@0.5"
+    },
+    "auxiliary/aux_semantic0.1_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.1_ridge100@1"
+    },
+    "auxiliary/aux_semantic0.1_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.1_ridge1000@0.5"
+    },
+    "auxiliary/aux_semantic0.1_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.1_ridge1000@1"
+    },
+    "auxiliary/aux_semantic0.1_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.1_ridge10000@0.5"
+    },
+    "auxiliary/aux_semantic0.1_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.1_ridge10000@1"
+    },
+    "auxiliary/aux_context0.3_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.3_ridge100@0.5"
+    },
+    "auxiliary/aux_context0.3_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.3_ridge100@1"
+    },
+    "auxiliary/aux_context0.3_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.3_ridge1000@0.5"
+    },
+    "auxiliary/aux_context0.3_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.3_ridge1000@1"
+    },
+    "auxiliary/aux_context0.3_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.3_ridge10000@0.5"
+    },
+    "auxiliary/aux_context0.3_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.3_ridge10000@1"
+    },
+    "auxiliary/aux_semantic0.3_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.3_ridge100@0.5"
+    },
+    "auxiliary/aux_semantic0.3_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.3_ridge100@1"
+    },
+    "auxiliary/aux_semantic0.3_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.3_ridge1000@0.5"
+    },
+    "auxiliary/aux_semantic0.3_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.3_ridge1000@1"
+    },
+    "auxiliary/aux_semantic0.3_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.3_ridge10000@0.5"
+    },
+    "auxiliary/aux_semantic0.3_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.3_ridge10000@1"
+    },
+    "auxiliary/aux_context0.5_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.5_ridge100@0.5"
+    },
+    "auxiliary/aux_context0.5_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.5_ridge100@1"
+    },
+    "auxiliary/aux_context0.5_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.5_ridge1000@0.5"
+    },
+    "auxiliary/aux_context0.5_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.5_ridge1000@1"
+    },
+    "auxiliary/aux_context0.5_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_context0.5_ridge10000@0.5"
+    },
+    "auxiliary/aux_context0.5_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_context0.5_ridge10000@1"
+    },
+    "auxiliary/aux_semantic0.5_ridge100@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.5_ridge100@0.5"
+    },
+    "auxiliary/aux_semantic0.5_ridge100@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.5_ridge100@1"
+    },
+    "auxiliary/aux_semantic0.5_ridge1000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.5_ridge1000@0.5"
+    },
+    "auxiliary/aux_semantic0.5_ridge1000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.5_ridge1000@1"
+    },
+    "auxiliary/aux_semantic0.5_ridge10000@0.5": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.5_ridge10000@0.5"
+    },
+    "auxiliary/aux_semantic0.5_ridge10000@1": {
+      "family": "auxiliary",
+      "name": "aux_semantic0.5_ridge10000@1"
+    },
+    "media/image:tree3@0.25": {
+      "family": "media",
+      "name": "image:tree3@0.25"
+    },
+    "media/image:tree3@0.5": {
+      "family": "media",
+      "name": "image:tree3@0.5"
+    },
+    "media/image:tree3@1": {
+      "family": "media",
+      "name": "image:tree3@1"
+    },
+    "media/image:ridge100@0.25": {
+      "family": "media",
+      "name": "image:ridge100@0.25"
+    },
+    "media/image:ridge100@0.5": {
+      "family": "media",
+      "name": "image:ridge100@0.5"
+    },
+    "media/image:ridge100@1": {
+      "family": "media",
+      "name": "image:ridge100@1"
+    },
+    "media/image:ridge1000@0.25": {
+      "family": "media",
+      "name": "image:ridge1000@0.25"
+    },
+    "media/image:ridge1000@0.5": {
+      "family": "media",
+      "name": "image:ridge1000@0.5"
+    },
+    "media/image:ridge1000@1": {
+      "family": "media",
+      "name": "image:ridge1000@1"
+    },
+    "media/speech:tree3@0.25": {
+      "family": "media",
+      "name": "speech:tree3@0.25"
+    },
+    "media/speech:tree3@0.5": {
+      "family": "media",
+      "name": "speech:tree3@0.5"
+    },
+    "media/speech:tree3@1": {
+      "family": "media",
+      "name": "speech:tree3@1"
+    },
+    "media/speech:ridge100@0.25": {
+      "family": "media",
+      "name": "speech:ridge100@0.25"
+    },
+    "media/speech:ridge100@0.5": {
+      "family": "media",
+      "name": "speech:ridge100@0.5"
+    },
+    "media/speech:ridge100@1": {
+      "family": "media",
+      "name": "speech:ridge100@1"
+    },
+    "media/speech:ridge1000@0.25": {
+      "family": "media",
+      "name": "speech:ridge1000@0.25"
+    },
+    "media/speech:ridge1000@0.5": {
+      "family": "media",
+      "name": "speech:ridge1000@0.5"
+    },
+    "media/speech:ridge1000@1": {
+      "family": "media",
+      "name": "speech:ridge1000@1"
+    },
+    "media/editing:tree3@0.25": {
+      "family": "media",
+      "name": "editing:tree3@0.25"
+    },
+    "media/editing:tree3@0.5": {
+      "family": "media",
+      "name": "editing:tree3@0.5"
+    },
+    "media/editing:tree3@1": {
+      "family": "media",
+      "name": "editing:tree3@1"
+    },
+    "media/editing:ridge100@0.25": {
+      "family": "media",
+      "name": "editing:ridge100@0.25"
+    },
+    "media/editing:ridge100@0.5": {
+      "family": "media",
+      "name": "editing:ridge100@0.5"
+    },
+    "media/editing:ridge100@1": {
+      "family": "media",
+      "name": "editing:ridge100@1"
+    },
+    "media/editing:ridge1000@0.25": {
+      "family": "media",
+      "name": "editing:ridge1000@0.25"
+    },
+    "media/editing:ridge1000@0.5": {
+      "family": "media",
+      "name": "editing:ridge1000@0.5"
+    },
+    "media/editing:ridge1000@1": {
+      "family": "media",
+      "name": "editing:ridge1000@1"
+    },
+    "media/full:tree3@0.25": {
+      "family": "media",
+      "name": "full:tree3@0.25"
+    },
+    "media/full:tree3@0.5": {
+      "family": "media",
+      "name": "full:tree3@0.5"
+    },
+    "media/full:tree3@1": {
+      "family": "media",
+      "name": "full:tree3@1"
+    },
+    "media/full:ridge100@0.25": {
+      "family": "media",
+      "name": "full:ridge100@0.25"
+    },
+    "media/full:ridge100@0.5": {
+      "family": "media",
+      "name": "full:ridge100@0.5"
+    },
+    "media/full:ridge100@1": {
+      "family": "media",
+      "name": "full:ridge100@1"
+    },
+    "media/full:ridge1000@0.25": {
+      "family": "media",
+      "name": "full:ridge1000@0.25"
+    },
+    "media/full:ridge1000@0.5": {
+      "family": "media",
+      "name": "full:ridge1000@0.5"
+    },
+    "media/full:ridge1000@1": {
+      "family": "media",
+      "name": "full:ridge1000@1"
+    }
+  },
+  "errors": {
+    "base/median_5": 0.7201534193699334,
+    "base/median_20": 0.7056326772980377,
+    "base/mean_20": 0.6913490017707691,
+    "base/logmean_20": 0.671375974982537,
+    "base/shrunk_2": 0.986841839396249,
+    "base/shrunk_5": 1.3926290383566944,
+    "base/median_50": 0.7057462774661218,
+    "base/logmean_50": 0.6714787038386235,
+    "base/recent_median_30": 0.7190218760132986,
+    "base/recent_median_90": 0.7176485313396685,
+    "base/duration_05": 0.7346495634202221,
+    "base/duration_10": 0.6884856825525594,
+    "base/format_median": 0.7080962821123294,
+    "base/context_d3_median_20@0.25": 0.6861570026229572,
+    "base/context_d3_median_20@0.5": 0.6737661613484717,
+    "base/context_d3_median_20@1": 0.6627633141731717,
+    "base/context_d3_logmean_20@0.25": 0.6568136688211819,
+    "base/context_d3_logmean_20@0.5": 0.6502270394578641,
+    "base/context_d3_logmean_20@1": 0.6488830824820276,
+    "base/context_d5_median_20@0.25": 0.6833641500266584,
+    "base/context_d5_median_20@0.5": 0.6707190713674828,
+    "base/context_d5_median_20@1": 0.6678657257285462,
+    "base/context_d5_logmean_20@0.25": 0.65402129542745,
+    "base/context_d5_logmean_20@0.5": 0.6462884310383278,
+    "base/context_d5_logmean_20@1": 0.6458573918658077,
+    "base/retrieval_d3_median_20@0.25": 0.6984832634426704,
+    "base/retrieval_d3_median_20@0.5": 0.6938566411251288,
+    "base/retrieval_d3_median_20@1": 0.6967262265990781,
+    "base/retrieval_d3_logmean_20@0.25": 0.6673756282880063,
+    "base/retrieval_d3_logmean_20@0.5": 0.6708398663511176,
+    "base/retrieval_d3_logmean_20@1": 0.6916402396830263,
+    "base/retrieval_d5_median_20@0.25": 0.7018122098560967,
+    "base/retrieval_d5_median_20@0.5": 0.7027258755955083,
+    "base/retrieval_d5_median_20@1": 0.7159981783382324,
+    "base/retrieval_d5_logmean_20@0.25": 0.6682159244225909,
+    "base/retrieval_d5_logmean_20@0.5": 0.6702079807940321,
+    "base/retrieval_d5_logmean_20@1": 0.6830176345188452,
+    "base/semantic_retrieval_d3_median_20@0.25": 0.6954975858948959,
+    "base/semantic_retrieval_d3_median_20@0.5": 0.6913901043655728,
+    "base/semantic_retrieval_d3_median_20@1": 0.6921367220862283,
+    "base/semantic_retrieval_d3_logmean_20@0.25": 0.6633142955451159,
+    "base/semantic_retrieval_d3_logmean_20@0.5": 0.6626993422185751,
+    "base/semantic_retrieval_d3_logmean_20@1": 0.6728733547744654,
+    "base/semantic_retrieval_d5_median_20@0.25": 0.6982238211543339,
+    "base/semantic_retrieval_d5_median_20@0.5": 0.6967519279599709,
+    "base/semantic_retrieval_d5_median_20@1": 0.7129255636166413,
+    "base/semantic_retrieval_d5_logmean_20@0.25": 0.6643806662196724,
+    "base/semantic_retrieval_d5_logmean_20@0.5": 0.6654865102879896,
+    "base/semantic_retrieval_d5_logmean_20@1": 0.6820740537003465,
+    "base/within_context_10@0.25": 0.667877071603335,
+    "base/within_context_10@0.5": 0.6652304710146139,
+    "base/within_context_10@1": 0.6629494395790831,
+    "base/within_context_100@0.25": 0.6679867415560818,
+    "base/within_context_100@0.5": 0.6649293811780221,
+    "base/within_context_100@1": 0.660563427375721,
+    "base/within_context_1000@0.25": 0.6693022261174859,
+    "base/within_context_1000@0.5": 0.6672417698678571,
+    "base/within_context_1000@1": 0.66332864833571,
+    "base/within_text_10@0.25": 0.6660568151052959,
+    "base/within_text_10@0.5": 0.6654031319485221,
+    "base/within_text_10@1": 0.6770558968491284,
+    "base/within_text_100@0.25": 0.6655275785368188,
+    "base/within_text_100@0.5": 0.6616367502570079,
+    "base/within_text_100@1": 0.6647799372395666,
+    "base/within_text_1000@0.25": 0.6686269567968524,
+    "base/within_text_1000@0.5": 0.6659853668966089,
+    "base/within_text_1000@1": 0.6621742347811862,
+    "base/within_semantic_10@0.25": 0.6635010746667864,
+    "base/within_semantic_10@0.5": 0.6585752579617231,
+    "base/within_semantic_10@1": 0.6565014981786331,
+    "base/within_semantic_100@0.25": 0.664113747871599,
+    "base/within_semantic_100@0.5": 0.6595864687065557,
+    "base/within_semantic_100@1": 0.653967649834916,
+    "base/within_semantic_1000@0.25": 0.6672202496716986,
+    "base/within_semantic_1000@0.5": 0.6638503648533945,
+    "base/within_semantic_1000@1": 0.6585990842869767,
+    "base/within_semantic_full_100@0.25": 0.6773601346250888,
+    "base/within_semantic_full_100@0.5": 0.6934803460823569,
+    "base/within_semantic_full_100@1": 0.7439466541975661,
+    "base/within_semantic_full_1000@0.25": 0.6706045618694124,
+    "base/within_semantic_full_1000@0.5": 0.675009349582853,
+    "base/within_semantic_full_1000@1": 0.6903607167690933,
+    "base/within_semantic_full_10000@0.25": 0.6703371982969959,
+    "base/within_semantic_full_10000@0.5": 0.6693388403151772,
+    "base/within_semantic_full_10000@1": 0.6689784715658487,
+    "base/within_lexical_1@0.25": 0.6668259220789169,
+    "base/within_lexical_1@0.5": 0.6682456042460494,
+    "base/within_lexical_1@1": 0.6768661357035815,
+    "base/within_lexical_10@0.25": 0.6675278541669677,
+    "base/within_lexical_10@0.5": 0.6656079286108341,
+    "base/within_lexical_10@1": 0.6653413182268249,
+    "base/within_lexical_100@0.25": 0.6682700126851491,
+    "base/within_lexical_100@0.5": 0.6655918649759762,
+    "base/within_lexical_100@1": 0.6630652202539324,
+    "base/ensemble_0": 0.6458573918658077,
+    "base/ensemble_0.25": 0.6353532691834247,
+    "base/ensemble_0.5": 0.6335251929977882,
+    "base/ensemble_0.75": 0.6389751615805374,
+    "base/ensemble_1": 0.653967649834916,
+    "auxiliary/aux_context0_ridge100@0.5": 0.6357153123499047,
+    "auxiliary/aux_context0_ridge100@1": 0.6532795811957807,
+    "auxiliary/aux_context0_ridge1000@0.5": 0.6405408451062886,
+    "auxiliary/aux_context0_ridge1000@1": 0.6604405482582938,
+    "auxiliary/aux_context0_ridge10000@0.5": 0.645302021592705,
+    "auxiliary/aux_context0_ridge10000@1": 0.669516964523283,
+    "auxiliary/aux_semantic0_ridge100@0.5": 0.6616747017224643,
+    "auxiliary/aux_semantic0_ridge100@1": 0.7612243002134705,
+    "auxiliary/aux_semantic0_ridge1000@0.5": 0.6444384207871048,
+    "auxiliary/aux_semantic0_ridge1000@1": 0.6851569779118823,
+    "auxiliary/aux_semantic0_ridge10000@0.5": 0.6443993605157423,
+    "auxiliary/aux_semantic0_ridge10000@1": 0.6689525753488136,
+    "auxiliary/aux_context0.1_ridge100@0.5": 0.6365905574812527,
+    "auxiliary/aux_context0.1_ridge100@1": 0.6546557565307541,
+    "auxiliary/aux_context0.1_ridge1000@0.5": 0.6409023172603486,
+    "auxiliary/aux_context0.1_ridge1000@1": 0.6611441857131432,
+    "auxiliary/aux_context0.1_ridge10000@0.5": 0.6453550244639418,
+    "auxiliary/aux_context0.1_ridge10000@1": 0.6696243525510088,
+    "auxiliary/aux_semantic0.1_ridge100@0.5": 0.6576167392408341,
+    "auxiliary/aux_semantic0.1_ridge100@1": 0.7380058353348581,
+    "auxiliary/aux_semantic0.1_ridge1000@0.5": 0.644606068094037,
+    "auxiliary/aux_semantic0.1_ridge1000@1": 0.6826028727486518,
+    "auxiliary/aux_semantic0.1_ridge10000@0.5": 0.6445254149918712,
+    "auxiliary/aux_semantic0.1_ridge10000@1": 0.6691151077210423,
+    "auxiliary/aux_context0.3_ridge100@0.5": 0.6382827155616604,
+    "auxiliary/aux_context0.3_ridge100@1": 0.6579171065682679,
+    "auxiliary/aux_context0.3_ridge1000@0.5": 0.6416266320892123,
+    "auxiliary/aux_context0.3_ridge1000@1": 0.6625786830254088,
+    "auxiliary/aux_context0.3_ridge10000@0.5": 0.6454607706830464,
+    "auxiliary/aux_context0.3_ridge10000@1": 0.66983863267866,
+    "auxiliary/aux_semantic0.3_ridge100@0.5": 0.654607372621066,
+    "auxiliary/aux_semantic0.3_ridge100@1": 0.7195807919823296,
+    "auxiliary/aux_semantic0.3_ridge1000@0.5": 0.6448705864880229,
+    "auxiliary/aux_semantic0.3_ridge1000@1": 0.6786490707333487,
+    "auxiliary/aux_semantic0.3_ridge10000@0.5": 0.6448131258566882,
+    "auxiliary/aux_semantic0.3_ridge10000@1": 0.6696690095016912,
+    "auxiliary/aux_context0.5_ridge100@0.5": 0.6399282290459135,
+    "auxiliary/aux_context0.5_ridge100@1": 0.6611808652522053,
+    "auxiliary/aux_context0.5_ridge1000@0.5": 0.6423554460103956,
+    "auxiliary/aux_context0.5_ridge1000@1": 0.6640335646493791,
+    "auxiliary/aux_context0.5_ridge10000@0.5": 0.6455661735214496,
+    "auxiliary/aux_context0.5_ridge10000@1": 0.6700522566145684,
+    "auxiliary/aux_semantic0.5_ridge100@0.5": 0.6526249214221512,
+    "auxiliary/aux_semantic0.5_ridge100@1": 0.7107756528897705,
+    "auxiliary/aux_semantic0.5_ridge1000@0.5": 0.6448444469380135,
+    "auxiliary/aux_semantic0.5_ridge1000@1": 0.6758682088715864,
+    "auxiliary/aux_semantic0.5_ridge10000@0.5": 0.645109824852905,
+    "auxiliary/aux_semantic0.5_ridge10000@1": 0.670232279806052,
+    "media/image:tree3@0.25": 0.6336810199123438,
+    "media/image:tree3@0.5": 0.6391365693247565,
+    "media/image:tree3@1": 0.6525776457404981,
+    "media/image:ridge100@0.25": 0.6443374873060155,
+    "media/image:ridge100@0.5": 0.6653343546047357,
+    "media/image:ridge100@1": 0.7230449218268208,
+    "media/image:ridge1000@0.25": 0.636511376951924,
+    "media/image:ridge1000@0.5": 0.6457195037585821,
+    "media/image:ridge1000@1": 0.6666279802421287,
+    "media/speech:tree3@0.25": 0.6362323960205148,
+    "media/speech:tree3@0.5": 0.6430094117467953,
+    "media/speech:tree3@1": 0.6580458230106722,
+    "media/speech:ridge100@0.25": 0.6455585756595049,
+    "media/speech:ridge100@0.5": 0.662728403081151,
+    "media/speech:ridge100@1": 0.709878678504984,
+    "media/speech:ridge1000@0.25": 0.6355511848946094,
+    "media/speech:ridge1000@0.5": 0.642047816759205,
+    "media/speech:ridge1000@1": 0.6569216575993457,
+    "media/editing:tree3@0.25": 0.6325708773312597,
+    "media/editing:tree3@0.5": 0.6388641896995095,
+    "media/editing:tree3@1": 0.6543146725949643,
+    "media/editing:ridge100@0.25": 0.6443711226011156,
+    "media/editing:ridge100@0.5": 0.6603371647968704,
+    "media/editing:ridge100@1": 0.7041399706676578,
+    "media/editing:ridge1000@0.25": 0.6349114819673572,
+    "media/editing:ridge1000@0.5": 0.6404785879912246,
+    "media/editing:ridge1000@1": 0.6563582030524254,
+    "media/full:tree3@0.25": 0.6349627564204625,
+    "media/full:tree3@0.5": 0.6413498065007447,
+    "media/full:tree3@1": 0.6570714422142809,
+    "media/full:ridge100@0.25": 0.6446877323854623,
+    "media/full:ridge100@0.5": 0.6615706963211588,
+    "media/full:ridge100@1": 0.7119282991854373,
+    "media/full:ridge1000@0.25": 0.6356652840760288,
+    "media/full:ridge1000@0.5": 0.6435841203492204,
+    "media/full:ridge1000@1": 0.6627269876468337
+  },
+  "ranking_scores": {
+    "base/median_5": 0.49254586071008616,
+    "base/median_20": 0.49254586071008616,
+    "base/mean_20": 0.4996887178529433,
+    "base/logmean_20": 0.4996887178529433,
+    "base/shrunk_2": 0.4849323501895989,
+    "base/shrunk_5": 0.48558170083894947,
+    "base/median_50": 0.49254586071008616,
+    "base/logmean_50": 0.4996887178529433,
+    "base/recent_median_30": 0.49765619752774,
+    "base/recent_median_90": 0.49765619752774,
+    "base/duration_05": 0.5623104896060419,
+    "base/duration_10": 0.5480289676846349,
+    "base/format_median": 0.49254586071008605,
+    "base/context_d3_median_20@0.25": 0.5738241519471708,
+    "base/context_d3_median_20@0.5": 0.5744735025965214,
+    "base/context_d3_median_20@1": 0.5751228532458721,
+    "base/context_d3_logmean_20@0.25": 0.5736991465487344,
+    "base/context_d3_logmean_20@0.5": 0.5736991465487344,
+    "base/context_d3_logmean_20@1": 0.5736991465487344,
+    "base/context_d5_median_20@0.25": 0.4306028800423382,
+    "base/context_d5_median_20@0.5": 0.4377457371851953,
+    "base/context_d5_median_20@1": 0.43904443848389657,
+    "base/context_d5_logmean_20@0.25": 0.5070490940665443,
+    "base/context_d5_logmean_20@0.5": 0.5070490940665443,
+    "base/context_d5_logmean_20@1": 0.5053533206197448,
+    "base/retrieval_d3_median_20@0.25": 0.6376236422481125,
+    "base/retrieval_d3_median_20@0.5": 0.6382729928974632,
+    "base/retrieval_d3_median_20@1": 0.6382729928974632,
+    "base/retrieval_d3_logmean_20@0.25": 0.5901049405478688,
+    "base/retrieval_d3_logmean_20@0.5": 0.5901049405478688,
+    "base/retrieval_d3_logmean_20@1": 0.5901049405478688,
+    "base/retrieval_d5_median_20@0.25": 0.5619768084617439,
+    "base/retrieval_d5_median_20@0.5": 0.5626261591110945,
+    "base/retrieval_d5_median_20@1": 0.5632755097604452,
+    "base/retrieval_d5_logmean_20@0.25": 0.5855905766627797,
+    "base/retrieval_d5_logmean_20@0.5": 0.5862399273121304,
+    "base/retrieval_d5_logmean_20@1": 0.5790970701692733,
+    "base/semantic_retrieval_d3_median_20@0.25": 0.5254995702194661,
+    "base/semantic_retrieval_d3_median_20@0.5": 0.5254995702194661,
+    "base/semantic_retrieval_d3_median_20@1": 0.531945563250825,
+    "base/semantic_retrieval_d3_logmean_20@0.25": 0.5649234375336274,
+    "base/semantic_retrieval_d3_logmean_20@0.5": 0.5648759240714798,
+    "base/semantic_retrieval_d3_logmean_20@1": 0.5631952518025722,
+    "base/semantic_retrieval_d5_median_20@0.25": 0.5574603357560215,
+    "base/semantic_retrieval_d5_median_20@0.5": 0.5646031928988786,
+    "base/semantic_retrieval_d5_median_20@1": 0.5639387410716362,
+    "base/semantic_retrieval_d5_logmean_20@0.25": 0.5805221382112378,
+    "base/semantic_retrieval_d5_logmean_20@0.5": 0.5805221382112378,
+    "base/semantic_retrieval_d5_logmean_20@1": 0.5798576863839952,
+    "base/within_context_10@0.25": 0.5512361949884889,
+    "base/within_context_10@0.5": 0.5512361949884889,
+    "base/within_context_10@1": 0.5502048733689319,
+    "base/within_context_100@0.25": 0.517304440468499,
+    "base/within_context_100@0.5": 0.5186031417672003,
+    "base/within_context_100@1": 0.5186031417672003,
+    "base/within_context_1000@0.25": 0.5355713047865462,
+    "base/within_context_1000@0.5": 0.5355713047865462,
+    "base/within_context_1000@1": 0.5368700060852475,
+    "base/within_text_10@0.25": 0.5015992587928794,
+    "base/within_text_10@0.5": 0.50224860944223,
+    "base/within_text_10@1": 0.5005679371733224,
+    "base/within_text_100@0.25": 0.5386793236347805,
+    "base/within_text_100@0.5": 0.5399780249334819,
+    "base/within_text_100@1": 0.5406273755828325,
+    "base/within_text_1000@0.25": 0.5037820037002579,
+    "base/within_text_1000@0.5": 0.5037820037002579,
+    "base/within_text_1000@1": 0.5037820037002579,
+    "base/within_semantic_10@0.25": 0.4300954992423412,
+    "base/within_semantic_10@0.5": 0.42841482697343364,
+    "base/within_semantic_10@1": 0.43724177238574485,
+    "base/within_semantic_100@0.25": 0.43117775032459227,
+    "base/within_semantic_100@0.5": 0.43117775032459227,
+    "base/within_semantic_100@1": 0.4288002139441864,
+    "base/within_semantic_1000@0.25": 0.4364757360686759,
+    "base/within_semantic_1000@0.5": 0.4364757360686759,
+    "base/within_semantic_1000@1": 0.4357788719571777,
+    "base/within_semantic_full_100@0.25": 0.48994036948559655,
+    "base/within_semantic_full_100@0.5": 0.48857905354685577,
+    "base/within_semantic_full_100@1": 0.4892284041962064,
+    "base/within_semantic_full_1000@0.25": 0.5024957603316683,
+    "base/within_semantic_full_1000@0.5": 0.5024957603316683,
+    "base/within_semantic_full_1000@1": 0.5011344443929275,
+    "base/within_semantic_full_10000@0.25": 0.49055986443460997,
+    "base/within_semantic_full_10000@0.5": 0.49055986443460997,
+    "base/within_semantic_full_10000@1": 0.4898630003231117,
+    "base/within_lexical_1@0.25": 0.49365325875619154,
+    "base/within_lexical_1@0.5": 0.49365325875619154,
+    "base/within_lexical_1@1": 0.5031770682800011,
+    "base/within_lexical_10@0.25": 0.5518863617225367,
+    "base/within_lexical_10@0.5": 0.553185063021238,
+    "base/within_lexical_10@1": 0.5515043907523305,
+    "base/within_lexical_100@0.25": 0.5352647241539837,
+    "base/within_lexical_100@0.5": 0.5365634254526851,
+    "base/within_lexical_100@1": 0.5372127761020358,
+    "base/ensemble_0": 0.5053533206197448,
+    "base/ensemble_0.25": 0.4731661746325922,
+    "base/ensemble_0.5": 0.4595197218783352,
+    "base/ensemble_0.75": 0.45944806530873067,
+    "base/ensemble_1": 0.4288002139441864,
+    "auxiliary/aux_context0_ridge100@0.5": 0.48345602047347064,
+    "auxiliary/aux_context0_ridge100@1": 0.5354979366056741,
+    "auxiliary/aux_context0_ridge1000@0.5": 0.526309747330067,
+    "auxiliary/aux_context0_ridge1000@1": 0.5385496239438383,
+    "auxiliary/aux_context0_ridge10000@0.5": 0.507698444715895,
+    "auxiliary/aux_context0_ridge10000@1": 0.5729652083594227,
+    "auxiliary/aux_semantic0_ridge100@0.5": 0.5404393005590831,
+    "auxiliary/aux_semantic0_ridge100@1": 0.6001506795674492,
+    "auxiliary/aux_semantic0_ridge1000@0.5": 0.5323472574715443,
+    "auxiliary/aux_semantic0_ridge1000@1": 0.6193196785752924,
+    "auxiliary/aux_semantic0_ridge10000@0.5": 0.5175590805599815,
+    "auxiliary/aux_semantic0_ridge10000@1": 0.5191480985732095,
+    "auxiliary/aux_context0.1_ridge100@0.5": 0.5405988776163277,
+    "auxiliary/aux_context0.1_ridge100@1": 0.5430434918256478,
+    "auxiliary/aux_context0.1_ridge1000@0.5": 0.526309747330067,
+    "auxiliary/aux_context0.1_ridge1000@1": 0.5746123417138731,
+    "auxiliary/aux_context0.1_ridge10000@0.5": 0.507698444715895,
+    "auxiliary/aux_context0.1_ridge10000@1": 0.5831383685325829,
+    "auxiliary/aux_semantic0.1_ridge100@0.5": 0.536832625072924,
+    "auxiliary/aux_semantic0.1_ridge100@1": 0.567969159509315,
+    "auxiliary/aux_semantic0.1_ridge1000@0.5": 0.521983111813281,
+    "auxiliary/aux_semantic0.1_ridge1000@1": 0.5922703490719239,
+    "auxiliary/aux_semantic0.1_ridge10000@0.5": 0.4908442085646716,
+    "auxiliary/aux_semantic0.1_ridge10000@1": 0.5521552435752829,
+    "auxiliary/aux_context0.3_ridge100@0.5": 0.5477417347591849,
+    "auxiliary/aux_context0.3_ridge100@1": 0.5685069015488421,
+    "auxiliary/aux_context0.3_ridge1000@0.5": 0.5256603966807164,
+    "auxiliary/aux_context0.3_ridge1000@1": 0.579886877661393,
+    "auxiliary/aux_context0.3_ridge10000@0.5": 0.507698444715895,
+    "auxiliary/aux_context0.3_ridge10000@1": 0.5948521449522418,
+    "auxiliary/aux_semantic0.3_ridge100@0.5": 0.5130728246540197,
+    "auxiliary/aux_semantic0.3_ridge100@1": 0.5774753401592679,
+    "auxiliary/aux_semantic0.3_ridge1000@0.5": 0.48928402795140635,
+    "auxiliary/aux_semantic0.3_ridge1000@1": 0.5736763575641157,
+    "auxiliary/aux_semantic0.3_ridge10000@0.5": 0.4901948579153209,
+    "auxiliary/aux_semantic0.3_ridge10000@1": 0.5172303645327568,
+    "auxiliary/aux_context0.5_ridge100@0.5": 0.48513669274237825,
+    "auxiliary/aux_context0.5_ridge100@1": 0.5885383287538705,
+    "auxiliary/aux_context0.5_ridge1000@0.5": 0.49708896810928765,
+    "auxiliary/aux_context0.5_ridge1000@1": 0.5932060948960617,
+    "auxiliary/aux_context0.5_ridge10000@0.5": 0.49990623692368713,
+    "auxiliary/aux_context0.5_ridge10000@1": 0.5980189291206607,
+    "auxiliary/aux_semantic0.5_ridge100@0.5": 0.47159089284143507,
+    "auxiliary/aux_semantic0.5_ridge100@1": 0.48636385302329044,
+    "auxiliary/aux_semantic0.5_ridge1000@0.5": 0.43090861570224953,
+    "auxiliary/aux_semantic0.5_ridge1000@1": 0.5640982025770654,
+    "auxiliary/aux_semantic0.5_ridge10000@0.5": 0.47378873892670564,
+    "auxiliary/aux_semantic0.5_ridge10000@1": 0.48382102699275975,
+    "media/image:tree3@0.25": 0.46057281779313075,
+    "media/image:tree3@0.5": 0.4890466917442995,
+    "media/image:tree3@1": 0.4965089052173234,
+    "media/image:ridge100@0.25": 0.5023319945211107,
+    "media/image:ridge100@0.5": 0.47643187837709206,
+    "media/image:ridge100@1": 0.482633428764689,
+    "media/image:ridge1000@0.25": 0.4616889616672741,
+    "media/image:ridge1000@0.5": 0.46422507124852724,
+    "media/image:ridge1000@1": 0.4753247764325139,
+    "media/speech:tree3@0.25": 0.4901235913330939,
+    "media/speech:tree3@0.5": 0.4901235913330939,
+    "media/speech:tree3@1": 0.5055295949143335,
+    "media/speech:ridge100@0.25": 0.43500308595567344,
+    "media/speech:ridge100@0.5": 0.4372574874326568,
+    "media/speech:ridge100@1": 0.4620866476843922,
+    "media/speech:ridge1000@0.25": 0.46406649804767985,
+    "media/speech:ridge1000@0.5": 0.46945361035147837,
+    "media/speech:ridge1000@1": 0.4480453760424398,
+    "media/editing:tree3@0.25": 0.5027644616347029,
+    "media/editing:tree3@0.5": 0.5468137092407219,
+    "media/editing:tree3@1": 0.5438041333173294,
+    "media/editing:ridge100@0.25": 0.4357323623514274,
+    "media/editing:ridge100@0.5": 0.43886991913250634,
+    "media/editing:ridge100@1": 0.48036916205145497,
+    "media/editing:ridge1000@0.25": 0.45150070031622197,
+    "media/editing:ridge1000@0.5": 0.4460675117259815,
+    "media/editing:ridge1000@1": 0.4614001904582799,
+    "media/full:tree3@0.25": 0.4617582494246603,
+    "media/full:tree3@0.5": 0.46410337352081044,
+    "media/full:tree3@1": 0.5255622281914365,
+    "media/full:ridge100@0.25": 0.4567733368807741,
+    "media/full:ridge100@0.5": 0.46518678734320523,
+    "media/full:ridge100@1": 0.4625752152044234,
+    "media/full:ridge1000@0.25": 0.46340204622043735,
+    "media/full:ridge1000@0.5": 0.45619094850852215,
+    "media/full:ridge1000@1": 0.48788611097509704
+  },
+  "media_provenance": {
+    "index_sha256": "0a787abd5a5981721e5b1d1736ad24e7d943faeaf9bb6ce5e9f5f693941da1b3",
+    "acquisition_sha256": "c2968af677d565810f61310842e05ca8046f6f1f8b006cfdbfa17a60925b0b89",
+    "extractor_fingerprint": "1c1cd0a0de1c53a76d762775eec94eb43e957448a15569b0cc5f2014a232f5cf",
+    "feature_hashes": {
+      "TJRhFDCqt7E": "38152904ebdae3cb9a1689e60599f6881d46c90f1bf585650d545c4524389072",
+      "P-BvBpqLgj4": "01f780aa89129417ab9ade5ead479f3bd71ce96fbcc3209eeb7c5a895d4a15fa",
+      "2xZ6Db_gsfc": "9d1b61ac341fa32d53184913f75633bc3243938f7474c0ad2eb173947c9f7420",
+      "weSDU4HJTps": "5c041f39fda4605eaddc6de985ba7bcae7cde46735eb2bd8c7d25877934f86bc",
+      "Oc4mQ3pi3C8": "e20482b642edf498e78b102a4661d19b4bf6c3dd05be11915a441ce8571a3cd8",
+      "WWj4GxtOVGY": "d7785e4b3117865446826428f73e519e6049d7aa78582491e76cab79a8186c94",
+      "yuJHSws8_EY": "db9b1cbaec7ef1f059d01e97c71a339c3de4bd8e15a85107b68ed28ef79bb2fa",
+      "bxl9c_DkOIQ": "b620342b7b90ff1f077eab32c9db63f9d3cd2f7ac041cff1c38a894c695469ad",
+      "pmhfnS3Gb-Y": "21509445a643ff90d186ee261ff699cd5abba414c4d48bbc556cb25e7a7017f7",
+      "hBM-vdpb_kI": "03aee1e1378be1e2e1633d358e97b12460e368f5c9e3330a109c6ccc912dee40",
+      "16F01n3cTKY": "f9f750b4950f608386ac20b349aa8171ab8066bd84c0c6dd1489a74c94f13d28",
+      "bJYSA6RUH4U": "271a11b1f75c3f10d89877a9fcc5f8d564cba4ede3655dd810f1721ee48ff881",
+      "vmD195m_EB8": "bed6ec38dcd8c5ac10ac401bf37e29127e6d51cc51ee61ada6b55463a0846283",
+      "yPDrnF-hOow": "2bda0c5602526976596ce738999e8da886e627e0588c4c2512fccc3d573e1ff8",
+      "_QQZIUGcuX8": "ade0b9f5b53e0d9d1953c2306e473e9ff4c6f332d280e48a0bddfafa80fd14c5",
+      "Qq7qkzo1xs4": "d3111e05a3b01ea25a14ffb386e1161a8a75985cb6e6e4fb646f8b8c794617c0",
+      "F-IEFm0FWfM": "77d853b0f0d06581ab21e74375ef0a0b9c359f835a5ace22e5755882a95f479e",
+      "48Wyod25n_Y": "dba95df4272670a22f67b6d36b040443c6bdfa673d69c5b17532f9a40555c039",
+      "38HyYvr7B6A": "14edde2e7ffa76a452528b2d5449641803c8626d52912b447f49e9afe78a6e75",
+      "7Cue9hpQ97c": "a6e38dc70d12e30c98c90cf37219d6cb564872e579d344ac5720631180b9d965",
+      "_B396mxcxEE": "9e657fb55c42f6b0a322042824589c07ccfa59f1f83b4f616523a25bb73c4703",
+      "e-tcESPoPjI": "c8d1fcaf10740b5163c3872bc767a4a16d235f7de268d8c921a88f125828563e",
+      "hvMoOo7-Yfs": "a46ba49b2c09d193235c3d2bf2d99c613c2fdff106d786d45a67f1ce482776f0",
+      "hhp_JlQ5caM": "ad71c0a55b647c515a818ace4404e5867ac6d6ad97fbffe7eb5ce51a41885dd0",
+      "EMtJdxvW97w": "05596a6bcb7fdc787e4b2b466d689fa324f0807e6d4c89afd917b4099143c903",
+      "aN81JPw_a64": "6329bb36f68b878272f2bc0e8d221008261a53bff3749e67e6d640ebc8b90b6e",
+      "I7e4qSxyGCM": "d79b3e5138eee34d25c1f7d9d0b843618fb8d0acb62b4e147b50c7d06d67d4c0",
+      "f-zm2eUxE-I": "3b06c96f3cebf23383e552ca075352c4808ab2760e4eba06976498aa7d9cf417",
+      "Kk5C8W7hTqU": "46184b1debdae59911c4f0152a962c530fcce2984b3fd258842174d9f6b66da6",
+      "6ixO0ha9Pkc": "7049d98a4ab49c909facad86d69b73d4dc0aaf6c9c5466b0bce5cb693be60d34",
+      "aHSQEJH7H_Q": "370d65a6d4f7e7c92e24852735e4dca418f869166b3e51bce96299f0fb1cc204",
+      "pUlHTp3ZXS0": "d8e9a657e978729dcc4c9a9a99938ca30778f239d3cc28f6df39cd79561084da",
+      "gmuLcCCDv1M": "feb7cb6b6c48c5280a216d9ed08810ca55430156a92b9525261d5ccec3d87977",
+      "UkpkJlhVrjc": "6a852be1b79a4862912ebbc5216d10cf7f8f9a49c494d9c2b4049e68cb2695be",
+      "t3UiJ896ruQ": "9d387d382845ba62b3905b86cc222697561e0cfd75aa2dfba7e49330b2f3bd13",
+      "tn3iUMRbj1Q": "263fd6e2785547d9693116fa6ef55e23e7202afb628dfe14e53a2e810536f967",
+      "SBMLJcbcKxc": "2a9a8db7fd8093ff9e0c18272ff2216388e91e22cf53c4eefde6b90979404724",
+      "GF71F25I7r8": "53c20666831efebc3b2e1e1aed6635d1b51051c2c475f4b0a1c533b75492e42b",
+      "mxd9jIWbQ54": "1839b2b01f055d2529c77fc04ddc4c4db6e78f962aad74bf8840e370da9ee10d",
+      "-c34Bu_mwPI": "101b37cde32c430b801f55419efc753dda14134cda68565a578dc5faa16148bc",
+      "-f-3tYtQw1o": "142cb45e2732bf9b7e579c704afb582a57aa9a2ec06e7953833e7baba1b3ca6b",
+      "Aape1NJs92Q": "598d96166808c69e636fb36c76d0f4fbbcba5503584431575b78f3135bf5421d",
+      "GcFGTArD37I": "9485bdfcc86549cddd786bc152920cd5f02f06bd6fb24b0015daaa9f7fcce9d5",
+      "8p6Viu0uGXk": "7af1ebd6107fb7d2f32e1bd574d63132b3a2f8bfaa7544b93edfec251add587d",
+      "dYLaXOLZ2zw": "7ff7a2fe87425e9dad6231dfb2c9870ef5fc8d30f11dc74a9606d2139e56005e",
+      "1RkD_dOUagI": "80d7f70f73089dd05bc4f772a526393f87a2204efd3a0003eb839c2e40ef97f6",
+      "Wr7jjdT3ToQ": "d9c784dbd61b708e244634fe874231f8436f04bb2d03596c9f65c29f2bd19279",
+      "j0Sns8XEsIU": "ea2b2099d2f37e8aba27a5715833fa3562ac24fa94a39a16c412d545200df809",
+      "UUtokUm5h6A": "9894b46dc972e58e8d255aa3ba358c06144ef338f08c0b0588fed68370125f6d",
+      "VvFCq7UnTBw": "5fbff3efe08d02ce9356158eb60f28cd11213797f758156abae7d7769c2c4389",
+      "GWlWjBsbe5Q": "a55126aa65e6afbb895c9b8f85f8b2e0cc91dcd89e4f26e99cf99cad2af468d3",
+      "E2umVf1N1jc": "db003859d20f12160a7207228f0856d49275b103c2f1434646a686ce7ca9ed15",
+      "ypPNyKNJvKk": "bb70782647c8bb8b7a21c44751d73485d3c303a24d130b5b58a984644230680f",
+      "8W7k7w6_X2Y": "40f7a7021f8012dbab0ef52db95eec77823ef66d27aac047a0f00c95fdcb44d0",
+      "4S4uYMBLoPo": "c94451018703dc74887719b0862cfc5c91566b1d7e556d9b798450626c880094",
+      "K9ivBQr6b00": "3868d74d8681f519fa38ed2aff04157090853de0155c1144d08c5cd6c558fa4c",
+      "J5-W-B2syrw": "8d40102709c29bd73aecffd0fbd327fe9e611a1be41f559989b726dfd48df697",
+      "_N8kjT3r7wE": "2fc410643f4cb82c76a33d0d4d5655ff58595f2adc7100104004fcaf267af997",
+      "i3Ps7wIoRFc": "60a93e7a9f262b75e8936d0640bd26f8cc6fae20e225082af79128a271a713df",
+      "mu-0h6g5j2E": "7072d80c98e5066999b35b287b8e3a6f98216bc6bdcd0848741fdc27ef25e9a7",
+      "m8y8iI2DoYg": "5364648c45b6343ef928935b4f46a7148ee755b1048c344ac504865bff7b28da",
+      "oq1_tLK-TeM": "94fe460d26cefc23fde0efa6bdf271ea839691605ff85b2d997ba6aad62f35f2",
+      "aqUk7-nn9fs": "beee14b4428093490993f908a4761ef84a4ca869bce1ec142dfc7249030e7d27",
+      "XBqsiGejeUo": "5d5ba916c0845e38f1d460b471f069a198c92bccd9a0e89f7d153de466286607",
+      "294UA1BMDbQ": "1c45f8ea1211ca6c3c633adc71cdf1055be3fa563ec3a481f7771c0ac75f6a34",
+      "9HfZ0tP_lmg": "ef256d41109d393239b3a3c1396bd37268a955e1f3fbb9ca8e114ac3cf08be72",
+      "DPaXsXYvb84": "5d35c335dfa58fe13718bdf8d12f56da5b237ab50a1abc1558d2a9735206b89d",
+      "M8D2Rf4VFKE": "642c035f0cc84da74160c61ace8c4509474bbca4e8427abb7debff0e0237386b",
+      "3nG8TYJXFEU": "e9d809bcaaca6f27ab79c92891281bfb66a8e0ebcfe64a718af626d527fd5721",
+      "Cs4ajQytdmA": "f8ea5397ea055d7bb6a46e02038f16d12ac075d5f5d69d53b030c3fd0a99ebbb",
+      "8XRdJ69MBto": "9dd16e7f3de883f3fd530ded906a23449b2c3390f21d5897e2b3835b685e5da1",
+      "S95Pi5SCVX0": "1423f1e2c69af4837bd2cf439bd777fa608ef86a8db024f785a6296edb5fd335",
+      "O95fRcfwK1M": "eccacdc58ab8f17c9583a5fbb45c319454311050f65b686593ca0c0f958b978a",
+      "y9TVKjVPGfA": "f36340a9201472098cf69d0b716bdd2922b3c671bedf9a445da53ef44714060f",
+      "GNmjRL3ifyo": "c1e2f380da7939a5797d6b6f1fd09c17c3118a304e04813e5ceffd2aafc703dc",
+      "vzFTd2IEUBs": "a2bf7330a59ee7ea2781817c5b5b9b5bfa7ac7e2328043102f2d73108a6d2016",
+      "Fcjv-fF75nk": "0695f7ae1c04ea789383023a3273bd14fe4165353d65f9e410f195b78ace363d",
+      "X-E69Wc8bbg": "2105b2647b8e6450503acdac649460914e8c9c9ca39b2f1085d4180c42fa2f4d",
+      "nxu4bj8LoZA": "c6dfc9b5a7d9da28f38e62a4579492e4d72d9281f374ae98bd421284ea39d4b5",
+      "uI1DzDSP-h0": "2e6fe953d47e568ae682929497f07be48dea36b4ed9b76d0dc3678017beeed7c",
+      "vS7r-m6d3iA": "bf015bbf3d9f852df79eef32a0875643683f551e9ee9bac5ca4792f9256960ec",
+      "K8Y_JOVFyyI": "b36a68d6a5a3efeb9a90361724869295e76c729a00099af12dd35a11d78b2e1c",
+      "YpSP1T7J9qw": "b50bc22744d868ec21d5f34a21480306f49002fce5002444aacd1cf4f11e9014",
+      "MTE9lV9r8Qc": "311d3bf2b4f45954a12ddf8e3a530cdd92f3b4a2e3ca89c2cc44ff6234bf7573",
+      "-tdd1djl4rY": "63d6cc66e44193b93ec81fc2d7a5a9dfb8df01501b67e7960debcd26700700ec",
+      "tRU0UH4kLiM": "8506881a91a10fbfb395259acb6b1b122a4d3f4d92a0eaca2455e6476d1f734a",
+      "5z68L1mXU3g": "3ea3ebbd63465fbd556c0f68f547eb18f906cbdaab54c4ee29a5df8b5d305cdb",
+      "14yNdFFgu1I": "7dac9d2281f494b4a8cfaeff8d1e646035f62e0a8aa24fff59bd42720c6af4a5",
+      "naoeCS5sUYo": "9f43148ab0954eddab41e74914908c8c905a485fc2a66dc2d9a58d2a91aa14e0",
+      "ckDgoJF7Kew": "1f00927232b842562ca65f55a1c274c3c834e41b2ba996f2784af9f44465b96b",
+      "GbAFB1NXuvY": "ebd2fa4f2a92fea9b55e19403f29f91c002e9ec2e04608afc53e700eef1b2f6a",
+      "9wLFjiOQBKI": "f8c3736d6ee2fcc7a931a2b936a833bc84b9dac7a5fc939a678deec39360a9dd",
+      "IfkimFKIwzk": "96acf34c9bf20dbc69300392129b6b1f89825e5ef4cd29bfe7d9394a14766568",
+      "7LXZBWoSwNs": "05b0302d9eb2e20d872a9f0c7b006013d894c4b7827ad41895d49197c8e78428",
+      "sf52tFpiW1E": "6921a7f69d029cd36c670ddb5bc74c5b92fc5035d82e2a0a7d8467ef29f468d8",
+      "zJCeyf_rXP4": "36ccbc45d1acd3e1e40f87a0788b336da383b50c135db43224b6dfb9560a7e1a",
+      "4vcIzIY48vk": "8b9fcfaf110c09b0574fa6aa3d25fdf5595dae970e0a93ad755abb9724256723",
+      "YZ3kOUqZct0": "d5f97e4766896faa9c04a80553d8fd2848d5def93a820b34305ce7ac2c887919",
+      "0lqicuSY-YQ": "8bb624806a4ef02784093eb9f9be1e77a2a10c9eead9383dca9069b9329bda48",
+      "ap1mV2S6zTs": "a1612563d100d4710475c4e1ac0bafa6030e49ae8292e344cf110ce052bd4a46",
+      "Bf6K_7Bdwy0": "d1f4f60b68e7384ac06ca717ab581d07b21f2b34c9b89c8c487a3cfa1290a041",
+      "_DvSymiGx3A": "30d50a06229a316922a5c1d815ddb15da3396efdaa4e7d43f8a575acb50d0981",
+      "SfKsd1S9Sz8": "9027a1e53bea2c3ad0e224e82405960c6e6cda3bf976f40ef6956d85d6423cdc",
+      "lyJzydDFI3k": "925e287c931735918123acd58bb07cea2ee0f05b16230ee0e37d2d43bb2eb6d3",
+      "d2e15Cxg5is": "67fa91e57a519d78e321addb84356dae30557f1e3851504637adc78326a2acbd",
+      "7Cue8PbmHHg": "0e690498c25fa25337591e3028581ffd536872297b6cff0f87eeed56e7d733bf",
+      "J4sYLY1MWlE": "6ad16d7f27c39b51cc529ea90f124fd0b48c9b5af510283e09007763649aad89",
+      "Fzm61i-4Jg4": "8074a77cec585e1ac09c6ac62a9f4077e7376e1979fcd82bfbfa33de93ac92af",
+      "W5Su_37ZgTk": "2b3c18eca1f3d4037691785071371e63e32658bf368c0da1171d3ff91da1dd5c",
+      "9ufIgVSVJSE": "f58de0d45cb000918d199b645cead6100c81b6bae66386bb65bf3268b7c43f9d",
+      "wVGqEw02rWw": "f87d0acdde406bd874c54fc845b2dd457c5f4a0810eaa32b479842e584d959d8",
+      "2xrJ07NMp-E": "39998fd3b60d689f5761217a65b8a34024e48c7fc7306e8f6c95074a3cbbe283",
+      "OlSOwZxI35s": "df3187ceff02ce7571164fa66474d38e201193fb30f277f40798e8fc6962d4b0",
+      "CWShMgjLemk": "34710d9e5e30cbf7bab8feb810de7e4fefbb388e1b4a743cf9c51c7a8e15a96f",
+      "Mprj5KBHIyY": "82989c72abe293a412b1e9514955303a064561519ab5303dbe398a102f577c3f",
+      "KOfuuwwVNa8": "ae9575e2eacf5f14fbb88cdbd2c82087a014446e8f07849e01a770af2816d282",
+      "jTdvqnPXAP0": "7bcc04659c25e16620846c6053a9639dc7dc97a47d42681f858bf934704e1df9",
+      "vYdJUR65IVQ": "4471e2b7096bcbd36b55cbbed9c89a7b056d88b696bcaafb2f287a4189d3d8d9",
+      "CHCXVxvWdRw": "2c2b8a532c21afd6bb393e079d10c8826de133cb0229ae319082547a23aa5239",
+      "r7tFj6MMJ7M": "8de1e7853c33895f4ee31d98bbc1621902e24cfcb0c105bcab1c84014243cf30",
+      "V_fg_2BSGTM": "dc5fd5ef67cfb4c2679a614fe31ff924b06048cbb7875ab2ec94d48b93904fbc",
+      "tli3MyffNAM": "e0f568fef2caeeb4607429d703e108d2db9183f1367bc525d4a08d11f11199db",
+      "G2VF6eA60z8": "b76037f8b22b9660b216842927bc5e36adbdd63a7edb83ff2adf20b7da9f1add",
+      "HCBPNQXIuSw": "c09ccfe73506316c168be3fcc69dad80d9d68b09d560aa1e86a35f0b762b7779",
+      "BgdxeQIIv7Y": "dddfebe7db57c45c4b7bcfb882b4ea3909eb3a03ff5b931745811f0b218b8844",
+      "Ytdczrn2aEU": "484ac7dc5bb767251c3b0ac29e3435d883ef4e7877a0ee4a496c0c9e8fc98413",
+      "utHb4jHoDBg": "1bb0f96b385dc930c0ab790df6d59c2a6e2b3ee81880096d9d4d5a3cd30c0532",
+      "u43wvgYZVDM": "2e9f8ec0dcacf520436cd3ab580f050ae1b08044b813f94355743427185aea7f",
+      "D_9Q5f09RIo": "230d97e1d9403fa81dfb6069a524dd58c3b2cc5764df2e6cafd9c89a5609a731",
+      "s4jNMnN3a1c": "429004d7727134d4699c5d48a5846771f23467ddbb17e7ac2fb8a5fc0bbd8c61",
+      "gL5kmctIqSY": "c4a65999b20b0c798313327567e828df71b754ef41b395045206e93f446bd836",
+      "BBQBB2DdqRc": "f9e4a423556237f90c5ae4d3b5bea3aec7a7383b4bd332ed1a571e2c3c3066d8",
+      "7m0hKe7rCd8": "5d82ed67651aff3b3a68d20592d5a76140609711cccb3ab4395d47627fc6e4d5",
+      "DiVFnjYFqv0": "a0300ddf7a806b1fe02d9564759dda682fa1ff64774598bef4947a07ba851227",
+      "Jt602YmxB5U": "d1dce979b581e474a8367fb68f49de1734e199271c2d8e7c8c1b930316bd6bdf",
+      "PT0MZDsbOd8": "4f427bc891f41706917d6f3214c5a9fa9edc527137c4f08f6d33b03f6934f2d1",
+      "__JT5u3hJPw": "1456c22876d3d43d26e622a4de229da3cf087a4725d4c56b5e5546c0d73b2ed7",
+      "syIJibkENHA": "aa5869d82247e76895a91f05154cfd0945a49202530e8fa920aa3b9cac66cd66",
+      "Z1XyrZZYf84": "2204a74cbd3c4e9232f71fdcf9ada0b58e775a1d927f862929b892839b4f42a4",
+      "rgB2yJYqFq4": "78c8f8ba618746fbe83ebae17af76909d06f829cb9b75f366e4a1c08a0f93739",
+      "O1uW5QmHV70": "a39199a336d3712a3bf76ec2f34bf8208abc9b0d7abafc05f7fbc7e37a428178",
+      "o3OxgRKdoc4": "ebe243197851f16c472922b4420a88aa0d9a3447e1bd29537154acb3c18a98a5",
+      "aFCID8ueObk": "6a7995ccee12fc3dd2cdc2e4d196dab72ff04afd8952b3a9b6bd9931311e252c",
+      "C-gm4OniW40": "cc550967beb9785a3665bd0563dc5717c55e87c6741ff7f19734b8cdc3566ea2",
+      "2jhfvGoYCxU": "b4c0da97570ff63ad19d6a6a47404e3d3326861423926b368df5380ee4ac07f2",
+      "Mg1saQRCy-8": "716ce10658f679b13b71dfd580975ea3ec857a8fd60c610505147931fc042ebf",
+      "Z-Yb1zhO72M": "4131b0b914fd77e994e498d5120cd34938208139a6f80285428b7ec02859963f",
+      "YHip1TQN5Bc": "9121f3c945b9f0164ab8094522e4db610930b3187433a2212e2fec188ae387b7",
+      "I4ncuvWx80U": "a280a116a1782b30d59a7e4469e4d7f46380181f833aa02638783956ab400135",
+      "Z1i2RyGjafU": "86cf7e0932df5c734167b5e2fa403042af37a37bea8ac40a05629d4e900a1106",
+      "qr7-k2hK9Io": "963c236317b44a35b91091a08ff163478e1909f9151e934ae6a798201e0e500a",
+      "1svvdMrCkAM": "5c3616ca6735f9912172f11b6698b83c5b2d8b3c62da8812813ae83ce59e87c3",
+      "U-Q_Tm2EHbc": "47776556eefb6f1c5e31041d2b9246174153db0137c0db51c29922ebb9daaf3b",
+      "xD-2XivBXi0": "b92fa964f27217a555206697fb63f59ecd867cba901d8bc3163d6388e417a431",
+      "S3s0UFZSkP0": "4f8883df5b350c37f6eeaa8e5b02dfe213ac545615f64ecae8be31dfdfb0b1f9",
+      "rzEUsUKoyzg": "637048390c162fe40a6ff5f30d7d13cc0404403c2a27e20b0a964a74c7625adb",
+      "evMfptg-3SE": "df2bf13e1512ad6f907ae0514eeb7b225b8cf5e8b718ae90071623f433d048b2",
+      "BWNrsVzVo0c": "485ad50ae575539e931b099f9bab784c8bb735e8b39f203754343fea5fee4acd",
+      "JTQIcsWceXY": "a45336a59413b9bb4dde433fb6d25806be1ca5d65ca4d65eea75b543f81d261b",
+      "Ig5YM4-UQws": "cd67c2590a546ba92a09b1966c5195d77bdd436be39efab5cf13b6eb1d9b08e5",
+      "pf2ZrzlQesQ": "17fd473dcb23d92ca5499f114e7a410d56b1700356d8d487b6f8faffd4c97afc",
+      "TdOLnl-lc10": "5937df0023ea3a32339c37fd44367a6dd5d574dd87d0bd5c5f3783a28d3f3aa2",
+      "QSH8T3dk-VY": "b4f8783830ffe716277db0a5ed80d963dd3bb891aab3b0cae636d777c14cb74a",
+      "VHNFliNuy9s": "97378f4e53ddb753c232c468838a6bcd5dc83df1f0d61f1d7b411948b756f405",
+      "ZEjAI18_U60": "809aafbde5512b72e5487121ee31fa0eddb883301350f586904daa29cf1b0e6f",
+      "miktSAdaiOM": "b270be366fd3ee2e6dc4f78a997a5e5f56bb8c072dd996c9fea7a5ef745bb0c6",
+      "gIP30pvxp2U": "9fda12fbd7a8f8cbaa3f8a69780482cc6e29259f92d40dea3a4c275968489c9f",
+      "fD26Zbo_BoU": "5dcbb1d4255f2f422f1487924fd56d05724c63859e2c046ed1b565ac68b6c246",
+      "HRsKTQwny4U": "1ad6eca51c1574c644c349e20362575b05881c00dfb9bb02b4fdd476107f9605",
+      "mcnio0_zjag": "89505717f8938337d3d7dc738571260c5f9cc5e6b3000620750e102a2a25812a",
+      "siaFuMyfogg": "ca889c7a608614d590ea07da00aa8c9c30bffa5de3338b013942d6af641f2ced",
+      "TyaMPptdlAY": "33fbeba618b71ec33865674f093dfe6dd390033cb8a83a26a8ade32cbe859e76",
+      "x1DruoMfnts": "23eb51e01d385a12622e6d8839c37697e07aa9938b28586b4cef70fafbca508d",
+      "lraaAO-LIIY": "6fe060d7aa48c8f1e474ce077548c42318ab426b5c3df4c359b20de375120c5d",
+      "7LMJZx8H64c": "fbf2d407dba5841aadade8d292ba6900ef6c0c62c8f186fe5a8e5b2d9d5bcc6c",
+      "zNjuEXgwnus": "c9a8d1d629a017654efebba240958caff8324531d0842affc73c89b7f393d7f3",
+      "QyPKPNF0HiE": "a03b6687552537093bc4e4cadc8850a7fb2350c6ffad10b051141dda6a05edf2",
+      "ujRwmwvlnV4": "adf6075665514ea6a14d323de7b0f1745f6763fe5cf612cc3d928b09c723825b",
+      "PpxqsF4B3ng": "e043604f51f40270f9e94d685bb9efa3c4a796dd917edd8d14c1c11e0155ee21",
+      "6h24QF5CLDM": "0cf28f89d8c75081e86c1d5caf7c18bd6d5c9a470c704e608d038f48753c3e2e",
+      "GBprSEtZPmg": "b82b9670de9555c8b174b13d2b26a156c491f90b6412abc2ecbda8fd843b7ec9",
+      "4U3t4aI_bfE": "84927013b631df79caef48f53e5463d5aa5efca79a5c04dc754b3d8b4df95c09",
+      "W2qUHbhP0cg": "dc37ac55ad97b142757dad74cffc4e146e468d55dba29125db3bcb50f0e1968f",
+      "6ZFfOhWoVKE": "b039626962d754ca32f927a6695dd10000226cc769fc34752a999cc52bbdd412",
+      "oXj820FHcjo": "4d0e0fa063a4351f51806d942883685d5ff69b3b2425da92d1620b0f3442d4db",
+      "IE2bPqRST5M": "d29e26114c4d3fe74229688a418e9a993ff214664ad03832273be24e679e1300",
+      "Lfd0917b6GA": "36848362768f6084f2cf3b63d6ed9277837a8c2a4ae7196e115fb3d8c63a0623",
+      "zQbmYCaHZJQ": "f20d56c01f1f28d9e8f06268e51e5e5fc8ec1bbb3d0605026fcbed9520609244",
+      "Bq77UMqYzo8": "0619d15dc6886bae28442eab1a7754458c06477b894e4647207d8c9616b02fa6",
+      "ZikLTIPM4h4": "9639a7a553d39a2904d958d4ff3a3704b56d74e57f1359eb146d4d53126aeefd",
+      "c5JqYfT6MTs": "22246770a217c8a84cbcd83be87a2ae412e0046af75987c6f3efa95396ce3df1",
+      "D5vPbRQ8EHY": "6dd38c1e68c02f6d468695f5c10355f1fa6c815be21e757ce786610cf916f549",
+      "DRDXd4aUEmE": "4f7d638db50ed5436c8c7ccf77fbcb4ffba6d3998fdadcca7dea3b7aee5d2284",
+      "LAW3SDxFLVY": "44d7f76ab63c9b9be2de7f7f7b5e9f89ef1a0a9ae2b65b8e1faa0ff65c91f22f",
+      "OFaob16-3as": "b5bfa990b941ad1bcb97cb3f93c3b4b9c800df63807a255c64ef1ba4f68193ed",
+      "RqWxeRHDneY": "985e88935d4a3b5a9a9f6dff8733ecabc16fd3200230347838beedb22a61ead9",
+      "es1JmU6fXy0": "4bc22e562b4701785999af451ac00d4f14600f5382b2fe19520d998b3dfc5dfa",
+      "w90Yp93ARIo": "76146f85d534e587b3b4be9b5d61582e36097130ada86f4482a00de09811301b",
+      "5bR0lgTLeRk": "d720e44acfb0d9c2acd5e0ea7fcd18395f98329b31c3cf6bf789625871624d9c",
+      "D9U1nhtAvKk": "63081671f7c51ecc081a44b6da8af65286f6b6c41d61c06a4c992f3438cc3498",
+      "DSfm2pRf79s": "2dddda68639a73bbde756a0b96dc14cab6324671aae266d80c755a2eba323597",
+      "hC3lPy-D4Lw": "9f2576722f1c06e41d7aab5498c84ff42e48e6dcbfe7daff9d1a601b99994c79",
+      "uU7bl1aZLqM": "81fc5d83680a078164d90ef8374bb9b2abe7f7eecef1d58796405f9d2d1e4574",
+      "ZtAZfzNChS0": "d4b7567d1c675a7e54b10bab80c74837950faf077c4444db47d36e1cd6c6cc32",
+      "XzYI6XtR0RQ": "666808edc59c3c9e64548a539b3118dfeb6fb13ad77f9414de5703a332a5bb4a",
+      "AcQBasi3Hw8": "cf372dbf263ca4ebf69b0c8ee223c2eb4bc2ff906c15d77fed721954bc7e72cb",
+      "IJqjo8R9wuc": "38af8314a7f4d7cdc1c40ab66afd16ae71d8ae30cf6d1c91bc97f7b29e13f281",
+      "Qgak4lKwvX4": "9cdf0878d00ac22f9d504cb0e09a5b745822f829a034e03e2244d82b46b5313f",
+      "VQ8XtFRXBDk": "7ac924c2f6dbe52fab1952227b7b8d8764d98b307fc1645f610e69d00534e801",
+      "toCGd79nCuI": "5315b19b10d7eba24cbdbeac77e72a5106f8071f18525a7c347fb72144104038",
+      "OpprIa9h9Lo": "bf70654b7d8ddd8d41d0a9e71867422959c06685e87f456179e93e4a4fd0745b",
+      "R1fgknd032A": "023324fa40eeba5ca346159b62c87307856e2022bb6d185d60bc3a4706985f58",
+      "UMO49Qfeozk": "9a503bd336c599c5bd3b398845a96e94895bbb18692f8a446df8fce2ae587b61",
+      "cg6-vNiZ3lI": "9bc9947f66194e58fa7a2e39d548feacd0466a12b6ab68857152c0e6af8aada6",
+      "CGW8WTJE-zc": "d8f99c639adcd9b94c11e290d0a23fcc2eae8947fe9b428500e813313fbfbf8c",
+      "wxyM8CtvjJU": "44c5dc1409598e95445670b4c54a25400cd75767628404c0b29659cb5c6801e9",
+      "UxNDeStP-bY": "67d22f2f947c3d50c0257d7d62773a60c48fe132b867c89b5823c49cb3c993a2",
+      "FWuAAShBSHo": "4970bdcb626058414389a3240ac2f22512fb3f872775a3b9a895eef4a4dfabf4",
+      "5399Fv_GHXY": "8af14b18de52997e63b91088c5a37ff075db0e914bdda543b7241b7872c7d269",
+      "cWOtuW4DdKE": "518c03d4ee66a4401fa73fcf5ca4827018319ed4ee3c05658606de2fd22aa294",
+      "AbSY3GAs6Rc": "6db5e6221469dcc2089feb74d546f9d8f7cb148263773e8fb126b0ed15fa9464",
+      "s94UTGMS3yQ": "ac0f0f2de422c97e32f86e39a243e315055e9c4ed14d834ae90127a9cad10b34",
+      "OlTUs8_Ca34": "220afab6a1c3d083a6600d5edba9a66d6360b46e8ff03bf880043d25a97d0d20",
+      "2OOCdejExnM": "f1d78ce5a4b9fe04dda531043e909ff441aa0260a8d7c56ecb86ad66ae455e71",
+      "oMIFmXs2YnM": "b0aa171f244bb7a6c4d89bada40a26b6feed70074a1d992cb7a3e40e7f340793",
+      "NmdV0Py3JwQ": "e7de8d94dc30103b88c62dbaa6536c1342f5bebe8fa5fb5738de6877d7ca9dbe",
+      "R2QUVVSQuuo": "a78d5440a1b3355596c3340526483834280fca64332c8739a935e32a53333ddb",
+      "SbRT6L8m0Lk": "e43ac457933633074e683b8d26a9fdc94dae121a7c938ebf188d4fe3852bdb83",
+      "K3wviCRMJ10": "fbad7d59ef511a920681adcf19889aaf542878a2d115bb5b171ea5e6f4e36f14",
+      "H2_xMApsnyk": "18e37b7f3a603906970735140f6c56aefb42545c7d79769fb87464f41a62bead",
+      "HRGejQq7D7w": "095bd8712b7788ca5708d6ca91f9c8debd484f06b3e15871a8b93f54c3b11818",
+      "G5dxLr-l9LY": "e3a9d15bea6a3250e337e1ca3ffe41a73dd626cfc91620898587a6a95899457b",
+      "DJtbp7paoeE": "7d079deac890470711da7c7947420c0f5a2fbbcecc8b149c6d06de1fe06fab3b",
+      "IuLiRBdKw9A": "69406cbe82150f0082c14675d63bea4d7eb44a70d4081910a4b755917e9cd8a5",
+      "RnuxBI56yCY": "9f7293040a60ded7dce76656dd12e53dcce6e6cf31c44df62626635d91417820",
+      "p02g574KMi8": "02012bdcdd693766f4fee392db48a6124159f504c50c4d74c3d086ed1a5e0d33",
+      "MI3X372Kj4k": "5b07ba1e5c182c4964260766f9819e4d65ed748d96276c68b89bcd597fe93ac2",
+      "bgXmeonaoDQ": "a418119e55604ab5318581f46300af8572358a422c14fd513a08b403136834ab",
+      "pCeWXwcFzcg": "ddd27c622e3157c794c98b1de97c92aa569eeb92cad36711a78582bf5f69090e",
+      "xzDu_qqlD7k": "7425315c5d4808eb9c46f48323306e317781fcd84e2836f65b172c795db30b84",
+      "-zDzzh-N788": "e09a16cdffd49e905e545ce2b6846228a969932761911ea4c62ea70f4ee4721e",
+      "pyt7fvSaFCY": "8ec887f397a0bfb0b98c46e6ffb01457bb132fea26bf6b2773809e2a915316f5",
+      "U7GpF-zQp8c": "03b597d7d34a441d61d55e480dd15a0e76e97d4c6f9e75bc442eb71f54798a38",
+      "7jnQKHdCGJA": "dad632c933fb03c7e28d80ced7e5d145e6d45101e4b18a93321d3dc2985dd2be",
+      "KAjrqCvoinA": "b4e890cac74284b0f87f3b7ceea8d96d529d49815f3c5c3aec662085f0f5e724",
+      "FLPLKD6pt1A": "77cbcfb3724a71457b490172f81a9a9dfc379a5e66498310fab76585a32bb5ee",
+      "wM3PGKlfl_4": "03a644e2ee90ac00c19935020c586e2ff154c43d4e5a5ee80ade653488b276df",
+      "Sc4e90DA7eg": "a0ef74d3c639283311b305eb2a7089ccd4031dcfc26ba4ef24e752972008a4cd",
+      "iTZvB7K7kug": "9539bc7d1586be011a7722c88fb128337de0bf801e1ae74887f136966d5ff349",
+      "j9yLkbZRvtI": "4d2943bc71e2ed5e7628e59aa23ecdda8cdd2bda39be94f0035541255599bfe5",
+      "3wAMzDW6dq4": "8be70a546a20e261b965a4f1a32ae9a77bfcfa8e30d20b4140465bdf95329026",
+      "kGrmFpN08NI": "758d1b6bbc28621535935179e0c00cad72cf1fcf8e01e0d79858fa1935474c53",
+      "j90x98tu-0w": "4f72e52c343c705bf1eeff4c48e689d629917e9467696ea203472d7e556e91b2",
+      "E_kzJdE0ols": "7bd6bf61a8c5695d6b15e30e1cfac13d9700644d820c4b821cbb9425e5c00633",
+      "2ELP1Gam17I": "66779d27702cd4629ccb06109ad623e9dca82774a62b3740653b9bc7357da2cf",
+      "-x07WCSM7J0": "fd0fb036ae94da7ec7a6bbace8e51c590abe8ca2e4a93df9dd9bb73e0dc2f638",
+      "aN3HSIJurhA": "e942d80fbae535d997796398e4565214d0092e5aa661c93210d20bffe798d348",
+      "GJJ84EuOR9U": "851730a6c39f121614a0d4f67458b422931018ee4472c34857fe17736351c24a",
+      "87YmA37gcxs": "6618fec00d54da17a494c64fa6c31f26a9793cae8f4c3db51bca1cbe6467ac37",
+      "FpB7l9UCvJ4": "acc60030288799ef30cb6de3be8b5be562b2a7c23a22faa3ca712f11dfb8bd52",
+      "rUsCVUlN3uM": "e43d1bf560020964258fcee3de675205d8544f1ccb97a0b2439e6ead802a527c",
+      "UEAldFCEuto": "b7459d006866ea9911ba9ea2d3c3dcf809f8e917f2dd4647a46fa57bb9b2c3af",
+      "WGegdPUrCWo": "4b30ad4ea1cecfaa902be8df982e286145c97a1713a48ae156277daf5b555354",
+      "ZoRyv9cJ9lA": "5bd217856f167f686616702d4ae710c44fddbd8381947f660376d5bf95e9ff55",
+      "o8KhysHIg0s": "0923c215556c09305f6f149f908e310701aec2e8eee5cd1827c07f448df9e7bb",
+      "1KNem-zOYKA": "9851abb8741c0a33988fb41df72078858a2fc83aeba3ec148014c0d19fa7e748",
+      "7X9W0cpraiI": "a2cbe6bb0e987702f43de2ee32ac96cf81c0903f6a0103678640ac55ffb3c7ba",
+      "MNUnctlhfcw": "f27b6496b4b4db4a59a82a65ffa6454593982d191312f95ed83477c47832d2ef",
+      "WDHeUjRrKlA": "ab17e45cf04b6ad26302b2ac1db1b184f6c2e59c3e8c521e063b26b44f440d22",
+      "s3qnVsoElzE": "ef4c75f926ab53d55530b577293677d3db0eb7e61e5634e0bc745f49f2535e27",
+      "DDEl7DsPHvc": "882d0e7b1a56152a1d88d8fe0b56423e07a102536d1bc14c500e7af1cd53581c",
+      "0wrqKfOj9kc": "83187a359d01a68f94aa1e8aa1fed6d1cd47c0df8cedca2fcc76083873a3398b",
+      "4WI5iXtbg-Q": "a396c140492dba5efc0efd1036f341daa89f13e6ea90e36e51accda471f6087d",
+      "Tv6ZMcRq9Ao": "a4944185e50409082e48fa2ea475c8ad3442d5c59a2997c0ea17f472e1e2b1b4",
+      "TxJeoBDM3Xs": "b351db88e2ec1550e46b849cae813d672bcc60a8516b4a1b73a2ae49b3bfe5ca",
+      "sXA0y158E60": "e637d7331290cc8d5125db1acaa937826a390435281c8370c1f1a586d38dd556",
+      "WNXnhFCJ9SI": "4d0128883a9c85a4ea8c45512f509d3f59887bc9b58f81accb7fc603c0cec6fb",
+      "VPUHg8hRSqE": "5a4d1c50c8f48eade0a57580723e83991b846fba983b25829ff8ca4193bad578",
+      "VvBv2g5iRng": "dbae4d56692d48485b44e6e3a92ab77aed238b58d958a003d47f880ea29e4bc0",
+      "2WyxwrbQZOc": "934d68e95fe2ef4be62cb81783330ad64831323809548ecc4d48031ca08a4c16",
+      "8uRpbf2RrMY": "951c913c9eb73109501aab97e085153f22277054914ff3ec07d47915b73f9240",
+      "ljk26awQ8Vw": "9ecf1fb0d01ae36f5a06ca3aca93eb981f7113f2d68b5d75096250b08b1e9292",
+      "CFuhoOV0ONk": "d5ceedabffe2a0bdebc1481c3e6be6ba5c3ed659e48433ed30f17b87a9aab799",
+      "iHG5xjWwSi4": "fe137367ba05dc831578f4c0a0d3f86020e10cb6f23f5cce859ce018b176b430",
+      "pM39fOmscs0": "5c68d3668d8db193978fda48535d5936ec9291504701b46328979cc7c5931708",
+      "R7xr1qn708s": "8f37820cd7596a11f59c6075187e59c4090773a1016d5888d14112233dae7a27",
+      "NyslBW4y-lg": "80ade52eed555dfd78ed96e5566cc52553a546496ec1506618cd95011a0baa2f",
+      "spSi2lAot3k": "e53770c503e46caad448dec0f2069a00413282b7da0a10fcbee758c459f60e81",
+      "jWQZqDNzJ9k": "77e9ab53b3fa8bfb401b93528fb4f6dba43e3ecd2ac49c188475f4a64fca80f7",
+      "vtQHtjwMYig": "06291ae7afd7e0a8e8b38f6ca5d4dd5d7f37e5f4e8ab2f6fb57a6439dec4d7cb",
+      "lmPzRFeQH5Y": "d910e0ec4a0161688c7b873c3f594fdde7c78a9bb4f9ff693a976c5f24cefd30",
+      "IGD2YpQzMqE": "75f54cc21b944f302596ae6fc037e6ec8813275bb0ae3d7961de93b1751e5205",
+      "cu0XXMN8TN0": "5ca0e9dd4bebf0ac1d7c83daee9560803ec066938712e379cb7de1132ea84b84",
+      "8DqTME_nFgw": "aa49fe3aacb1dd13dc67b4416f5b6649e0c27c1607ed757ed7ed413471496fa6",
+      "yYjvcLTiV3M": "3ed55475858dded0e9edfbf0fca3afe4cd2dfc4c056a856cf0204824c7dd3fc9",
+      "56GQAQ7Btwk": "b10c3d53d61759697a02e856cfb82551aa9e3d24714c22c6668321e6c9b7dad7",
+      "dvYrY4wiBRY": "56f618c53399de8664be8ef79c29cdff3cc6ee6a3f4eb67ef43a308d77fca54e",
+      "doFAAh2Txhs": "d702afa83483fe4d244b79b0f8dd83374e6b906b3756531ccae64fa4ccfe6eca",
+      "5TOUnUEx3RQ": "86b636ffe04eda93671135ba9faf7691c9d66f8573c4ecb980e75ec20f5ec6b3",
+      "Ui-0-BXxnOA": "b00291e417542408158fcf5c0e5e3d923ca1c530d0f1c50887c89efc0973c507",
+      "3JAt_pbvYuA": "6128b6bbc9949df6b380adcc360eb9fd71e28c4ea70e683e8c19cb82834f658d",
+      "WVS7SnKYpUg": "22bf6af9a2f3ba80d8129e6c3eb7668e6fc01f5bf595fba5b509c1639fe66c6d",
+      "koce-DVvr5Y": "b445935b7c8a9b8980c3df136559caf2c3398b5220218d010dd9b025c3c0754f",
+      "cAlCrQGMXxo": "ddf058a5c1d9f9671250001fd475080f6dbe4404b534a3022146ae3cd90f9f14",
+      "NsyJzamp5Q4": "5c8e5e14f37bf9cda3607276255761e6cf68d0f93be8840c81be7805fc3a072b",
+      "TZZQvZTcFbE": "6529f3924187bf99d401c51ce24b201c9cc3452d91a24b1e7ca91bcfebedc2a0",
+      "2KmLraAD1iQ": "3f479d96355a4f97c7f1643360387d6f8220879405872b57f325f6bd768b6cf7",
+      "qOFOz0ZI_9k": "75145d1e7468087a41597d29ccfb11a829929dbecab3f0c6f36adb1bed9d2be5",
+      "1pGMfYA_yCE": "3399d8cc7b020ae98c0e7effffbb7a9223256f06f3268f167a1c68c27b7fce66",
+      "g3dg0u8nGJA": "b5a0e3a5570867f5ffcf97c7433970f270a21e9d639f39820d6b6c2454d4ad60",
+      "S28tm_6-ww8": "990862b3c723e7f7cd06e954376ef8d66645b96f2c90569e553a4b1c4e32a993",
+      "G5nq9G5ofbw": "8fb8cf9c2a8a974867df2915e5d033f8da72a5eba35dbbd7ca57fce1baf06dbd",
+      "OCcRIqfmTNw": "fd816c3eab103f298c2cc3e03d95fd47ff4c8ab91373db1e9c6be665de767b90",
+      "viBJxhiy6_k": "bd22c806bea0322a2d10352f5e9b9ed4da5e14896575d04ba89b74fb43f93f57",
+      "bqVTWFxmcmk": "75d760c19519a8b7f4ef89ea4b21871aaaa375d687f72d394ed083cda8e90ccf",
+      "sJal4I_jwO4": "912b73a1473be8fd3d935ebce7ea2722d8222cd238493eee1953830b5dfa7edc",
+      "4zukQdFldk4": "ac2e9f86a3895e77247a83749f94c5bb65f4dac88d60cc8f873f5db408ea66bf",
+      "WXIS4dOoOOY": "535238c99564f1544402d455e490e98f248ab8d811db09b0381a2841a0736049",
+      "rULIdqOCYVI": "0f16e6c404c6f847d59e68a20b9f84dd25b74b136c555692d0cdde09310e6ff2",
+      "MgnbQgT-D8c": "65fab14b5c9082f1e8e2ce111d1a526443d55bda7c48946b9d17285d6aa8dfa7",
+      "nSKA8_QF9tw": "6d3cc004ca3bd4629e87da3439a482a932cb516e1c181f60cbeda7ac090c6dbc",
+      "v9AkwO6M0Ys": "b8b56b79a057fc0e553517cd80f18057ff9bd070f12771cb1f671852ab3ab8a8",
+      "KddovfdVa7M": "f8a885a3ae65d3af5e7546095ad3d7b6fb3cecf50314468392b2b9fe338fc119",
+      "bcJHwJj9Egc": "af293e0ed214049b2f21c0988afae40b975234e33d3732d9a02079a9749bcfaa",
+      "c_wOr8H3vbc": "b1dc48db509f989a26ca8ba99f075b58d5620b66b38946ea86119c0451888780",
+      "ztYP0nW15zU": "15e03e66b5de1bc88eb9b52bb2aeb1c0ca9bd6fbce0f163fd7bd0ca48d98e858",
+      "Kh8vJ6FXWgk": "7e797690cbf34b9ad892992521cd718cbd98217b74eb5f84014badc3dad32a60",
+      "t_pkzbyT_kc": "1a2d51b174f9812ea3f41556f3aee5a18a96dcb7e87b53225c50f283357fed63",
+      "tlFuRXvI-Jc": "b47005c38994337529593b3a682cfeb2eb557ca9c810cbfebfa5dc233e4a2df2",
+      "H-crXmtZFVU": "eb39af75921d9e63537a43d795012545dc47b153240317e05c55a8243708dad2",
+      "F2FQ0_fa67M": "6e8b94ce0590afb73b05e56e0991d495566615f143d69975caaf501a78fc8418",
+      "3Hf_I1BNtRQ": "30f0a152f8056309a3ef2579b14934d0a3aa4b2c014cfe209bf67c3f87157fa6",
+      "4DPkA-nx6UI": "ec4aaf06b3bf39eb5a43d4691ec0dadcd89215260f5464d9c655a01d0a8bdfef",
+      "4v2xGCcJwZk": "bf625c648be92ae78377930d607f95689cdeedd7c2584b2c6e2b20216e15febd",
+      "Hr8w8q3j4kU": "4bb857ab4d802f47e6556c0fca5bb24be12c8f1ece803974c7f35fde4f9ab6e8",
+      "IlMnGHR5M0s": "67f19e5eaa352986f8714c8373f1d9e45c58349b4127b95f13001f2e9dfc81bd",
+      "KlrCodF-p6I": "decc7d9004c2efbe8964ac44cc8358171cd2bbc12456f47a7570ece7fb935ed0",
+      "3HwBJeQMwLY": "6fffef33e9b2f89e3ff9a05ba231ddaf0a7801fea25387199e9b0561091b11c7",
+      "cSLyiTB3mi0": "61caaed92f7a55f23c8d6bcaa7771bb50117cfd9dfbc8bb81a415544c6f68092",
+      "rjXsTUobD78": "cf06f7b13e71d285496352aebd9bdd8601c1a3bcdc0759d67de9b6d737a531a3",
+      "05eDaP1W5nA": "f8918a8ae0f1d8dc0f5e7c69722fe22a11ce294fe536adaf2f9df1b0da254571",
+      "SsI944aS9cU": "b0a8c0bee84d2444b68ed9ad965aac5e339ec5c50d30aadd779b184c23995b78",
+      "TCfB9WDlTuE": "30eb153f6f945d3368680bddaade6fd7cb46debe0a8a82434ba68c343ec42849",
+      "V-3uEFU41Lw": "0658d7085aeee9b646de2aca28d59b3da3c8e0fc91ea5aa219759563440959cc",
+      "m_Ejt3JS6Jg": "27023d069cd02457cc6ec1656886fb2f02ec072bfb6805cc8f9ca3bc9ccacf69",
+      "UXw95xgtn_M": "4dc63a669ff77b21267fdeeec843dd71af45ddb194f95ae8ddd580bda7b4d986",
+      "wsRmhpJM2KY": "dbdaee61d802506c63a8a1451795117ca5fe75cf58e8e2886550354d0d827043",
+      "B5-l9vpsFbQ": "643d7df59be5987c8ba1e84840c9e74f8992e6120e47f4711811356ee63f6ef0",
+      "FUVk-uzOcYo": "ff563a6eef53c984763cfe972b260e10cd93001ba406ec244f9bdbdb75380da6",
+      "RZcIE2xZQ-c": "024ae596a9ce3289b8e8a928fc4f22109376b6cb2b27bcf9925f0f13f69f9981",
+      "hnozbHJNIg8": "6cae7356f0e02861a69e1288c3036a8ff04fa7af5ce97c59876fa6f94a8cde82",
+      "CQfXZ2yu0Xw": "78cfc1035e27c6490337a5e8aca09f6200c08aedc14926352170cb1d057a2261",
+      "MRX1aOpE88o": "5b2d7993196f52ac8f916cce3c1213a7cbb6a1dce2fd750335d0b5b4c423e9ec",
+      "b0unF9fcZf8": "f13f967619459f4f73a29685758dbefbcc2981a833b150b093666a924b823f6a",
+      "zRA-3LDpVmU": "5badce409c80c87fa64f6109adce345971919a364f74e3eb9f555421597a08e3",
+      "14xZOshmaqw": "a2ed65ed51e833d26641459a3d80b445c08b72ec358611dc980e6b64f0e88d1b",
+      "M113gioV7NI": "1e59f55fe3a19731bc6da7ba474ad0f799e624b7a73b7f3c80585dc441cbf936",
+      "gCTH3DZ06k4": "d3c9415bb648b2a1f0f5c6af9d5ce848af45189a0f08b2d25e58a0467aa79e35",
+      "OqOgbh-xWS0": "4b468703fe0ee24c6b51eb003d8b1fca98018b5110511958e171167006950460",
+      "Qwh3z6GKiww": "5ff0212c810597821f53c580d7da4d26cdd61cc9e43e3b3361c4ff100e7c1164",
+      "GzrK6Zb5Ncg": "4f0ca6d3b58a5ef297f1d95dc1c3f756f2d0d0c77622a21ad4093a846ad2fdf5",
+      "WLp9iNXoq2U": "b300392b88dbf395c000e2704f364b2fcc83fde6e5713147ce59f5dc3e2cce3c",
+      "Z9UICwx_3mQ": "4324adad0ab9bfe2e13df6ad569e606960c2ec0044061a14a31e6807971bf31a",
+      "cHutPlQRUW4": "2049edb273c62b10da86042fe61f3cb4c0b691320a408658e4f0e26639a5b0d9",
+      "07g2RwfVEWE": "a61110aa27d243a32bb00b3a773045e640a0446e5d795846055eee2501a21a84",
+      "DpzEyx5Op5U": "c2a3465c1af8eca69b44f3ff726cd9222da621751aae27d9ab61c01cd7341c19",
+      "HyEhIgeUDXw": "77bf904842b47e0867bad90a82557e69d1e215db486ceb6ae23bdebe2fecf710",
+      "1u-k_lkAFqU": "1c628a987bf73baef1316567fbad2c9cf115cd4d61aebad723d30b4ff2436575",
+      "KBDCJDIPNW0": "0898465b239b27e791424772dc1560caa4080e9b1d679975fb1ddb9786c33c3e",
+      "rpEXodzQpeA": "04a898da32f76311b7ab2b3939da22f11de0b288524d3edddbf65fbd81cb2ad1",
+      "EDLGcSDYz-M": "607cd01e258ac26e683b8d2be4c5f0940e9dfdbdf81f9d103f1fed511998936c",
+      "HrA-HK7cdX8": "719888d29a0e848d65d656e63979758bd68a9d6899941903b45c607ada16021e",
+      "T5Ll_qaCi4o": "90ea37617f87aa4f6f38a6dd17ebd80c87c35bbd212fd33ad08a2f3c65bf4498",
+      "0mCX6I9EVLg": "b8e277d64ba35ed58c5380ac9b7d8b784e40fd92f494563ffe1194b9b2a220cd",
+      "Ebr7m6YfwD0": "95d81265ed2278f3a968e6a943046a343f4ccbe583098d07ada7c512e2f7253f",
+      "bvfD6jSLmjo": "fdb840291ae85c58576fffdb403c0d3cbb757deedfa313c28f9c0aeb83f244a4",
+      "WyXweL2sehI": "c678a6321f0c7df0f9e7713fefc64909fa474eb348a4bff58cbfc70654735960",
+      "FLswnpEY3s0": "35ab01af5fdf3c3ac4672389dafd5d09a21433a8302ecd7b9ddad4e6aaba94a0",
+      "Ter8IiNyGBI": "ea2f5204adcc54199d53a8110d0d77303b919853e40144bd8dd42c60e77d66af",
+      "aDopBZf-E34": "e2f77f2481ef54534e9d85ac8b861c71cda4f1dd8364bc970d2905abd9db9eb6",
+      "6pkw-mq45bY": "de6005367af4fa09284065bed0e1b29db052d1315dd75807f1a26b80e3df5156",
+      "LyeAuGo9MjA": "fbba9a8161734e1d25b70298ba4fd3f7f4f831eb52e4a78f225bd61bbf142990",
+      "ii5giixZtPM": "c4a8427e7af7c262de7409607a42bda375b870d522bc2ba78669c28a12b9cce3",
+      "HQ1ClUV8KcM": "6963c67b832bf4bba0b8a65caf1e47887f51b036f63338860d00f3b222f718bf",
+      "5O0AqIYxj-A": "f08f7fae79539252e0448d2fc1535d6f8e6fc812745f425b0b9c88485de6812f",
+      "AXSs9xgeSMM": "15f73206cc5603ef7e04676debf458b84d867dde542f58557d55ed22d4ddae11",
+      "L4-50o9GnPw": "272b0844404cf64483ef00d4709ac426c0412646044e5801853a567508d76e98",
+      "xcAuGXsHvuY": "f78c3277b811d1e1af154909c4a10d88ff290c9042d76a97fa9ae5fe99d37c55",
+      "nAKGABxkCok": "c4fbd9a203d2d622fc4aab52bd778bb55f540268a5b9acbc4e2c75cdf1847d65",
+      "km9zHfSyFvk": "d114e53d92252d8d945885672ad0a30f0514a7986477738e3496babc5e59a3aa",
+      "Tp3QfKnbJqs": "8d8fc796b24a37a63718fc6520289789c84f22adccc966d068669815be91eefb",
+      "_bJc6eYi9vg": "975897fd7c4f3580186317c7ac97ec9385d3bd430afd39e919b8371a795e8f1c",
+      "AX4eQT-Dzz0": "3065860b5d13b93d537062ab2a403c4df2f950540e57aa61440b2f45cbbede03",
+      "lM8FJ6gU67Y": "de7765c64d25f971b88b3272f389502a3aa46c94d3021d41c615c7a4f0e7c1be",
+      "4hq9HgVcBk4": "64236b384f39f6c48beb68e8f52529c9053603d521718e29be4157399b49d1ee",
+      "Epj1rXf4tzI": "c0bb8f5f6fd03e3ee3f4eece8cdb5b8f0ee993369377e5a854c2666165edee2e",
+      "OHHlrAzK2Bw": "a731bfa90f763e07077446aba6179cf4f76f7389903b37d17eef39912d2c090e",
+      "PvkqKOORsJc": "156f30eedb75f1f3555d05851aff6981218cfcefdafef6103b5831b4160385d1",
+      "_6vn-oZrU9Q": "54f18bb5775c52106cf0b11fa7325e295e4099bb86093fe1d90bfa59389277d7",
+      "c5VaAkPdLEk": "823455b3cdf3fe8733bb3071a64e51f4ff42aa1f44e0ce59d3f1662e956fe0f0",
+      "hN3nj1K8L2Q": "1834f4ed5a5ad49f93f46d14ff2c89688556aa2481ca499160bde62f5326bc19",
+      "xbcbAI_9jB0": "32f8330a2f4d47aadbcaa4282bb70bfffe3be990b594254e65ec2996392bd11d",
+      "GIVq-J1n0ks": "83390e823b8bc3d48ed5199f3db969dc3d0cd06a1ffc88fb4971b9dce186b25c",
+      "YCq8f_OVv3k": "afc49ed81edda2b1b3dc990ffe9e66b356ebf9ee8e2916a4c5a6b0bbe1ff29ea",
+      "6kcyw7hJma8": "a6297bca18ae58dd3daaebba5075aaad938fcb5dc1ba828399a5433f10708c95",
+      "TJIffp4rAq4": "a418dd00e87e458fde59d3841b69ef65e2c19e5cdd6977b12cb16008fa842cac",
+      "qw_bhg7NLC4": "e0c2f8de490d29bc12a550bc21d2cd4e76e075e3f31e396a49c632b217c27590",
+      "NwTJF5touJM": "c13e709645c8f4b6f534ea34e220e9092e4f911908490638554583321085d32e",
+      "kV74UD4-WwY": "1c3eb7c79d4b4d2eb56492804021745926d207b725a1c7f82f70d9528263804f",
+      "Dt5qUJ0a3v8": "feb1751fb1dda8d4f15bbbea811218f1411d79911ae49800083e3c4a79023241",
+      "ENepqwIAtFg": "505dde1e251159a3269cbba6c832303bec21252fbe9de30cc9022e73a7c58f8a",
+      "14HlbYy7d1o": "e1f250e876948a47884c2322d4c01b5d9d7641a4c3e312c2e239231eacdc768c",
+      "QbDUkZ3OR-4": "25206d8518962d78204b2d533778302c2bce4f4c0548194c8f8d0a621022a0eb",
+      "0CGZgcYu4ug": "2243511a8821a7118a0f6c4dd0207156b9f866d3662a5f1e58c656bd8982b20e",
+      "0VXIiQLF_SM": "dbea94ffef5c47d0f99ebeafdbda30ced6bd8006762abc4fb2e795aef3760d41",
+      "vHb2FKA-UCU": "9e1c7cd158ea7c78cfef92784adc7e37e80c3fc6cb0004be6580643d5d6fe66c",
+      "refbDcvVPbw": "443855f5be434faf00db102a5b69cff511a1042e0aaa605170a1213ebe7ad153",
+      "p-d4c_cHd-U": "3d9097e4f7bf08421846e3ec4f3e71de0c75785b3ba57aee000c966465e9085a",
+      "hnpzDvGAbuA": "794ca006a1acd33920cfd212c97b87ae0f16c9a3a1f83f8b6a1fd5ca4c9ab351",
+      "GhOOqzscCts": "f5de8f761f3becbefe6e9d1402ca50cf6069c02c0e14cf77c972e1f63c185df6",
+      "aOTG1XiGclc": "0495ba88b1efa92aa6823a5e5f8694a7abedb2c5f71043f109757bcc0b029132"
+    },
+    "exact_duplicates_fallback_to_text": [],
+    "available_videos": 421
+  },
+  "primary_test_start": "2024-01-05",
+  "primary_expected_videos": 515,
+  "primary_expected_channels": 165,
+  "minimum_error_gain_pct": 5,
+  "minimum_videos": 500,
+  "minimum_channels": 50,
+  "minimum_ranking_pairs": 200,
+  "minimum_ranking_channels": 30,
+  "bootstrap_repetitions": 5000,
+  "predictions_sha256": "03643a3705a82c4cccdb2337b995e7d0a6f34ee41db88be95f17136473b7b638",
+  "test_opened": false
+}
