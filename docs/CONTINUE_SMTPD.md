@@ -1,5 +1,7 @@
 # Retomar sem repetir trabalho
 
+**Etapa concluída:** o teste reservado foi aberto uma vez, verificado e documentado em [SMTPD_RESULTS.md](SMTPD_RESULTS.md). Não há ganho confirmado. Reutilize as previsões publicadas para conferir os números; não repita coleta ou treinamento.
+
 Comece com **um comando de leitura**, sem baixar dados nem carregar modelos:
 
 ```bash
@@ -48,7 +50,7 @@ Se `evaluation-opened.json` já existe, **não executar `final` de novo nem apag
 - Transferência de 40.781 vídeos de outros setores não ajudou. Seu controle sem transferência fortaleceu a referência de contexto: 0,6357.
 - Ponderar a transferência pela proximidade dos setores não atingiu o critério de adoção.
 - Treinar diretamente para ordenação obteve 58,5%, abaixo dos 63,8% do modelo já existente. Não acrescentar essa família à confirmação.
-- Imagem/fala/edição têm aquisição e extração em andamento. O desenvolvimento pode rodar quando os 363 vídeos anteriores à calibração estiverem contabilizados; o teste aguarda todo o plano.
+- Mídia concluída: 669 itens contabilizados, 667 downloads e 662 extrações válidas. Duas falhas de acesso e cinco de extração foram preservadas; a avaliação principal manteve todos os 515 vídeos, usando texto quando faltava mídia.
 - Os estudos anteriores de alcance, transferência, adaptação recente e retenção já abriram seus testes. Seus resultados estão publicados; não reutilizá-los para escolher uma nova tentativa.
 
 ## Regra para gastar tempo

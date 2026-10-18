@@ -17,8 +17,8 @@ RUN = Path(".runtime/reports/smtpd-final")
 DOCS = Path("docs")
 
 
-def percent(value):
-    return f"{value:.1f}".replace(".", ",")
+def percent(value, digits=1):
+    return f"{value:.{digits}f}".replace(".", ",")
 
 
 def main():
@@ -202,7 +202,7 @@ def main():
 |---|---:|---:|---:|
 {rows}
 
-A redução do erro foi **{percent(gain["history"]["relative_reduction_pct"])}% contra histórico** e **{percent(gain["context"]["relative_reduction_pct"])}% contra contexto**. Valor negativo significa piora. Isso mede erro da previsão; não representa aumento causado nas visualizações.
+A redução do erro foi **{percent(gain["history"]["relative_reduction_pct"], 2)}% contra histórico** e **{percent(gain["context"]["relative_reduction_pct"], 2)}% contra contexto**. Valor negativo significa piora. Isso mede erro da previsão; não representa aumento causado nas visualizações.
 
 {error_conclusion}
 
@@ -252,6 +252,14 @@ Escolha para erro: `{selection["content"]}`. Referência histórica: `{selection
 - Howto & Style inclui temas além de moda e beleza. A mídia e o título podem ter mudado desde a publicação.
 - Não existe alvo de curtidas no mesmo horizonte nesta fonte. Não há confirmação prospectiva em canais da Galaxies nem autorização técnica para promover o modelo como produção validada.
 - Os resultados anteriores, inclusive negativos, continuam publicados: [2016](REACH_RESULTS.md), [transferência entre épocas](TRANSFER_RESULTS.md), [adaptação recente](RECENT_ADAPTATION_RESULTS.md) e [retenção com vídeo completo](FULL_VIDEO_RESULTS.md).
+
+## Decisão e próximo investimento que faz sentido
+
+**Não promover este modelo como superior ao histórico.** A extração funciona, mas sua utilidade preditiva não foi demonstrada. O intervalo nominal de 90% do modelo cobriu **{percent(100 * metrics["content"]["coverage90"])}%** dos resultados; isso não substitui o critério de ganho sobre as referências.
+
+As tentativas de ampliar texto, transferir 40.781 vídeos, ponderar a transferência e treinar diretamente para ordenação já foram implementadas e não justificaram adoção. Alterar mais hiperparâmetros com os mesmos dados de teste criaria uma comparação contaminada. Uma nova avaliação exigirá novos dados reservados.
+
+O próximo investimento com potencial material é obter **histórico completo de canais do domínio e resultados observados em horizonte fixo**, ligados ao vídeo original, separando mídia paga, republicações e mudanças de estratégia. O repositório já tem coleta de snapshots e registro prospectivo; esses componentes podem ser reutilizados quando houver essa fonte. A base da Academy não existe e nenhuma fonte acessível resolveu essa lacuna nesta investigação. Não há evidência para prometer que outro modelo maior corrigirá o problema.
 
 ## Conferir e reproduzir
 

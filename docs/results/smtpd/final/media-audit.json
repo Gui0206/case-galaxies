@@ -1,0 +1,29 @@
+{
+  "planned": 669,
+  "downloaded": 667,
+  "acquisition_complete": true,
+  "acquisition_failures": {
+    "UAs5lAaj6n0": {
+      "kind": "DownloadError",
+      "message": "ERROR: unable to download video data: HTTP Error 403: Forbidden",
+      "blocked": true,
+      "at": "2026-10-18 01:35:00.213470+00:00"
+    },
+    "c0ys0Rmx4gg": {
+      "kind": "DownloadError",
+      "message": "ERROR: unable to download video data: HTTP Error 403: Forbidden",
+      "blocked": true,
+      "at": "2026-10-18 02:25:06.479904+00:00"
+    }
+  },
+  "extracted": 662,
+  "extraction_complete": true,
+  "extraction_failures": {
+    "QeSCSItg5kg": "ValueError: Out of range float values are not JSON compliant: nan",
+    "oX8mirgcVHs": "ValueError: Duration differs from official metadata",
+    "4W-qvHsFlQ8": "ValueError: Out of range float values are not JSON compliant: nan",
+    "ccA2Z1zqrXM": "ValueError: Duration differs from official metadata",
+    "swywbV7127Q": "ValueError: Duration differs from official metadata"
+  },
+  "policy": "All planned items accounted for; unavailable media use frozen text fallback in primary evaluation; no outcome-based exclusions."
+}

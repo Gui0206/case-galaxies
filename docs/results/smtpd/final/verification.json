@@ -1,0 +1,96 @@
+{
+  "verified_at": "2026-10-18 03:43:41.960840+00:00",
+  "prediction_sha256": "75ccda84d4f34963daa1e846178e4ba8dd31f492af8721ba9827784d789836bf",
+  "videos": 515,
+  "channels": 165,
+  "metrics_independently_recomputed": {
+    "history": {
+      "macro_mae_log": 0.6868015679327545,
+      "mae_log": 0.6841540037019818,
+      "mae_views": 21805.370109209627,
+      "within_factor_two": 0.6466019417475728,
+      "coverage90": 0.8912621359223301
+    },
+    "context": {
+      "macro_mae_log": 0.6853547196194425,
+      "mae_log": 0.6862959414403987,
+      "mae_views": 18529.1773154121,
+      "within_factor_two": 0.6504854368932039,
+      "coverage90": 0.9106796116504854
+    },
+    "content": {
+      "macro_mae_log": 0.6855686049145331,
+      "mae_log": 0.6889335775028723,
+      "mae_views": 18207.74954106348,
+      "within_factor_two": 0.654368932038835,
+      "coverage90": 0.8893203883495145
+    },
+    "ranking_history": {
+      "macro_mae_log": 0.7515878555805326,
+      "mae_log": 0.7717736484541464,
+      "mae_views": 34668.70944432742,
+      "within_factor_two": 0.6116504854368932,
+      "coverage90": 0.8990291262135922
+    },
+    "ranking_context": {
+      "macro_mae_log": 0.6869625955997416,
+      "mae_log": 0.68485146657636,
+      "mae_views": 21789.248769779417,
+      "within_factor_two": 0.6466019417475728,
+      "coverage90": 0.8912621359223301
+    },
+    "ranking_content": {
+      "macro_mae_log": 0.7151350784588291,
+      "mae_log": 0.7138160141261649,
+      "mae_views": 20126.49488821454,
+      "within_factor_two": 0.6194174757281553,
+      "coverage90": 0.8912621359223301
+    },
+    "ablation_text_control": {
+      "macro_mae_log": 0.6836983304036202,
+      "mae_log": 0.6862325509396219,
+      "mae_views": 18133.121126324753,
+      "within_factor_two": 0.658252427184466,
+      "coverage90": 0.8893203883495145
+    },
+    "ablation_image": {
+      "macro_mae_log": 0.6860647909179873,
+      "mae_log": 0.6886786912305312,
+      "mae_views": 18149.34272875072,
+      "within_factor_two": 0.6524271844660194,
+      "coverage90": 0.9048543689320389
+    },
+    "ablation_speech": {
+      "macro_mae_log": 0.6876665258262896,
+      "mae_log": 0.690646034386655,
+      "mae_views": 18227.56402695724,
+      "within_factor_two": 0.6485436893203883,
+      "coverage90": 0.9067961165048544
+    },
+    "ablation_editing": {
+      "macro_mae_log": 0.6855686049145331,
+      "mae_log": 0.6889335775028723,
+      "mae_views": 18207.74954106348,
+      "within_factor_two": 0.654368932038835,
+      "coverage90": 0.8893203883495145
+    },
+    "ablation_full": {
+      "macro_mae_log": 0.687179558366195,
+      "mae_log": 0.6875619204282584,
+      "mae_views": 18179.62547134025,
+      "within_factor_two": 0.658252427184466,
+      "coverage90": 0.9009708737864077
+    },
+    "text_reference": {
+      "macro_mae_log": 0.6848165247569008,
+      "mae_log": 0.6880540324793736,
+      "mae_views": 18207.60675781027,
+      "within_factor_two": 0.658252427184466,
+      "coverage90": 0.887378640776699
+    }
+  },
+  "history_maturity_verified": true,
+  "development_test_disjoint": true,
+  "ranking_pairs_recomputed": 726,
+  "bootstrap_intervals_recomputed": true
+}
