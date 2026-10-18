@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-10-18 01:32:45.524545+00:00",
+  "code_sha256": "6bed3c139855686de687305450c5127cb6f22c320582bc3ae39f7aa7eb26dfc9",
+  "auxiliary_cohort_sha256": "57aa09c96ee667cbf2397abdc306029ba410074162b9257d1791737449132d8b",
+  "auxiliary_semantic_manifest_sha256": "7410a23db048a65e1071f1bb0911d9e6337538e914a3d098f0749c8fd5890d39",
+  "fractions": [
+    0.0,
+    0.1,
+    0.3,
+    0.5
+  ],
+  "penalties": [
+    100,
+    1000,
+    10000
+  ],
+  "context_blends": [
+    0.5,
+    1.0
+  ],
+  "bundles": [
+    "context: duration and schedule only",
+    "semantic: context, title statistics and multilingual representation"
+  ],
+  "base_selection_sha256": "1f27651d67e124ddb72af960376512cbee993071f04b5b5cdeb06715cdd039dc",
+  "folds": [
+    [
+      "2023-11-17",
+      "2023-11-28"
+    ],
+    [
+      "2023-12-18",
+      "2023-12-23"
+    ]
+  ],
+  "future_test_opened": false
+}

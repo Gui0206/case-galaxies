@@ -238,6 +238,7 @@ def develop(base_run=Path(".runtime/reports/smtpd-v2"), run=Path(".runtime/repor
             "blends": BLENDS,
             "fallback": "frozen text ensemble",
             "primary_includes_missing_media": True,
+            "diagnostic_ablations": "also freeze the best actual model for each modality, even when fallback wins; report separately from the selected primary strategy",
         },
     )
     parts = []
@@ -278,11 +279,16 @@ def develop(base_run=Path(".runtime/reports/smtpd-v2"), run=Path(".runtime/repor
         )
         for b in BUNDLES
     }
+    nonfallback = {
+        b: min([n for n in names if n.startswith(b + ":")], key=lambda n: (errors[n], n))
+        for b in BUNDLES
+    }
     scores = ranking_scores(predictions, {n: predictions[n].to_numpy() for n in names})
     predictions.to_csv(run / "development.csv", index=False)
     result = {
         "created_at": utcnow(),
         "selected": selected,
+        "nonfallback": nonfallback,
         "errors": errors,
         "ranking_diagnostic": scores,
         "plan_sha256": sha256_file(run / "plan.json"),

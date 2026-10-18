@@ -324,12 +324,8 @@ def final(run=RUN):
         roles[role] = predict(spec["family"], spec["name"])
     # Ablations were independently selected in development, never by test outcome.
     media_selection = read_json(MEDIA / "selection.json")
-    for bundle, name in media_selection["selected"].items():
-        roles[f"ablation_{bundle}"] = (
-            predict("base", base_selection["content"])
-            if name == "content"
-            else predict("media", name)
-        )
+    for bundle, name in media_selection["nonfallback"].items():
+        roles[f"ablation_{bundle}"] = predict("media", name)
     roles["text_reference"] = predict("base", base_selection["content"])
     primary = frame.iloc[test].copy()
     export = primary[

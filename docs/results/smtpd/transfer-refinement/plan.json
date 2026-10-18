@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-18 01:36:34.463601+00:00",
+  "code_sha256": "d5b7a2b27bc5d638899e1afc553ac33845b284cfd2ac8c953dcd65e01ad2aa09",
+  "auxiliary_sha256": "57aa09c96ee667cbf2397abdc306029ba410074162b9257d1791737449132d8b",
+  "fractions": [
+    0,
+    0.1,
+    0.3,
+    0.5
+  ],
+  "ridge_penalties": [
+    10,
+    100,
+    1000
+  ],
+  "source_weights": [
+    "uniform",
+    "clipped creator-level semantic density ratio"
+  ],
+  "context_blends": [
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "go_no_go": "at least 2% lower development error than BOTH existing semantic ensemble and strongest context; no final targets consulted"
+}
