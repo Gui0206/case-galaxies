@@ -63,3 +63,20 @@ Fontes adicionais: [WebShorts/Shorts-Cast](https://github.com/ryang1119/Shorts-c
 A segunda rodada terminou: erro de desenvolvimento **0,5449 no histórico**, **0,5403 no contexto** e **0,5313 no conteúdo com analogias** (redução de 2,5% sobre histórico). Para ordenar pares, o vencedor foi o modelo lexical treinado diretamente: **56,9%**, contra **50,5%** do histórico e **52,6%** do contexto. Esses resultados ainda são desenvolvimento.
 
 O [plano final](results/transfer/plan.json) e a [seleção final](results/transfer/selection.json) ficam congelados antes da primeira avaliação externa de 2020–2024. Os 88 testes passaram. Não haverá escolha de outra configuração após abrir o teste.
+
+
+## Resultado externo e decisão
+
+O [teste de transferência](TRANSFER_RESULTS.md) terminou sem ganho: erro macro de conteúdo 0,4386, contra 0,4245 do histórico e 0,4194 do contexto. A ordenação também piorou, em uma amostra pequena de 40 pares/18 canais. As configurações não serão trocadas depois desse resultado. Esse teste passa a estar encerrado; pode informar hipóteses futuras, mas não poderá ser reapresentado como confirmação inédita.
+
+**AdsTrace não será priorizada:** além de não conter canal/data de publicação, a unidade da coluna chamada CVR não está suficientemente esclarecida. Há valor acima de 1 no treino; o código dos autores apenas aplica log1p. São anúncios profissionais e faltam exposição/investimento. Baixar 10 GB de áudio/frames agora não responde ao objetivo principal de alcance sobre histórico. Preservamos a auditoria e voltamos a uma fonte mais adequada.
+
+## SMTPD: alternativa que justifica nova investigação
+
+A [SMTPD, CVPR 2025](https://arxiv.org/html/2503.04446v1) acompanha visualizações nos primeiros 30 dias. O [repositório dos autores](https://github.com/zhuwei321/SMTPD), commit `9658ea11aff81c533c46070b53b5bd90d1a29c70`, fornece CSV e miniaturas. O CSV público foi baixado integralmente (608.627.296 bytes); contém 282.481 linhas, 282.161 IDs distintos e 12.657 linhas nas duas categorias relevantes. A fonte filtra falhas, exclusões e outliers, o que limita representatividade.
+
+Os campos `Day 1` a `Day 30` usam `log2(views/dia + 1)`, conforme a equação do artigo. A inversão do sétimo dia produz contagens compatíveis com inteiros nos 12.657 registros. Os campos numéricos já foram padronizados sobre a base; não serão utilizados. O arquivo omite publicação e usa apelidos/URLs de canal, com valores inválidos e duplicações: não permite montar um histórico seguro diretamente.
+
+Uma sondagem determinística de 48 IDs, ordenados pelo SHA-256 sem consultar desempenho, recuperou metadados públicos em parte dos vídeos. A recuperação usa apenas identidade estável do canal, publicação, duração e condição de transmissão ao vivo. Não incorpora contagens atuais. A coleta ampliada encontrou HTTP 429 e foi interrompida. Foi preparada uma retomada sequencial após espera, com intervalo de dois segundos e parada imediata em nova restrição; sem cookies, proxies ou desvio de controles.
+
+O alvo continua sendo alcance de sete dias, com margem conservadora de disponibilidade de oito dias. Vídeos privados, ausentes, lives, identidade/data inválida e IDs duplicados não serão preenchidos artificialmente. Nenhuma comparação preditiva da SMTPD foi feita nesta etapa. Caso a recuperação seja viável, os cortes de treino/validação/teste serão registrados a partir das datas e cobertura, antes de comparar modelos. Arquivos recuperados em 2026 não garantem que a edição do vídeo seja idêntica à original; essa limitação será explícita.

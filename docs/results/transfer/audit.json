@@ -1,0 +1,25 @@
+{
+  "snapshots": 1881232,
+  "unique_ids": 229115,
+  "invalid_snapshot_metadata": 11160,
+  "inconsistent_identity_or_publication": 109,
+  "sector_videos": 13189,
+  "videos_with_title_changes": 357,
+  "conflicting_target_counts": 32,
+  "eligible_videos": 1998,
+  "created_at": "2026-10-18 00:24:08.516516+00:00",
+  "cohort_sha256": "577ddfd72234073b532fe445d88cb9f9083e6d16bc5bba47087bfe2341f302bf",
+  "acquisition_sha256": "f5b02735ede6a9c852ba4591f3a3d1058ddcba03295f729ef1f5b5bf943f4209",
+  "warm_videos": 922,
+  "warm_channels": 119,
+  "by_year": {
+    "2023": 596,
+    "2022": 526,
+    "2021": 471,
+    "2024": 255,
+    "2020": 150
+  },
+  "target": "First reported snapshot at nominal age [168,192) hours; +24h availability margin",
+  "duration_available": false,
+  "test_outcomes_summarized": false
+}

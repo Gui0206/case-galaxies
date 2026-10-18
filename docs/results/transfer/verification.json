@@ -1,0 +1,12 @@
+{
+  "independently_recomputed_macro_mae_log": {
+    "history": 0.4244537217975316,
+    "context": 0.41940376720306793,
+    "content": 0.43862752711725583
+  },
+  "primary_videos": 922,
+  "primary_channels": 119,
+  "selection_preceded_final": true,
+  "freeze_commit": "0138217",
+  "test_reopened": false
+}

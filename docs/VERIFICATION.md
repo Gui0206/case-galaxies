@@ -84,3 +84,8 @@ O teste principal contém **27.505 vídeos de 10.621 canais**, com 34.598 pares 
 A verificação independente recalculou erro em log, erro em visualizações, cobertura, proporção dentro de um fator dois e quantidade de resultados históricos maduros. Uma implementação que enumera pares diretamente reproduziu o ranking e seus intervalos, conferindo também a amostragem por canal. Todas as verificações passaram. Os modelos salvos reproduziram as previsões de calibração antes da publicação dos resultados. O gráfico foi renderizado e inspecionado.
 
 Os dados têm limitações substantivas: amostra selecionada de 2016, metadados retrospectivos, ausência dos arquivos originais e de informação de mídia paga. O teste não mede ganho de imagem/fala/edição sobre visualizações, não valida curtidas e não comprova benefício em campanhas atuais. Todos os resultados, inclusive recortes desfavoráveis e controles não escolhidos, estão em [results/reach](results/reach/).
+
+
+## Transferência para 2020–2024
+
+Os 88 testes passaram antes da abertura externa. A configuração foi publicada em `0138217` antes de executar o teste final. As métricas de 922 vídeos/119 canais foram recalculadas independentemente a partir das previsões: histórico 0,424454, contexto 0,419404, conteúdo 0,438628 de erro macro em log. Resultado desfavorável, sem promoção para produção. [Relatório e limitações](TRANSFER_RESULTS.md).

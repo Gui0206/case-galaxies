@@ -3,29 +3,25 @@
 <h1 align="center">Galaxies · Creative Intelligence</h1>
 <p align="center">Prever visualizações antes de publicar.<br>Medir se o modelo supera o histórico do canal em dados reservados.</p>
 
-<p align="center"><a href="docs/REACH_RESULTS.md">Resultado mais recente</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
+<p align="center"><a href="docs/TRANSFER_RESULTS.md">Resultado mais recente</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
 
-> **Resultado real — 17/10/2026:** houve ganho estatisticamente positivo em **27.505 vídeos reservados de 10.621 canais**: erro de previsão **3,7% menor** que o histórico e acerto de ordenação **60,6% contra 49,3%**. A redução do erro ficou abaixo da meta registrada de 5%. A fonte é de 2016, com metadados e séries diárias; este resultado ainda não valida Shorts atuais, análise de imagem/fala ou campanhas da Galaxies.
+> **Resultado mais recente — 18/10/2026 UTC:** o ganho não se manteve em outra época. Em **922 vídeos de 119 canais de 2020–2024**, o modelo com conteúdo teve erro **3,3% maior que o histórico**. Não há ganho confirmado nesse teste. O modelo não foi promovido para produção.
 
 ## Entenda o resultado em um minuto
 
-O modelo começa pelo desempenho habitual do canal. Ajusta a previsão pela duração, calendário e comportamento recente, e consulta até cinco publicações anteriores com títulos parecidos. O alvo são as visualizações na data de publicação e nas seis datas seguintes. Nenhum engajamento inicial do próprio vídeo entra na previsão.
+A pergunta é: **antes de publicar, analisar o conteúdo ajuda mais que olhar o desempenho habitual do canal?** O modelo parte do histórico e ajusta a previsão com contexto, título e vídeos comparáveis. A avaliação usa resultados futuros reservados e histórias disponíveis antes de cada publicação.
 
-| Como prever | Redução do erro sobre o histórico ↑ | Acerto ao ordenar vídeos do mesmo canal ↑ |
-|---|---:|---:|
-| Histórico do canal | Referência | 49,3% |
-| Histórico + contexto | 2,7% | 58,9% |
-| **Histórico + contexto + título** | **3,7%** | **60,6%** |
+| Estudo real | Resultado | O que permite concluir |
+|---|---|---|
+| Alcance de 2016: 27.505 vídeos de teste | Erro 3,7% menor; ordenação 60,6% vs. 49,3% | Ganho modesto nessa população; abaixo da meta de 5% de redução do erro |
+| **Transferência para 2020–2024: 922 vídeos de teste** | **Erro 3,3% maior** | **O ganho não se generalizou; sem confirmação** |
+| Vídeos completos: retenção, 177 vídeos de teste | Sem ganho estatisticamente confirmado | Imagem, fala e edição funcionam como extração; eficácia preditiva não comprovada |
 
-A redução usa o erro em log, com peso igual por canal. A ordenação compara vídeos publicados pelo mesmo canal na mesma semana e dá peso igual aos canais. O conteúdo do título acrescentou **1,1% de redução do erro** e **1,8 ponto percentual de acerto** sobre o contexto, com intervalos de 95% favoráveis. O critério de ordenação foi cumprido; o de redução relevante do erro, de pelo menos 5% contra ambas as referências, não foi.
+![Teste externo em outra época](docs/assets/transfer-results.png)
 
-![Erro e ordenação no teste reservado](docs/assets/reach-results.png)
+Leia o [teste mais recente explicado](docs/TRANSFER_RESULTS.md), o [resultado de alcance anterior](docs/REACH_RESULTS.md) e o [teste de vídeos completos](docs/FULL_VIDEO_RESULTS.md). Os resultados negativos permanecem visíveis. Os dados de 2016 e 2020–2024 são públicos e selecionados; nenhum deles representa diretamente campanhas atuais da Galaxies.
 
-**Leia o [resultado explicado](docs/REACH_RESULTS.md)**: números, incerteza, cinco exemplos incluindo erros e todos os recortes. O modelo acertou a faixa ampla entre metade e dobro do valor real em **73,8%** dos vídeos. Para canais sem histórico, o ganho foi apenas **0,4%**; a utilidade depende do contexto disponível.
-
-Os 263.317 registros preparados vieram de uma fonte pública com categorias Automotivo e Howto & Style. Os vídeos finais eram novos para a avaliação, mas foram publicados em agosto de 2016. As regras, revisões feitas no desenvolvimento e limitações estão no [protocolo](docs/REVISED_STUDY.md). A [seleção foi publicada antes da abertura final](https://github.com/Gui0206/case-galaxies/commit/660999e).
-
-A análise de [imagem, fala e edição em vídeos completos](docs/FULL_VIDEO_RESULTS.md) permanece implementada, com o estudo anterior de retenção em 945 vídeos e sem ganho confirmado. Os [dois testes anteriores de metadados](docs/REAL_DATA_RESULTS.md) também permanecem preservados. Nenhum modelo foi promovido para produção.
+As novas tentativas e a auditoria de fontes estão no [registro de pesquisa](docs/NEXT_EVIDENCE.md). A base mencionada no briefing não existe, conforme informado pelo responsável pelo projeto. O aplicativo abaixo continua sendo uma demonstração com dados sintéticos; seu funcionamento não é prova de precisão no mundo real.
 
 ## A qualidade está na avaliação do modelo
 
@@ -70,7 +66,7 @@ Esse é o fluxo da aplicação de demonstração, que continua usando dados sint
 | Prevenção de vazamento | Histórico ponto a ponto no tempo; expurgo de rótulos imaturos; deduplicação; separação de campanhas |
 | Modelagem | Ridge, CatBoost, LightGBM e blend; alvos absolutos/residuais; quantis calibrados por setor |
 | Experimentos | Competição em três janelas, contexto forte, ablações, controles negativos, seeds e canais não vistos; seleção congelada e teste final de uso único |
-| Testes públicos reais | Novo estudo de alcance com ganho modesto confirmado, ordenação superior ao histórico/contexto, hashes e teste final único; resultados anteriores preservados |
+| Testes públicos reais | Ganho modesto em 2016; transferência para 2020–2024 sem ganho; extração multimodal sem eficácia confirmada; resultados e previsões preservados |
 | Vídeos completos | [Imagem, fala e edição](docs/FULL_VIDEO_METHOD.md) em 945 vídeos íntegros; teste reservado com 177 vídeos; vantagem não confirmada |
 | Avaliação | MAE, MAE em log, MAPE com zeros explícitos, Spearman, pares, arrependimento de seleção, F1 de faixas, interval score, cobertura/largura e médias equilibradas por canal |
 | Explicação | SHAP de árvores/decomposição linear, comparáveis históricos, evidências temporais, abstenção e rastros em JSON |
@@ -86,7 +82,7 @@ Esse é o fluxo da aplicação de demonstração, que continua usando dados sint
 
 | Quero… | Leia |
 |---|---|
-| Saber se o modelo supera o histórico | [Resultado de alcance](docs/REACH_RESULTS.md) |
+| Saber se o modelo supera o histórico | [Teste externo mais recente](docs/TRANSFER_RESULTS.md) |
 | Entender a seleção da base e do modelo | [Protocolo revisado](docs/REVISED_STUDY.md) |
 | Saber se imagem, fala e edição ajudaram | [Resultado com vídeos completos](docs/FULL_VIDEO_RESULTS.md) |
 | Conferir os testes anteriores de metadados | [Ken Jee e YouTube Trending](docs/REAL_DATA_RESULTS.md) |

@@ -1,0 +1,55 @@
+{
+  "dataset": "rsrishav/youtube-trending-video-dataset",
+  "version": 1346,
+  "files": [
+    {
+      "region": "BR",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/BR_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "BR_youtube_trending_data.csv",
+      "bytes": 360199182,
+      "sha256": "8e73196bf54938114aae3d6c42b28f874e24b2f2e06ff0739aa6d24a89632eb9"
+    },
+    {
+      "region": "US",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/US_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "US_youtube_trending_data.csv",
+      "bytes": 409199174,
+      "sha256": "09f25753a4d447e3169f964a6a09e6d96a3653b354cab1d569abf21e9d9a7f51"
+    },
+    {
+      "region": "GB",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/GB_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "GB_youtube_trending_data.csv",
+      "bytes": 400885825,
+      "sha256": "bceeadb5d584b8ea4784274060ce666afaafb0ca3de09c090e8292d381ee9f1e"
+    },
+    {
+      "region": "CA",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/CA_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "CA_youtube_trending_data.csv",
+      "bytes": 412598392,
+      "sha256": "91bfa4110c67483cf48f5594e2316f87dfc759443aa7a71902cc3bbff94c07e2"
+    },
+    {
+      "region": "DE",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/DE_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "DE_youtube_trending_data.csv",
+      "bytes": 462208841,
+      "sha256": "2110f02e93016866a022a93b9b7ec45cbc2e887c3458ddd4c1193a6d8435a351"
+    },
+    {
+      "region": "FR",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/FR_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "FR_youtube_trending_data.csv",
+      "bytes": 375386851,
+      "sha256": "5db2cb32ff5eee54a9a2ccd31319e7b6dc806d33113b91c789f2ace6b3f85017"
+    },
+    {
+      "region": "MX",
+      "url": "https://www.kaggle.com/api/v1/datasets/download/rsrishav/youtube-trending-video-dataset/MX_youtube_trending_data.csv?datasetVersionNumber=1346",
+      "file": "MX_youtube_trending_data.csv",
+      "bytes": 362622447,
+      "sha256": "9166d050c51de6ac3936368bcb250c95e3ee067a0d75e3ff9cc2959748a12cc0"
+    }
+  ]
+}
