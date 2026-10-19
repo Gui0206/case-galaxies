@@ -83,6 +83,44 @@ As tentativas de ampliar texto, transferir 40.781 vídeos, ponderar a transferê
 
 O próximo investimento com potencial material é obter **histórico completo de canais do domínio e resultados observados em horizonte fixo**, ligados ao vídeo original, separando mídia paga, republicações e mudanças de estratégia. O repositório já tem coleta de snapshots e registro prospectivo; esses componentes podem ser reutilizados quando houver essa fonte. A base da Academy não existe e nenhuma fonte acessível resolveu essa lacuna nesta investigação. Não há evidência para prometer que outro modelo maior corrigirá o problema.
 
+## Revisão de encerramento: o que aprendemos
+
+**Decisão em 18/10/2026: encerrar as tentativas de modelagem nesta entrega.** Esta revisão leu resultados, código e previsões já existentes. Não executou novos treinos, extrações, coletas ou testes preditivos. Os recortes abaixo são descritivos e posteriores à abertura do teste; não alteram a seleção congelada.
+
+### Tema × histórico já foi explorado
+
+A implementação compara o título com publicações anteriores do mesmo canal por palavras e embeddings semânticos. Usa até cinco comparáveis e seus resultados maduros, ponderados pela similaridade, além de medidas de similaridade máxima e peso. Também houve regressão semântica de diferenças dentro do canal e combinação com contexto. Isso testa aproximações da hipótese, não todas as possíveis representações de tema ou público.
+
+No desenvolvimento, a melhor variante de recuperação semântica teve MAE log por canal **0,6627**, contra **0,6459** do contexto. A combinação de regressão semântica e contexto chegou a **0,6335**, mas essa promessa não se confirmou no teste final. A recuperação escolhida para ordenação era **lexical**, não a variante de embeddings semânticos. Portanto, sua seleção não prova benefício específico dos embeddings.
+
+Fontes: [seleção base](results/smtpd/development-v2/base-selection.json), [combinação e ordenação](results/smtpd/development-v2/ensemble-selection.json), implementação em `src/galaxies/reach_study.py` (`ReachEncoder`) e `src/galaxies/smtpd_study.py`.
+
+### Pouco histórico e ordenação não revelaram uma oportunidade clara
+
+O teste tem mediana de **8** publicações anteriores disponíveis. Não é correto presumir que a maioria dos canais dispõe de histórico farto. Todos os vídeos avaliados têm ao menos três antecedentes maduros; **canais sem histórico não foram avaliados neste teste**.
+
+Recortes descritivos por quantidade de antecedentes na data de cada vídeo, calculados das previsões salvas. Erro absoluto em log, primeiro médio por canal dentro do recorte e depois médio entre canais:
+
+| Antecedentes | Vídeos | Canais presentes | Histórico | Contexto | Conteúdo |
+|---|---:|---:|---:|---:|---:|
+| 3–5 | 200 | 116 | 0,7164 | 0,7073 | 0,7092 |
+| 6–10 | 123 | 47 | 0,5971 | 0,6433 | 0,6475 |
+| 11 ou mais | 192 | 30 | 0,8020 | 0,7771 | 0,7752 |
+
+Um canal pode aparecer em mais de um recorte à medida que publica; os canais da tabela não devem ser somados. Não calculamos novos intervalos por recorte nem usamos essas fatias para escolher modelos. O pequeno ganho pontual no último grupo não é uma confirmação. No grupo de 3–5 antecedentes, conteúdo ficou ligeiramente pior que contexto. A ordenação já registrada também ficou abaixo de contexto: **55,8% contra 56,8%**, com diferença incerta.
+
+### Incerteza não significa ganho grande oculto
+
+O bootstrap por canal com 5.000 reamostragens já estava registrado e verificado. Dividindo seus limites pelo erro observado da referência, o intervalo do ganho relativo do modelo principal corresponde aproximadamente a **−3,78% a +3,97% contra histórico** e **−1,97% a +1,83% contra contexto**. Positivo indica redução do erro. Esta conversão usa o denominador observado fixo, não um novo bootstrap da razão.
+
+A meta de redução de 5% ficou fora desses intervalos para **este modelo nesta população**. Benefícios pequenos continuam compatíveis com os dados. Isso não é cálculo formal de poder, não determina o tamanho de uma futura amostra e não limita o ganho de um modelo diferente. A análise multimodal de 219 vídeos continua exploratória.
+
+### Por que encerramos
+
+Não encontramos evidência concreta que justifique repetir tema × histórico ou ampliar a busca de hiperparâmetros nesta entrega. A hipótese já teve implementações, a vantagem de desenvolvimento não se confirmou e o teste final já foi utilizado. Mais tentativas orientadas pelo mesmo teste contaminariam a avaliação.
+
+Preservamos a ferramenta funcional, os resultados negativos e o histórico/contexto como referências. **Ganho não demonstrado não significa que conteúdo nunca ajuda.** Não atribuiremos a falha exclusivamente à falta de dados contínuos ou ao tamanho da amostra. Uma retomada dependeria de uma hipótese materialmente diferente, desenvolvimento separado e novos dados reservados adequados ao domínio, com autorização explícita. Nada disso está em execução.
+
 ## Conferir e reproduzir
 
 [Previsões individuais](results/smtpd/final/test_predictions.csv) · [Resultado integral](results/smtpd/final/final.json) · [Escolha congelada](results/smtpd/final/selection.json) · [Verificação independente](results/smtpd/final/verification.json) · [Protocolo e desenvolvimento](SMTPD_PROTOCOL.md).

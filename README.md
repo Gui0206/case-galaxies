@@ -9,6 +9,12 @@
 
 > **Estado do trabalho:** interrompido a pedido do usuário em 18/10/2026. Piloto de coleta desativado; nenhuma retomada automática. [Estado completo e pendências](docs/CURRENT_STATE.md) · [Protocolo e interrupção do piloto](docs/CHANNEL_PILOT.md).
 
+## Conclusão da entrega
+
+**Encerramos as tentativas de modelagem nesta entrega.** Tema × histórico já foi explorado por recuperação lexical/semântica e regressão dentro do canal. Os resultados não justificam outra tentativa semelhante: a promessa no desenvolvimento não se confirmou, e o recorte exploratório com pouco histórico também não mostrou vantagem sobre contexto. A incerteza permite benefícios pequenos, mas não sustenta a meta de 5% para o modelo avaliado. Isso não prova que conteúdo nunca ajuda.
+
+A ferramenta e os resultados permanecem disponíveis. Uma retomada exigiria hipótese materialmente diferente e novos dados reservados, mediante autorização. [O que testamos, aprendemos e por que encerramos](docs/SMTPD_RESULTS.md#revisão-de-encerramento-o-que-aprendemos). Esta atualização é documental, sem novos testes.
+
 ## Execute os modelos reais, sem treinar
 
 Abra **http://127.0.0.1:8000/** com o servidor local ativo. A interface separa **Meu vídeo** (descrição de fala, edição e medidas visuais, sem views nem canal emprestado) de **Canais da base** (previsão histórica demonstrável, com comparação ao resultado observado). A conclusão do case aparece na tela: não houve ganho preditivo comprovado. A demonstração sintética fica em `/synthetic`.
@@ -27,7 +33,7 @@ A pergunta é: **antes de publicar, analisar o conteúdo ajuda mais que olhar o 
 
 | Estudo real | Resultado | O que permite concluir |
 |---|---|---|
-| **SMTPD: 515 vídeos novos; horizonte de sete dias** | **Erro 0,18% menor que histórico; 0,03% maior que contexto** | **Sem ganho confirmado; mídia completa também não ajudou** |
+| **SMTPD: 515 vídeos novos; horizonte de sete dias** | **Erro 0,18% menor que histórico; 0,03% maior que contexto** | **Sem ganho confirmado; mídia completa sem vantagem demonstrada** |
 | Alcance de 2016: 27.505 vídeos de teste | Erro 3,7% menor; ordenação 60,6% vs. 49,3% | Ganho modesto nessa população; abaixo da meta de 5% de redução do erro |
 | **Transferência para 2020–2024: 922 vídeos de teste** | **Erro 3,3% maior** | **O ganho não se generalizou; sem confirmação** |
 | **Adaptação recente: 665 vídeos novos de teste** | **Erro 2,1% menor que histórico; 1,3% maior que contexto** | **Sem ganho confirmado** |

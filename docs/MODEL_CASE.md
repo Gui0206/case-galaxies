@@ -15,6 +15,12 @@
 
 Artefatos auditáveis: [515 previsões individuais](results/smtpd/final/test_predictions.csv), [seleção congelada](results/smtpd/final/selection.json), [verificação independente](results/smtpd/final/verification.json) e [auditoria de mídia](results/smtpd/final/media-audit.json).
 
+## Aprendizado e encerramento desta entrega
+
+Tema × histórico já recebeu implementações de recuperação lexical e semântica de publicações anteriores do canal, além de regressão de diferenças dentro do canal. A combinação promissora no desenvolvimento não confirmou superioridade no teste. A ordenação e a revisão exploratória de vídeos com poucos antecedentes também não justificam outra rodada semelhante.
+
+A decisão é encerrar a modelagem nesta entrega, preservando a demonstração e os resultados negativos. Ganho não demonstrado não prova ausência de utilidade do conteúdo. Retomar exigiria hipótese materialmente diferente e dados novos reservados, sem reutilizar o teste para selecionar melhorias. [Revisão detalhada, incerteza e recortes](SMTPD_RESULTS.md#revisão-de-encerramento-o-que-aprendemos). Esta atualização não executou novos testes.
+
 ## O que a ferramenta entrega agora
 
 A interface separa **Meu vídeo** (descrição de fala, edição e medidas visuais, sem views) de **Canais da base** (reprodução de previsões históricas com comparação ao resultado observado). O adaptador `real_service` carrega os modelos SMTPD salvos para Python, HTTP e MCP, sem novo ajuste. [Guia da demonstração real](REAL_DEMO.md).

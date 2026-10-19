@@ -21,6 +21,14 @@ Não há previsão validada para o canal de um novo usuário. Um canal da base n
 
 Não apagar `evaluation-opened.json`, reabrir o teste ou ajustar modelos pelos resultados reservados. Melhor apresentação e infraestrutura não mudam a conclusão estatística.
 
+## Decisão de encerramento após revisão dos resultados
+
+Encerramos as tentativas de modelagem desta entrega. A revisão dos artefatos existentes confirmou que tema × histórico já foi explorado e que a ordenação intra-canal já foi avaliada. Um recorte descritivo das previsões salvas, com 3–5 antecedentes, também não apresentou vantagem do conteúdo sobre contexto. Esses recortes posteriores não são novos testes confirmatórios nem autorizam selecionar outro modelo.
+
+O intervalo existente contra contexto equivale aproximadamente a 2% de piora a 1,8% de melhora, usando o erro observado da referência como denominador fixo. A meta de 5% está fora desse intervalo para o modelo avaliado; pequenos benefícios permanecem possíveis. Não foi realizado cálculo formal de poder. Não concluímos que toda modalidade de conteúdo seja inútil nem que mais dados garantam ganho.
+
+A documentação e os slides incorporam a decisão. Nenhum novo treino, extração, coleta ou teste foi executado nesta atualização. Detalhamento e fontes: [revisão de encerramento](SMTPD_RESULTS.md#revisão-de-encerramento-o-que-aprendemos). Retomada somente com autorização explícita e evidência nova que justifique o investimento.
+
 ## Piloto iniciado e interrompido
 
 Foi preparado um piloto de metadados públicos para quatro canais: Doug DeMuro, carwow, Alexandra Anele e NikkieTutorials. O plano foi limitado a 48 horas de entrada de novas publicações, com acompanhamento até sete dias depois e tolerância operacional de três horas. A janela de 48 horas não permitiria comprovar ganho no alvo de sete dias antes da entrega.
