@@ -3,7 +3,7 @@
 <h1 align="center">Galaxies · Creative Intelligence</h1>
 <p align="center">Prever visualizações antes de publicar.<br>Medir se o modelo supera o histórico do canal em dados reservados.</p>
 
-<p align="center"><a href="docs/SMTPD_RESULTS.md">Resultado mais recente</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
+<p align="center"><a href="docs/SMTPD_RESULTS.md">Resultado mais recente</a> · <a href="docs/ROTEIRO_APRESENTACAO.md">Roteiro da apresentação</a> · <a href="docs/REVISED_STUDY.md">Método e busca de dados</a> · <a href="docs/FULL_VIDEO_RESULTS.md">Vídeos completos</a> · <a href="docs/MODEL_CASE.md">O case de modelagem</a> · <a href="docs/QUICKSTART.md">Começar</a> · <a href="docs/DATA.md">Preparar dados</a></p>
 
 > **Resultado mais recente — 18/10/2026:** não comprovamos ganho real. No teste reservado da **SMTPD, com 515 vídeos de 165 canais**, o erro foi **0,18% menor que o histórico** e **0,03% maior que histórico + contexto**; os intervalos de incerteza incluem ausência de ganho. Em 219 vídeos completos do teste, imagem, fala e edição juntas tiveram erro **0,5% maior** que a referência textual. [Veja os números e exemplos reais](docs/SMTPD_RESULTS.md). O modelo não foi promovido para produção.
 
